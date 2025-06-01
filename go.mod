@@ -4,8 +4,8 @@ go 1.24.2
 
 require (
 	cogentcore.org/core v0.3.11
-	github.com/Kodeworks/golang-image-ico v0.0.0-20141118225523-73f0f4cfade9
 	github.com/adam-macioszek/lotr-sdk v0.0.0-20230613211617-ea4183f497bf
+	gopkg.in/ini.v1 v1.67.0
 )
 
 require (
@@ -38,5 +38,4 @@ require (
 	golang.org/x/sys v0.31.0 // indirect
 	golang.org/x/text v0.23.0 // indirect
 	golang.org/x/tools v0.23.0 // indirect
-	gopkg.in/ini.v1 v1.67.0 // indirect
 )

@@ -1,7 +1,7 @@
 package gui
 
 import (
-	config "ago-launcher/internal/utils"
+	"ago-launcher/src/config"
 	"fmt"
 
 	"cogentcore.org/core/core"

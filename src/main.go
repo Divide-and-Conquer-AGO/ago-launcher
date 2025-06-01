@@ -1,8 +1,9 @@
 package main
 
 import (
-	"ago-launcher/gui"
 	"fmt"
+
+	"ago-launcher/src/gui"
 )
 
 func main() {
