@@ -10,8 +10,8 @@ import (
 )
 
 type Updater struct {
-	CurrentVersion ModVersion
-	LatestVersion ModVersion
+	CurrentVersion    ModVersion
+	LatestVersion     ModVersion
 	AvailableVersions ModVersions
 }
 
@@ -75,19 +75,19 @@ func (updater *Updater) GetLatestModVersion() {
 }
 
 func (updater *Updater) CheckForUpdate() (ModVersion, bool, error) {
-	if (updater.CurrentVersion.Version == "") {
+	if updater.CurrentVersion.Version == "" {
 		updater.GetCurrentModVersion()
 	}
 
 	updater.GetLatestModVersion()
 	latestVersion := updater.LatestVersion
 
-	if (updater.LatestVersion.Version != updater.CurrentVersion.Version) {
+	if updater.LatestVersion.Version != updater.CurrentVersion.Version {
 		fmt.Println("!!! New mod version found !!!")
 		fmt.Println("Current Version: ", updater.CurrentVersion.Version)
 		fmt.Println("Latest Version: ", latestVersion.Version)
 		return latestVersion, true, nil
-	} 
+	}
 
 	return updater.CurrentVersion, false, nil
 }

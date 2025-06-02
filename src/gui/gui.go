@@ -28,7 +28,7 @@ func InitGUI(updater *updater.Updater) {
 
 func RenderToolbar(app fyne.App, mainWindow fyne.Window, updater *updater.Updater) {
 	tabs := container.NewAppTabs(
-	container.NewTabItemWithIcon("Home", theme.HomeIcon(), getHomeContent(app, updater)),
+		container.NewTabItemWithIcon("Home", theme.HomeIcon(), getHomeContent(app, updater)),
 		container.NewTabItemWithIcon("Settings", theme.SettingsIcon(), getSettingsContent()),
 		container.NewTabItemWithIcon("About", theme.ComputerIcon(), getAboutContent()),
 	)
@@ -77,14 +77,18 @@ func getHomeContent(app fyne.App, updater *updater.Updater) fyne.CanvasObject {
 	versionContainer := container.NewCenter(versionText)
 
 	// Buttons
-	quoteButton := widget.NewButton("Refresh quote", func() {
-		quote, err := quoter.GetRandomQuote()
-		if err != nil {
-			fmt.Println("error getting random quote")
-		}
-		quoteText.Text = quote.Quote
-		authorText.Text = quote.Author
-	})
+
+	// Quote Refresh
+	// quoteButton := widget.NewButton("Refresh quote", func() {
+	// 	quote, err := quoter.GetRandomQuote()
+	// 	if err != nil {
+	// 		fmt.Println("error getting random quote")
+	// 	}
+	// 	quoteText.Text = quote.Quote
+	// 	authorText.Text = quote.Author
+	// })
+
+	// Check for Updates
 	updateButtonLabel := "Check for updates"
 	updateButton := widget.NewButton(updateButtonLabel, func() {
 		newVersion, updateAvailable, err := updater.CheckForUpdate()
@@ -97,16 +101,18 @@ func getHomeContent(app fyne.App, updater *updater.Updater) fyne.CanvasObject {
 			app.SendNotification(fyne.NewNotification("You are up to date!", updater.CurrentVersion.Version))
 		}
 	})
+
+	// Launch Mod
 	launchButton := widget.NewButton("Launch Mod", func() {
 		app.SendNotification(fyne.NewNotification("Launching mod...", ""))
 	})
-	buttonContainer := container.NewVBox(quoteButton, updateButton, launchButton)
+	buttonContainer := container.NewVBox(updateButton, launchButton)
 
 	// Container
 	content := container.NewVBox(
-        logoContainer, titleContainer, quoteContainer, authorContainer, versionContainer, buttonContainer,
-    )
-    return content
+		logoContainer, titleContainer, quoteContainer, authorContainer, versionContainer, buttonContainer,
+	)
+	return content
 }
 
 func getSettingsContent() fyne.CanvasObject {
