@@ -1,6 +1,8 @@
 package gui
 
 import (
+	"ago-launcher/utils"
+	"fmt"
 	"image/color"
 
 	"fyne.io/fyne/v2"
@@ -12,20 +14,24 @@ import (
 	"fyne.io/fyne/v2/widget"
 )
 
-func InitGUI() {
+type AppData struct {
+	Quotes utils.Quotes	
+}
+
+func InitGUI(data AppData) {
 	myApp := app.NewWithID("divide.and.conquer.ago")
 
 	myWindow := myApp.NewWindow("AGO Launcher")
 	myWindow.CenterOnScreen()
-	myWindow.FixedSize()
+	myWindow.SetFixedSize(true)
 	myWindow.Resize(fyne.NewSize(1155, 700))
 
-	RenderToolbar(myApp, myWindow)
+	RenderToolbar(myApp, myWindow, data)
 }
 
-func RenderToolbar(app fyne.App, mainWindow fyne.Window) {
+func RenderToolbar(app fyne.App, mainWindow fyne.Window, data AppData) {
 	tabs := container.NewAppTabs(
-	container.NewTabItemWithIcon("Home", theme.HomeIcon(), getHomeContent(app)),
+	container.NewTabItemWithIcon("Home", theme.HomeIcon(), getHomeContent(app, data)),
 		container.NewTabItemWithIcon("Settings", theme.SettingsIcon(), getSettingsContent()),
 		container.NewTabItemWithIcon("About", theme.ComputerIcon(), getAboutContent()),
 	)
@@ -36,29 +42,55 @@ func RenderToolbar(app fyne.App, mainWindow fyne.Window) {
 	mainWindow.ShowAndRun()
 }
 
-func getHomeContent(app fyne.App) fyne.CanvasObject {
+func getHomeContent(app fyne.App, data AppData) fyne.CanvasObject {
 	// Logo
 	logo := canvas.NewImageFromFile("icon.png")
 	logo.FillMode = canvas.ImageFillOriginal
 	logoContainer := container.NewCenter(logo)
 
 	// Text
+	// Title
 	titleText := canvas.NewText("Divide and Conquer: AGO V3", color.White)
+	titleText.TextSize = 32
+	titleText.TextStyle = fyne.TextStyle{Bold: true}
 	titleContainer := container.NewCenter(titleText)
 
+	// Quote (Quote)
+	quote, err := utils.RandomElement(data.Quotes.Quotes)
+	if err != nil {
+		fmt.Println("error getting quote")
+	}
+	quoteText := canvas.NewText(quote.Quote, color.White)
+	quoteText.TextSize = 16
+	quoteText.TextStyle = fyne.TextStyle{Italic: true}
+	quoteContainer := container.NewCenter(quoteText)
+
+	// Quote (Author)
+	authorText := canvas.NewText(quote.Author, color.White)
+	authorText.TextSize = 14
+	authorText.TextStyle = fyne.TextStyle{Italic: true}
+	authorContainer := container.NewCenter(authorText)
 
 	// Buttons
-	button := widget.NewButton("Check for Updates", func() {
+	quoteButton := widget.NewButton("Refresh quote", func() {
+		quote, err := utils.RandomElement(data.Quotes.Quotes)
+		if err != nil {
+			fmt.Println("error getting quote")
+		}
+		quoteText.Text = quote.Quote
+		authorText.Text = quote.Author
+	})
+	updateButton := widget.NewButton("Check for Updates", func() {
 		app.SendNotification(fyne.NewNotification("Checking for updates...", ""))
 	})
-	button2 := widget.NewButton("Launch Mod", func() {
+	launchButton := widget.NewButton("Launch Mod", func() {
 		app.SendNotification(fyne.NewNotification("Launching mod...", ""))
 	})
-	buttonContainer := container.NewVBox(button, button2)
+	buttonContainer := container.NewVBox(quoteButton, updateButton, launchButton)
 
 	// Container
 	content := container.NewVBox(
-        logoContainer, titleContainer, buttonContainer,
+        logoContainer, titleContainer, quoteContainer, authorContainer, buttonContainer,
     )
     return content
 }
