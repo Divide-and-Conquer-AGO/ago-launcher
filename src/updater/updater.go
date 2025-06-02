@@ -10,7 +10,9 @@ import (
 )
 
 type Updater struct {
-	ModVersions ModVersions
+	CurrentVersion ModVersion
+	LatestVersion ModVersion
+	AvailableVersions ModVersions
 }
 
 type ModVersions struct {
@@ -23,56 +25,69 @@ type ModVersion struct {
 	Url     string `json:"url"`
 }
 
-func (updater *Updater) GetModVersion() (ModVersion, error) {
+func (updater *Updater) GetCurrentModVersion() {
 	fmt.Println("Retrieving mod version")
 	jsonFile, err := os.Open("resources/uiCfg.json")
 	if err != nil {
 		fmt.Println("could not open uiCfg file")
-		return ModVersion{}, err
+		return
 	}
 	defer jsonFile.Close()
 
 	jsonContent, err := io.ReadAll(jsonFile)
 	if err != nil {
 		fmt.Println("could not read uiCfg file")
-		return ModVersion{}, err
+		return
 	}
 
 	modVersion := gjson.Get(string(jsonContent), "modVersion")
 	fmt.Println("Mod version", modVersion, "found")
 
-	return ModVersion{}, nil
+	updater.CurrentVersion = ModVersion{
+		Version: modVersion.String(),
+	}
 }
 
-func (updater *Updater) GetLatestModVersion() (ModVersion, error) {
-	jsonFile, err := os.Open("resources/uiCfg.json")
+func (updater *Updater) GetLatestModVersion() {
+	jsonFile, err := os.Open("resources/modVersions.json")
 	if err != nil {
-		return ModVersion{}, err
 	}
 	defer jsonFile.Close()
 
 	byteValue, err := io.ReadAll(jsonFile)
 	if err != nil {
-		return ModVersion{}, err
+		fmt.Println("could not open modVersions file")
 	}
 	var modVersions ModVersions
 
 	jsonErr := json.Unmarshal(byteValue, &modVersions)
 	if jsonErr != nil {
-		return ModVersion{}, jsonErr
+		fmt.Println("could not unmarshal file")
 	}
 
-	var latestVersion ModVersion
 	for i := 0; i < len(modVersions.ModVersions); i++ {
 		version := modVersions.ModVersions[i]
 		if version.Latest {
-			fmt.Println("found latest version", version.Version)
-			return latestVersion, nil
+			fmt.Println("Found latest version", version.Version)
+			updater.LatestVersion = version
 		}
 	}
-	return ModVersion{}, err
 }
 
-func (updater *Updater) CheckForUpdate() {
+func (updater *Updater) CheckForUpdate() (ModVersion, bool, error) {
+	if (updater.CurrentVersion.Version == "") {
+		updater.GetCurrentModVersion()
+	}
 
+	updater.GetLatestModVersion()
+	latestVersion := updater.LatestVersion
+
+	if (updater.LatestVersion.Version != updater.CurrentVersion.Version) {
+		fmt.Println("!!! New mod version found !!!")
+		fmt.Println("Current Version: ", updater.CurrentVersion.Version)
+		fmt.Println("Latest Version: ", latestVersion.Version)
+		return latestVersion, true, nil
+	} 
+
+	return updater.CurrentVersion, false, nil
 }

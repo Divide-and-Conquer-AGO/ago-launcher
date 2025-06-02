@@ -15,7 +15,7 @@ import (
 	"fyne.io/fyne/v2/widget"
 )
 
-func InitGUI() {
+func InitGUI(updater *updater.Updater) {
 	myApp := app.NewWithID("divide.and.conquer.ago")
 
 	myWindow := myApp.NewWindow("AGO Launcher")
@@ -23,12 +23,12 @@ func InitGUI() {
 	myWindow.SetFixedSize(true)
 	myWindow.Resize(fyne.NewSize(1155, 700))
 
-	RenderToolbar(myApp, myWindow)
+	RenderToolbar(myApp, myWindow, updater)
 }
 
-func RenderToolbar(app fyne.App, mainWindow fyne.Window) {
+func RenderToolbar(app fyne.App, mainWindow fyne.Window, updater *updater.Updater) {
 	tabs := container.NewAppTabs(
-	container.NewTabItemWithIcon("Home", theme.HomeIcon(), getHomeContent(app)),
+	container.NewTabItemWithIcon("Home", theme.HomeIcon(), getHomeContent(app, updater)),
 		container.NewTabItemWithIcon("Settings", theme.SettingsIcon(), getSettingsContent()),
 		container.NewTabItemWithIcon("About", theme.ComputerIcon(), getAboutContent()),
 	)
@@ -39,8 +39,7 @@ func RenderToolbar(app fyne.App, mainWindow fyne.Window) {
 	mainWindow.ShowAndRun()
 }
 
-func getHomeContent(app fyne.App) fyne.CanvasObject {
-	var updater = &updater.Updater{}
+func getHomeContent(app fyne.App, updater *updater.Updater) fyne.CanvasObject {
 	var quoter = &quotes.Qouter{}
 
 	// Logo
@@ -72,11 +71,7 @@ func getHomeContent(app fyne.App) fyne.CanvasObject {
 	authorContainer := container.NewCenter(authorText)
 
 	// Mod Version
-	modVersion, err := updater.GetModVersion()
-	if err != nil {
-		fmt.Println(err)
-	}
-	versionText := canvas.NewText(modVersion.Version, color.White)
+	versionText := canvas.NewText(updater.CurrentVersion.Version, color.White)
 	versionText.TextSize = 12
 	versionText.TextStyle = fyne.TextStyle{Bold: true}
 	versionContainer := container.NewCenter(versionText)
@@ -90,9 +85,17 @@ func getHomeContent(app fyne.App) fyne.CanvasObject {
 		quoteText.Text = quote.Quote
 		authorText.Text = quote.Author
 	})
-	updateButton := widget.NewButton("Check for Updates", func() {
-		app.SendNotification(fyne.NewNotification("Checking for updates...", ""))
-		updater.CheckForUpdate()
+	updateButtonLabel := "Check for updates"
+	updateButton := widget.NewButton(updateButtonLabel, func() {
+		newVersion, updateAvailable, err := updater.CheckForUpdate()
+		if err != nil {
+			fmt.Println(err)
+		}
+		if updateAvailable {
+			app.SendNotification(fyne.NewNotification("New update available!", newVersion.Version))
+		} else {
+			app.SendNotification(fyne.NewNotification("You are up to date!", updater.CurrentVersion.Version))
+		}
 	})
 	launchButton := widget.NewButton("Launch Mod", func() {
 		app.SendNotification(fyne.NewNotification("Launching mod...", ""))
