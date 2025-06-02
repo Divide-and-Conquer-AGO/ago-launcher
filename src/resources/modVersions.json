@@ -1,0 +1,24 @@
+{
+    "modVersions": [
+        {
+            "version": "AGO-3.2.13-BETA",
+            "latest": true,
+            "url": ""
+        },
+        {
+            "version": "AGO-3.2.12-BETA",
+            "latest": false,
+            "url": ""
+        },
+        {
+            "version": "AGO-3.2.11-BETA",
+            "latest": false,
+            "url": ""
+        },
+        {
+            "version": "AGO-3.2.10-BETA",
+            "latest": false,
+            "url": ""
+        }
+    ]
+}

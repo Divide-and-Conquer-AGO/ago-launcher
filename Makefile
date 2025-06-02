@@ -1,3 +1,3 @@
 run:
 	echo "Running AGO Launcher"
-	cd src
+	cd src && air

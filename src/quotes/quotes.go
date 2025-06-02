@@ -1,0 +1,73 @@
+package quotes
+
+import (
+	"ago-launcher/utils"
+	"encoding/json"
+	"fmt"
+	"io"
+	"os"
+)
+
+type Qouter struct {
+	Quotes Quotes
+}
+
+type Quotes struct {
+	Quotes []Quote `json:"quotes"`
+}
+
+type Quote struct {
+	Author string `json:"author"`
+	Quote  string `json:"quote"`
+}
+
+func (qouter *Qouter) LoadQuotes() (Quotes, error) {
+	var quotes Quotes
+
+	fmt.Println("Loading quotes.json")
+	jsonFile, err := os.Open("resources/quotes.json")
+	if err != nil {
+		fmt.Println("could not load quote file:", err)
+		return Quotes{}, err
+	}
+	defer jsonFile.Close()
+
+	byteValue, err := io.ReadAll(jsonFile)
+	if err != nil {
+		fmt.Println("could not read quote file:", err)
+		return Quotes{}, err
+	}
+
+	err = json.Unmarshal(byteValue, &quotes)
+	if err != nil {
+		fmt.Println("could not unmarshal quote file:", err)
+		return Quotes{}, err
+	}
+
+	numQuotes := len(quotes.Quotes)
+	if numQuotes <= 0 {
+		fmt.Println("no quotes found")
+		return quotes, nil
+	}
+
+	fmt.Println("Found", numQuotes, "quotes")
+
+	return quotes, nil
+}
+
+func (qouter *Qouter) GetRandomQuote() (Quote, error) {
+	if len(qouter.Quotes.Quotes) == 0 {
+		quotes, err := qouter.LoadQuotes()
+		if err != nil {
+			fmt.Println("error loading quotes:", err)
+		}
+		qouter.Quotes = quotes
+	}
+	quote, err := utils.RandomElement(qouter.Quotes.Quotes)
+	if err != nil {
+		fmt.Println("error getting random quote:", err)
+	} else {
+		fmt.Println("Found random quote", quote.Quote)
+	}
+	return quote, err
+}

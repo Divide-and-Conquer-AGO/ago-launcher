@@ -5,6 +5,7 @@ go 1.24.2
 require (
 	fyne.io/fyne/v2 v2.6.1
 	github.com/adam-macioszek/lotr-sdk v0.0.0-20230613211617-ea4183f497bf
+	github.com/tidwall/gjson v1.18.0
 	gopkg.in/ini.v1 v1.67.0
 )
 
@@ -35,6 +36,8 @@ require (
 	github.com/srwiley/oksvg v0.0.0-20221011165216-be6e8873101c // indirect
 	github.com/srwiley/rasterx v0.0.0-20220730225603-2ab79fcdd4ef // indirect
 	github.com/stretchr/testify v1.10.0 // indirect
+	github.com/tidwall/match v1.1.1 // indirect
+	github.com/tidwall/pretty v1.2.0 // indirect
 	github.com/yuin/goldmark v1.7.8 // indirect
 	golang.org/x/image v0.25.0 // indirect
 	golang.org/x/net v0.38.0 // indirect
