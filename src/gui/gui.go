@@ -6,6 +6,7 @@ import (
 	"ago-launcher/updater"
 	"fmt"
 	"image/color"
+	"strconv"
 
 	"net/url"
 
@@ -130,12 +131,13 @@ func getHomeContent(app fyne.App, updater *updater.Updater) fyne.CanvasObject {
 
 func getSettingsContent(configurator *config.Configurator) fyne.CanvasObject {
 	saveButton := widget.NewButton("Save Settings", func() {
+		configurator.WriteConfigToFile()
 		fmt.Println("Saved settings")
 	})
 	tabs := container.NewAppTabs(
 		container.NewTabItem("Debug", getDebugInputs(configurator)),
 		container.NewTabItem("Sorting", getSortingInputs(configurator)),
-		container.NewTabItem("Limits", widget.NewLabel("Limits")),
+		container.NewTabItem("Limits", getLimitsInputs(configurator)),
 		container.NewTabItem("Saving", widget.NewLabel("Saving")),
 		container.NewTabItem("Info", widget.NewLabel("Info")),
 		container.NewTabItem("Scripts", widget.NewLabel("Scripts")),
@@ -145,7 +147,7 @@ func getSettingsContent(configurator *config.Configurator) fyne.CanvasObject {
 
 	// Container
 	content := container.NewVBox(
-		saveButton, tabs, 
+		tabs, saveButton,
 	)
 	return content
 }
@@ -175,41 +177,41 @@ func getSortingInputs(configurator *config.Configurator) fyne.CanvasObject {
 
 	sortMode1 := widget.NewSelect(sortOptions,  func(selected string) {
             fmt.Println("Selected sort mode 1:", selected)
-			// Find the index of the selected value
 			for i, v := range sortOptions {
 				if v == selected {
 					fmt.Println("Selected index:", i+1)
-					configurator.Config.Sorting.SortMode1 = i+1 // Save index if needed
+					configurator.Config.Sorting.SortMode1 = i+1 
 					break
 				}
 			}
         },)
+	// We use -1 because Lua indexes start from 1 
 	sortMode1.SetSelectedIndex(configurator.Config.Sorting.SortMode1-1)
 
 	sortMode2 := widget.NewSelect(sortOptions,  func(selected string) {
-            fmt.Println("Selected sort mode 1:", selected)
-			// Find the index of the selected value
+            fmt.Println("Selected sort mode 2:", selected)
 			for i, v := range sortOptions {
 				if v == selected {
 					fmt.Println("Selected index:", i+1)
-					configurator.Config.Sorting.SortMode2 = i+1 // Save index if needed
+					configurator.Config.Sorting.SortMode2 = i+1 
 					break
 				}
 			}
         },)
+	// We use -1 because Lua indexes start from 1 
 	sortMode2.SetSelectedIndex(configurator.Config.Sorting.SortMode2-1)
 
 	sortMode3 := widget.NewSelect(sortOptions,  func(selected string) {
-            fmt.Println("Selected sort mode 1:", selected)
-			// Find the index of the selected value
+            fmt.Println("Selected sort mode 3:", selected)
 			for i, v := range sortOptions {
 				if v == selected {
 					fmt.Println("Selected index:", i+1)
-					configurator.Config.Sorting.SortMode3 = i+1 // Save index if needed
+					configurator.Config.Sorting.SortMode3 = i+1
 					break
 				}
 			}
         },)
+	// We use -1 because Lua indexes start from 1 
 	sortMode3.SetSelectedIndex(configurator.Config.Sorting.SortMode3-1)
 	
 	// Container
@@ -220,10 +222,64 @@ func getSortingInputs(configurator *config.Configurator) fyne.CanvasObject {
 	return content
 }
 
+func getLimitsInputs(configurator *config.Configurator) fyne.CanvasObject {
+     guildCooldownSpin := makeSpinBox(
+        "Guild Cooldown",
+        func() int { return configurator.Config.Limits.GuildCooldown },
+        func(v int) { configurator.Config.Limits.GuildCooldown = v },
+    )
+
+    maxAncillariesSpin := makeSpinBox(
+        "Maximum Ancillaries",
+        func() int { return configurator.Config.Limits.MaximumAncillaries },
+        func(v int) { configurator.Config.Limits.MaximumAncillaries = v },
+    )
+
+    content := container.NewVBox(
+        guildCooldownSpin,
+        maxAncillariesSpin,
+    )
+
+    return content
+}
+
 func getAboutContent() fyne.CanvasObject {
 	img := canvas.NewImageFromFile("icon.png")
 	img.FillMode = canvas.ImageFillOriginal
 	text := canvas.NewText("Overlay", color.Black)
 	content := container.New(layout.NewCenterLayout(), img, text)
 	return content
+}
+
+func makeSpinBox(labelText string, get func() int, set func(int)) fyne.CanvasObject {
+    val := get()
+
+    entry := widget.NewEntry()
+    entry.SetText(fmt.Sprintf("%d", val))
+    entry.OnChanged = func(s string) {
+        if v, err := strconv.Atoi(s); err == nil {
+            val = v
+            set(v)
+        }
+    }
+
+    inc := widget.NewButton("+", func() {
+        val++
+        entry.SetText(fmt.Sprintf("%d", val))
+        set(val)
+    })
+    dec := widget.NewButton("-", func() {
+        val--
+        entry.SetText(fmt.Sprintf("%d", val))
+        set(val)
+    })
+
+    spinRow := container.NewHBox(dec, entry, inc)
+
+    content := container.NewVBox(
+        widget.NewLabel(labelText),
+        spinRow,
+    )
+
+    return content
 }

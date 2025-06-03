@@ -9,7 +9,8 @@ import (
 )
 
 type Configurator struct {
-	Config    AGOConfig
+	Config    	AGOConfig
+	ConfigFile *ini.File
 }
 
 type AGOConfig struct {
@@ -94,6 +95,7 @@ func (configurator *Configurator) LoadConfigFile() *ini.File {
 		log.Printf("Fail to read file: %v", err)
 		os.Exit(1)
 	}
+	configurator.ConfigFile = cfg
 	configurator.PrintConfig(cfg)
 	return cfg
 }
@@ -115,5 +117,27 @@ func (configurator *Configurator) PrintConfig(cfg *ini.File) {
 		for _, option := range section.Keys() {
 			log.Printf("%v = %v", option.Name(), option.Value())
 		}
+	}
+}
+
+func (configurator *Configurator) WriteConfigToFile() {
+	// Get the right file path
+	configPath := configurator.GetConfigFilePath()
+	file, err := os.Create(configPath)
+	if err != nil {
+		log.Fatalf("Failed to open config file for writing: %v", err)
+	}
+	defer file.Close()
+
+	// Update the ini pointer with our struct from memory
+	err = configurator.ConfigFile.ReflectFrom(&configurator.Config)
+	if err != nil {
+		log.Fatalf("Failed to update ini file from struct: %v", err)
+	}
+
+	// Write the config back to the file
+	_, err = configurator.ConfigFile.WriteTo(file)
+	if err != nil {
+		log.Fatalf("Failed to write config to file: %v", err)
 	}
 }
