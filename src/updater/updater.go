@@ -49,10 +49,20 @@ func (updater *Updater) GetCurrentModVersion() {
 }
 
 func (updater *Updater) GetLatestModVersion() {
+	// Local
 	jsonFile, err := os.Open("resources/modVersions.json")
 	if err != nil {
 	}
 	defer jsonFile.Close()
+
+	// Remote
+	// resp, err := http.Get("https://raw.githubusercontent.com/EddieEldridge/ago-launcher/refs/heads/main/src/resources/modVersions.json?token=<>")
+	// if err != nil {
+	// 	fmt.Println("could not fetch modVersions file from GitHub")
+	// 	return
+	// }
+	// defer resp.Body.Close()
+	// jsonFile := resp.Body
 
 	byteValue, err := io.ReadAll(jsonFile)
 	if err != nil {

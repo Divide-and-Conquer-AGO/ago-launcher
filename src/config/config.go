@@ -8,6 +8,10 @@ import (
 	"gopkg.in/ini.v1"
 )
 
+type Configurator struct {
+	Config    AGOConfig
+}
+
 type AGOConfig struct {
 	Debug struct {
 		EnableLogging bool `ini:"enable_logging"`
@@ -58,39 +62,53 @@ type AGOConfig struct {
 	} `ini:"difficulty"`
 }
 
-func GetConfigFilePath() string {
-	exePath, err := os.Executable()
-	if err != nil {
-		log.Fatalf("Failed to get executable path: %v", err)
-	}
-	exeDir := filepath.Dir(exePath)
-	configPath := filepath.Join(exeDir, "config", "AGO.cfg")
-	return configPath
+func (configurator *Configurator) GetConfigFilePath() string {
+    // prod
+    exePath, err := os.Executable()
+    if err == nil {
+        exeDir := filepath.Dir(exePath)
+        configPath := filepath.Join(exeDir, "config", "AGO.cfg")
+        if _, err := os.Stat(configPath); err == nil {
+            return configPath
+        }
+    }
+
+    // dev
+    cwd, err := os.Getwd()
+    if err == nil {
+        configPath := filepath.Join(cwd, "config", "AGO.cfg")
+        if _, err := os.Stat(configPath); err == nil {
+            return configPath
+        }
+    }
+
+    log.Fatalf("AGO.cfg not found in either executable or working directory")
+    return ""
 }
 
-func LoadConfigFile() *ini.File {
-	configFile := GetConfigFilePath()
+func (configurator *Configurator) LoadConfigFile() *ini.File {
+	configFile := configurator.GetConfigFilePath()
 	log.Printf("Opening AGO config file: %v", configFile)
 	cfg, err := ini.Load(configFile)
 	if err != nil {
 		log.Printf("Fail to read file: %v", err)
 		os.Exit(1)
 	}
-	PrintConfig(cfg)
+	configurator.PrintConfig(cfg)
 	return cfg
 }
 
-func ParseConfig(cfgFile *ini.File) AGOConfig {
+func (configurator *Configurator) ParseConfig(cfgFile *ini.File) {
 	log.Printf("Parsing config file to struct")
 	var cfgStruct AGOConfig
 	err := cfgFile.MapTo(&cfgStruct)
 	if err != nil {
 		log.Fatalf("Failed to map config file to struct: %v", err)
 	}
-	return cfgStruct
+	configurator.Config = cfgStruct
 }
 
-func PrintConfig(cfg *ini.File) {
+func (configurator *Configurator) PrintConfig(cfg *ini.File) {
 	log.SetFlags(0)
 	for _, section := range cfg.Sections() {
 		log.Printf("\n[%v]", section.Name())

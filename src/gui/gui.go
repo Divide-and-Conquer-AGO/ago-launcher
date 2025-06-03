@@ -1,21 +1,25 @@
 package gui
 
 import (
+	"ago-launcher/config"
 	"ago-launcher/quotes"
 	"ago-launcher/updater"
 	"fmt"
 	"image/color"
 
+	"net/url"
+
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
+	"fyne.io/fyne/v2/data/binding"
 	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/theme"
 	"fyne.io/fyne/v2/widget"
 )
 
-func InitGUI(updater *updater.Updater) {
+func InitGUI(updater *updater.Updater, configurator *config.Configurator) {
 	myApp := app.NewWithID("divide.and.conquer.ago")
 
 	myWindow := myApp.NewWindow("AGO Launcher")
@@ -23,13 +27,13 @@ func InitGUI(updater *updater.Updater) {
 	myWindow.SetFixedSize(true)
 	myWindow.Resize(fyne.NewSize(1155, 700))
 
-	RenderToolbar(myApp, myWindow, updater)
+	RenderToolbar(myApp, myWindow, updater, configurator)
 }
 
-func RenderToolbar(app fyne.App, mainWindow fyne.Window, updater *updater.Updater) {
+func RenderToolbar(app fyne.App, mainWindow fyne.Window, updater *updater.Updater, configurator *config.Configurator) {
 	tabs := container.NewAppTabs(
 		container.NewTabItemWithIcon("Home", theme.HomeIcon(), getHomeContent(app, updater)),
-		container.NewTabItemWithIcon("Settings", theme.SettingsIcon(), getSettingsContent()),
+		container.NewTabItemWithIcon("Settings", theme.SettingsIcon(), getSettingsContent(configurator)),
 		container.NewTabItemWithIcon("About", theme.ComputerIcon(), getAboutContent()),
 	)
 
@@ -76,6 +80,15 @@ func getHomeContent(app fyne.App, updater *updater.Updater) fyne.CanvasObject {
 	versionText.TextStyle = fyne.TextStyle{Bold: true}
 	versionContainer := container.NewCenter(versionText)
 
+	// Website Link
+	websiteURL, err := url.Parse("https://www.divide-and-conquer-ago.com/")
+	if err != nil {
+		fmt.Println("invalid website url")
+	}
+	websiteText := widget.NewHyperlink("divide-and-conquer-ago.com", websiteURL)
+	websiteText.TextStyle = fyne.TextStyle{Bold: true}
+	websiteContainer := container.NewCenter(websiteText)
+
 	// Buttons
 
 	// Quote Refresh
@@ -110,13 +123,101 @@ func getHomeContent(app fyne.App, updater *updater.Updater) fyne.CanvasObject {
 
 	// Container
 	content := container.NewVBox(
-		logoContainer, titleContainer, quoteContainer, authorContainer, versionContainer, buttonContainer,
+		logoContainer, titleContainer, quoteContainer, authorContainer, versionContainer, websiteContainer, buttonContainer,
 	)
 	return content
 }
 
-func getSettingsContent() fyne.CanvasObject {
-	return widget.NewLabel("Settings")
+func getSettingsContent(configurator *config.Configurator) fyne.CanvasObject {
+	saveButton := widget.NewButton("Save Settings", func() {
+		fmt.Println("Saved settings")
+	})
+	tabs := container.NewAppTabs(
+		container.NewTabItem("Debug", getDebugInputs(configurator)),
+		container.NewTabItem("Sorting", getSortingInputs(configurator)),
+		container.NewTabItem("Limits", widget.NewLabel("Limits")),
+		container.NewTabItem("Saving", widget.NewLabel("Saving")),
+		container.NewTabItem("Info", widget.NewLabel("Info")),
+		container.NewTabItem("Scripts", widget.NewLabel("Scripts")),
+		container.NewTabItem("Battle", widget.NewLabel("Battle")),
+		container.NewTabItem("Difficulty", widget.NewLabel("Difficulty")),
+	)
+
+	// Container
+	content := container.NewVBox(
+		saveButton, tabs, 
+	)
+	return content
+}
+
+func getDebugInputs(configurator *config.Configurator) fyne.CanvasObject {
+	option1 := widget.NewCheckWithData("Enable Logging", binding.BindBool(&configurator.Config.Debug.EnableLogging))
+	option2 := widget.NewCheckWithData("Developer Debug", binding.BindBool(&configurator.Config.Debug.DevDebug))
+	option3 := widget.NewCheckWithData("Log to Console", binding.BindBool(&configurator.Config.Debug.LogToConsole))
+	
+	// Container
+	content := container.NewVBox(
+		option1, option2, option3,
+	)
+
+	return content
+}
+
+func getSortingInputs(configurator *config.Configurator) fyne.CanvasObject {
+	option1 := widget.NewCheckWithData("Automatic stack sorting", binding.BindBool(&configurator.Config.Sorting.EnableSorting))
+	option2 := widget.NewCheckWithData("Sort player stacks automatically", binding.BindBool(&configurator.Config.Sorting.SortPlayer))
+	
+	// Sort Mode Selection
+	label := widget.NewLabel("Sort Algorithm Priority")
+	label.TextStyle = fyne.TextStyle{Bold: true}
+
+	sortOptions := []string{"eduType", "category", "class", "soldierCount", "experience", "categoryClass", "aiUnitValue"}
+
+	sortMode1 := widget.NewSelect(sortOptions,  func(selected string) {
+            fmt.Println("Selected sort mode 1:", selected)
+			// Find the index of the selected value
+			for i, v := range sortOptions {
+				if v == selected {
+					fmt.Println("Selected index:", i+1)
+					configurator.Config.Sorting.SortMode1 = i+1 // Save index if needed
+					break
+				}
+			}
+        },)
+	sortMode1.SetSelectedIndex(configurator.Config.Sorting.SortMode1-1)
+
+	sortMode2 := widget.NewSelect(sortOptions,  func(selected string) {
+            fmt.Println("Selected sort mode 1:", selected)
+			// Find the index of the selected value
+			for i, v := range sortOptions {
+				if v == selected {
+					fmt.Println("Selected index:", i+1)
+					configurator.Config.Sorting.SortMode2 = i+1 // Save index if needed
+					break
+				}
+			}
+        },)
+	sortMode2.SetSelectedIndex(configurator.Config.Sorting.SortMode2-1)
+
+	sortMode3 := widget.NewSelect(sortOptions,  func(selected string) {
+            fmt.Println("Selected sort mode 1:", selected)
+			// Find the index of the selected value
+			for i, v := range sortOptions {
+				if v == selected {
+					fmt.Println("Selected index:", i+1)
+					configurator.Config.Sorting.SortMode3 = i+1 // Save index if needed
+					break
+				}
+			}
+        },)
+	sortMode3.SetSelectedIndex(configurator.Config.Sorting.SortMode3-1)
+	
+	// Container
+	content := container.NewVBox(
+		option1, option2, label, sortMode1, sortMode2, sortMode3,
+	)
+
+	return content
 }
 
 func getAboutContent() fyne.CanvasObject {
