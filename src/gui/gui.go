@@ -13,11 +13,18 @@ import (
 func InitGUI(updater *updater.Updater, configurator *config.Configurator) {
 	myApp := app.NewWithID("divide.and.conquer.ago")
 
+	// Set the theme
+	myApp.Settings().SetTheme(&AgoTheme{})
+
+	// Create the default window
 	myWindow := myApp.NewWindow("AGO Launcher")
+
+	// Set the size and focus
 	// myWindow.CenterOnScreen()
 	myWindow.SetFixedSize(true)
 	myWindow.Resize(fyne.NewSize(1155, 700))
 
+	// Render the main toolbar
 	RenderToolbar(myApp, myWindow, updater, configurator)
 }
 
