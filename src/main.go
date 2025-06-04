@@ -11,8 +11,13 @@ func main() {
 	updater.GetCurrentModVersion()
 
 	configurator := &config.Configurator{}
-	configFile := configurator.LoadConfigFile()
-	configurator.ParseConfig(configFile)
+	// AGO.cfg
+	configurator.AGOConfigFile = configurator.LoadConfigFile("AGO.cfg")
+	configurator.ParseConfig(configurator.AGOConfigFile, &configurator.AGOConfig)
+	
+	// TATW.cfg
+	configurator.ModConfigFile = configurator.LoadConfigFile("TATW.cfg")
+	configurator.ParseConfig(configurator.ModConfigFile, &configurator.ModConfig)
 
 	gui.InitGUI(updater, configurator)
 }

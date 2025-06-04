@@ -9,8 +9,21 @@ import (
 )
 
 type Configurator struct {
-	Config    	AGOConfig
-	ConfigFile *ini.File
+	AGOConfigFile *ini.File
+	ModConfigFile *ini.File
+
+	AGOConfig    	AGOConfig
+	ModConfig    	ModConfig
+}
+
+type ModConfig struct {
+	Video struct {
+		BorderlessWindow bool `ini:"borderless_window"`
+		Windowed      bool `ini:"windowed"`
+		BattleResolution  string `ini:"battle_resolution"`
+		CampaignResolution  string `ini:"campaign_resolution"`
+		Bloom      bool `ini:"bloom"`
+	} `ini:"video"`
 }
 
 type AGOConfig struct {
@@ -63,12 +76,12 @@ type AGOConfig struct {
 	} `ini:"difficulty"`
 }
 
-func (configurator *Configurator) GetConfigFilePath() string {
+func (configurator *Configurator) GetConfigFilePath(file string) string {
     // prod
     exePath, err := os.Executable()
     if err == nil {
         exeDir := filepath.Dir(exePath)
-        configPath := filepath.Join(exeDir, "config", "AGO.cfg")
+        configPath := filepath.Join(exeDir, "config", file)
         if _, err := os.Stat(configPath); err == nil {
             return configPath
         }
@@ -77,37 +90,35 @@ func (configurator *Configurator) GetConfigFilePath() string {
     // dev
     cwd, err := os.Getwd()
     if err == nil {
-        configPath := filepath.Join(cwd, "config", "AGO.cfg")
+        configPath := filepath.Join(cwd, "config",file)
         if _, err := os.Stat(configPath); err == nil {
             return configPath
         }
     }
 
-    log.Fatalf("AGO.cfg not found in either executable or working directory")
+    log.Fatalf("cfg file not found in either executable or working directory")
     return ""
 }
 
-func (configurator *Configurator) LoadConfigFile() *ini.File {
-	configFile := configurator.GetConfigFilePath()
-	log.Printf("Opening AGO config file: %v", configFile)
+func (configurator *Configurator) LoadConfigFile(file string) *ini.File {
+	configFile := configurator.GetConfigFilePath(file)
+	log.Printf("Opening config file: %v", configFile)
 	cfg, err := ini.Load(configFile)
 	if err != nil {
 		log.Printf("Fail to read file: %v", err)
 		os.Exit(1)
 	}
-	configurator.ConfigFile = cfg
 	configurator.PrintConfig(cfg)
+
 	return cfg
 }
 
-func (configurator *Configurator) ParseConfig(cfgFile *ini.File) {
+func (configurator *Configurator) ParseConfig(cfgFile *ini.File, cfgStruct interface{}) {
 	log.Printf("Parsing config file to struct")
-	var cfgStruct AGOConfig
-	err := cfgFile.MapTo(&cfgStruct)
+	err := cfgFile.MapTo(cfgStruct)
 	if err != nil {
 		log.Fatalf("Failed to map config file to struct: %v", err)
 	}
-	configurator.Config = cfgStruct
 }
 
 func (configurator *Configurator) PrintConfig(cfg *ini.File) {
@@ -120,24 +131,25 @@ func (configurator *Configurator) PrintConfig(cfg *ini.File) {
 	}
 }
 
-func (configurator *Configurator) WriteConfigToFile() {
+func (configurator *Configurator) WriteConfigToFile(file string, cfgFile *ini.File, cfgData interface{}) {
 	// Get the right file path
-	configPath := configurator.GetConfigFilePath()
-	file, err := os.Create(configPath)
+	configPath := configurator.GetConfigFilePath(file)
+	openedFile, err := os.Create(configPath)
 	if err != nil {
 		log.Fatalf("Failed to open config file for writing: %v", err)
 	}
-	defer file.Close()
 
 	// Update the ini pointer with our struct from memory
-	err = configurator.ConfigFile.ReflectFrom(&configurator.Config)
+	err = cfgFile.ReflectFrom(cfgData)
 	if err != nil {
 		log.Fatalf("Failed to update ini file from struct: %v", err)
 	}
 
 	// Write the config back to the file
-	_, err = configurator.ConfigFile.WriteTo(file)
+	_, err = cfgFile.WriteTo(openedFile)
 	if err != nil {
 		log.Fatalf("Failed to write config to file: %v", err)
 	}
+
+	defer openedFile.Close()
 }
