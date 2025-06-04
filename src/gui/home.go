@@ -1,0 +1,85 @@
+package gui
+
+import (
+	"ago-launcher/quotes"
+	"ago-launcher/updater"
+	"fmt"
+	"image/color"
+	"net/url"
+
+	"fyne.io/fyne/v2"
+	"fyne.io/fyne/v2/canvas"
+	"fyne.io/fyne/v2/container"
+	"fyne.io/fyne/v2/widget"
+)
+
+func getHomeContent(app fyne.App, updater *updater.Updater) fyne.CanvasObject {
+	var quoter = &quotes.Qouter{}
+
+	// Logo
+	logo := canvas.NewImageFromFile("icon.png")
+	logo.FillMode = canvas.ImageFillOriginal
+	logoContainer := container.NewCenter(logo)
+
+	// Text
+	// Title
+	titleText := canvas.NewText("Divide and Conquer: AGO V3", color.White)
+	titleText.TextSize = 32
+	titleText.TextStyle = fyne.TextStyle{Bold: true}
+	titleContainer := container.NewCenter(titleText)
+
+	// Quote (Quote)
+	quote, err := quoter.GetRandomQuote()
+	if err != nil {
+		fmt.Println("error random getting quote")
+	}
+	quoteText := canvas.NewText(quote.Quote, color.White)
+	quoteText.TextSize = 16
+	quoteText.TextStyle = fyne.TextStyle{Italic: true}
+	quoteContainer := container.NewCenter(quoteText)
+
+	// Quote (Author)
+	authorText := canvas.NewText(quote.Author, color.White)
+	authorText.TextSize = 14
+	authorText.TextStyle = fyne.TextStyle{Italic: true}
+	authorContainer := container.NewCenter(authorText)
+
+	// Mod Version
+	versionText := canvas.NewText(updater.CurrentVersion.Version, color.White)
+	versionText.TextSize = 12
+	versionText.TextStyle = fyne.TextStyle{Bold: true}
+	versionContainer := container.NewCenter(versionText)
+
+	// Website Link
+	websiteURL, err := url.Parse("https://www.divide-and-conquer-ago.com/")
+	if err != nil {
+		fmt.Println("invalid website url")
+	}
+	websiteText := widget.NewHyperlink("divide-and-conquer-ago.com", websiteURL)
+	websiteText.TextStyle = fyne.TextStyle{Bold: true}
+	websiteContainer := container.NewCenter(websiteText)
+
+	// Buttons
+
+	// Quote Refresh
+	// quoteButton := widget.NewButton("Refresh quote", func() {
+	// 	quote, err := quoter.GetRandomQuote()
+	// 	if err != nil {
+	// 		fmt.Println("error getting random quote")
+	// 	}
+	// 	quoteText.Text = quote.Quote
+	// 	authorText.Text = quote.Author
+	// })
+
+	// Launch Mod
+	launchButton := widget.NewButton("Launch Mod", func() {
+		app.SendNotification(fyne.NewNotification("Launching mod...", ""))
+	})
+	buttonContainer := container.NewVBox(launchButton)
+
+	// Container
+	content := container.NewVBox(
+		logoContainer, titleContainer, quoteContainer, authorContainer, versionContainer, websiteContainer, buttonContainer,
+	)
+	return content
+}
