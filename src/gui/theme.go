@@ -45,7 +45,21 @@ func (m AgoTheme) Icon(name fyne.ThemeIconName) fyne.Resource {
 }
 
 func (m AgoTheme) Font(style fyne.TextStyle) fyne.Resource {
+	if style.Monospace {
+		return theme.DefaultTheme().Font(style)
+	}
+	if style.Bold {
+		if style.Italic {
+			return theme.DefaultTheme().Font(style)
+		}
+		// https://github.com/lusingander/fyne-font-example?tab=readme-ov-file
+		// return resourceGeorgiaTtf
+	}
+	if style.Italic {
+		return theme.DefaultTheme().Font(style)
+	}
 	return theme.DefaultTheme().Font(style)
+	// return resourceGeorgiaTtf
 }
 
 func (m AgoTheme) Size(name fyne.ThemeSizeName) float32 {
