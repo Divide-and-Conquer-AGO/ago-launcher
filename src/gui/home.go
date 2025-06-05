@@ -13,9 +13,7 @@ import (
 	"fyne.io/fyne/v2/widget"
 )
 
-func getHomeContent(app fyne.App, updater *updater.Updater) fyne.CanvasObject {
-	var quoter = &quotes.Qouter{}
-
+func getHomeContent(app fyne.App, updater *updater.Updater, quoter *quotes.Qouter) fyne.CanvasObject {
 	// Logo
 	logo := canvas.NewImageFromFile("icon.png")
 	logo.FillMode = canvas.ImageFillOriginal

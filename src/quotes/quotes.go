@@ -5,7 +5,10 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"log"
 	"os"
+
+	"github.com/adam-macioszek/lotr-sdk/quote"
 )
 
 type Qouter struct {
@@ -70,4 +73,20 @@ func (qouter *Qouter) GetRandomQuote() (Quote, error) {
 		fmt.Println("Found random quote", quote.Quote)
 	}
 	return quote, err
+}
+
+func (qouter *Qouter) PrintAllQuotes() {
+	fmt.Println("Getting all LOTR quotes")
+
+	quotes, err := quote.GetAllQuotes()
+	if err != nil {
+		log.Println("Failed to retrieve quotes")
+		log.Println(err)
+	}
+
+	for _, v := range quotes {
+		fmt.Println(v.Dialog, "-", v.CharacterID)
+	}
+
+	fmt.Printf("Found %v quotes", len(quotes))
 }

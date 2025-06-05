@@ -13,6 +13,8 @@ func getAboutContent() fyne.CanvasObject {
 	img := canvas.NewImageFromFile("icon.png")
 	img.FillMode = canvas.ImageFillOriginal
 	text := canvas.NewText("Overlay", color.Black)
+
 	content := container.New(layout.NewCenterLayout(), img, text)
+
 	return content
 }

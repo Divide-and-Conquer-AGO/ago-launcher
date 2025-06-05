@@ -114,13 +114,13 @@ func getSortingInputs(configurator *config.Configurator) fyne.CanvasObject {
 }
 
 func getLimitsInputs(configurator *config.Configurator) fyne.CanvasObject {
-	guildCooldownSpin := makeSpinBox(
+	guildCooldownSpin := MakeSpinBox(
 		"Guild Cooldown",
 		func() int { return configurator.AGOConfig.Limits.GuildCooldown },
 		func(v int) { configurator.AGOConfig.Limits.GuildCooldown = v },
 	)
 
-	maxAncillariesSpin := makeSpinBox(
+	maxAncillariesSpin := MakeSpinBox(
 		"Maximum Ancillaries",
 		func() int { return configurator.AGOConfig.Limits.MaximumAncillaries },
 		func(v int) { configurator.AGOConfig.Limits.MaximumAncillaries = v },
@@ -141,8 +141,8 @@ func getGameInputs(configurator *config.Configurator) fyne.CanvasObject {
 
 	// option4 := widget.NewEntryWithData(binding.BindString(&configurator.ModConfig.Video.BattleResolution))
 	// option5 := widget.NewEntryWithData(binding.BindString(&configurator.ModConfig.Video.CampaignResolution))
-	option4 := makeStringBindingField("Battle Resolution", configurator.ModConfig.Video.BattleResolution)
-	option5 := makeStringBindingField("Campaign Resolution", configurator.ModConfig.Video.CampaignResolution)
+	option4 := MakeStringBindingField("Battle Resolution", configurator.ModConfig.Video.BattleResolution)
+	option5 := MakeStringBindingField("Campaign Resolution", configurator.ModConfig.Video.CampaignResolution)
 
 	// Container
 	content := container.NewVBox(

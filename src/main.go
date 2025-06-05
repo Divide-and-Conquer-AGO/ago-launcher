@@ -3,13 +3,20 @@ package main
 import (
 	"ago-launcher/config"
 	"ago-launcher/gui"
+	"ago-launcher/news"
+	"ago-launcher/quotes"
 	"ago-launcher/updater"
 )
 
 func main() {
+	// QUOTER
+	quoter := &quotes.Qouter{}
+
+	// UPDATER
 	updater := &updater.Updater{}
 	updater.GetCurrentModVersion()
 
+	// CONFIG
 	configurator := &config.Configurator{}
 	// AGO.cfg
 	configurator.AGOConfigFile = configurator.LoadConfigFile("AGO.cfg")
@@ -19,5 +26,9 @@ func main() {
 	configurator.ModConfigFile = configurator.LoadConfigFile("TATW.cfg")
 	configurator.ParseConfig(configurator.ModConfigFile, &configurator.ModConfig)
 
-	gui.InitGUI(updater, configurator)
+	// NEWSREADER
+	newsReader := &news.NewsReader{}
+	newsReader.GetNewsItems()
+
+	gui.InitGUI(updater, configurator, quoter, newsReader)
 }

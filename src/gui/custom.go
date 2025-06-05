@@ -10,7 +10,7 @@ import (
 	"fyne.io/fyne/v2/widget"
 )
 
-func makeSpinBox(labelText string, get func() int, set func(int)) fyne.CanvasObject {
+func MakeSpinBox(labelText string, get func() int, set func(int)) fyne.CanvasObject {
 	val := get()
 
 	entry := widget.NewEntry()
@@ -43,7 +43,7 @@ func makeSpinBox(labelText string, get func() int, set func(int)) fyne.CanvasObj
 	return content
 }
 
-func makeStringBindingField(labelText string, value string) fyne.CanvasObject {
+func MakeStringBindingField(labelText string, value string) fyne.CanvasObject {
 	entry := widget.NewEntryWithData(binding.BindString(&value))
 
 	content := container.NewVBox(

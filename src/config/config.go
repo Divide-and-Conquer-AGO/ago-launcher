@@ -108,7 +108,7 @@ func (configurator *Configurator) LoadConfigFile(file string) *ini.File {
 		log.Printf("Fail to read file: %v", err)
 		os.Exit(1)
 	}
-	configurator.PrintConfig(cfg)
+	// configurator.PrintConfig(cfg)
 
 	return cfg
 }
