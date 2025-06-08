@@ -2,30 +2,52 @@ package gui
 
 import (
 	"ago-launcher/updater"
-	"fmt"
+	"image/color"
 
 	"fyne.io/fyne/v2"
+	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/widget"
 )
 
-func getUpdateContent(app fyne.App, updater *updater.Updater) fyne.CanvasObject {
-	// Check for Updates
-	updateButtonLabel := "Check for updates"
-	updateButton := widget.NewButton(updateButtonLabel, func() {
-		newVersion, updateAvailable, err := updater.CheckForUpdate()
-		if err != nil {
-			fmt.Println(err)
-		}
-		if updateAvailable {
-			app.SendNotification(fyne.NewNotification("New update available!", newVersion.Version))
-		} else {
-			app.SendNotification(fyne.NewNotification("You are up to date!", updater.CurrentVersion.Version))
-		}
+func getUpdateContent(app fyne.App, window fyne.Window, updater *updater.Updater) fyne.CanvasObject {
+	var objects []fyne.CanvasObject
+	
+	// Mod Version
+	versionBanner := canvas.NewText("Mod Version", color.White)
+	versionBanner.TextSize = 34
+	versionBanner.TextStyle = fyne.TextStyle{Bold: true}
+	bannerContainer := container.NewCenter(versionBanner)
+	objects = append(objects, bannerContainer)
+
+	currentVersionText := canvas.NewText("Current Version: " + updater.CurrentVersion.Version, color.White)
+	currentVersionText.TextSize = 24
+	currentVersionText.TextStyle = fyne.TextStyle{Bold: true}
+	currVersionContainer := container.NewCenter(currentVersionText)
+	objects = append(objects, currVersionContainer)
+
+	latestVersionText := canvas.NewText("Latest Version: " + updater.LatestVersion.Version, color.White)
+	latestVersionText.TextSize = 24
+	latestVersionText.TextStyle = fyne.TextStyle{Bold: true}
+	latestVersionContainer := container.NewCenter(latestVersionText)
+	objects = append(objects, latestVersionContainer)
+
+	checkUpdateButton := widget.NewButton("Check for updates", func() {
+		updater.CheckForUpdate()
+		latestVersionText.Text = "Latest Version: " + updater.LatestVersion.Version
+		latestVersionContainer.Refresh()
 	})
+	objects = append(objects, checkUpdateButton)
+	if updater.UpdateAvailable {
+		startUpdateButton := widget.NewButton("Start Update", func() {
+			// update logic here
+		})
+		objects = append(objects, startUpdateButton)
+	}
+
 	// Container
 	content := container.NewVBox(
-		updateButton,
+		objects...,
 	)
 
 	return content

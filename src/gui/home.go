@@ -10,6 +10,7 @@ import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
+	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/widget"
 )
 
@@ -32,19 +33,19 @@ func getHomeContent(app fyne.App, updater *updater.Updater, quoter *quotes.Qoute
 		fmt.Println("error random getting quote")
 	}
 	quoteText := canvas.NewText(quote.Quote, color.White)
-	quoteText.TextSize = 16
+	quoteText.TextSize = 18
 	quoteText.TextStyle = fyne.TextStyle{Italic: true}
 	quoteContainer := container.NewCenter(quoteText)
 
 	// Quote (Author)
 	authorText := canvas.NewText(quote.Author, color.White)
-	authorText.TextSize = 14
+	authorText.TextSize = 16
 	authorText.TextStyle = fyne.TextStyle{Italic: true}
 	authorContainer := container.NewCenter(authorText)
 
 	// Mod Version
 	versionText := canvas.NewText(updater.CurrentVersion.Version, color.White)
-	versionText.TextSize = 12
+	versionText.TextSize = 14
 	versionText.TextStyle = fyne.TextStyle{Bold: true}
 	versionContainer := container.NewCenter(versionText)
 
@@ -77,7 +78,7 @@ func getHomeContent(app fyne.App, updater *updater.Updater, quoter *quotes.Qoute
 
 	// Container
 	content := container.NewVBox(
-		logoContainer, titleContainer, quoteContainer, authorContainer, versionContainer, websiteContainer, buttonContainer,
+		logoContainer, titleContainer, quoteContainer, authorContainer, versionContainer, websiteContainer, layout.NewSpacer(), buttonContainer,   
 	)
 	return content
 }

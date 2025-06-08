@@ -14,7 +14,7 @@ func main() {
 
 	// UPDATER
 	updater := &updater.Updater{}
-	updater.GetCurrentModVersion()
+	updater.CheckForUpdate()
 
 	// CONFIG
 	configurator := &config.Configurator{}

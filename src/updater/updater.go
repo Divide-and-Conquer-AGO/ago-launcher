@@ -13,6 +13,7 @@ type Updater struct {
 	CurrentVersion    ModVersion
 	LatestVersion     ModVersion
 	AvailableVersions ModVersions
+	UpdateAvailable bool
 }
 
 type ModVersions struct {
@@ -96,6 +97,8 @@ func (updater *Updater) CheckForUpdate() (ModVersion, bool, error) {
 		fmt.Println("!!! New mod version found !!!")
 		fmt.Println("Current Version: ", updater.CurrentVersion.Version)
 		fmt.Println("Latest Version: ", latestVersion.Version)
+		updater.UpdateAvailable = true
+		updater.LatestVersion = latestVersion
 		return latestVersion, true, nil
 	}
 

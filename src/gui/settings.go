@@ -29,7 +29,7 @@ func getSettingsContent(configurator *config.Configurator) fyne.CanvasObject {
 	)
 	settingsTabs := container.NewAppTabs(
 		container.NewTabItem("Game Settings", gameSettingsTabs),
-		container.NewTabItem("Mod Settings", modSettingsTabs),
+		container.NewTabItem("AGO Settings", modSettingsTabs),
 	)
 	saveButton := widget.NewButton("Save Settings", func() {
 		configurator.WriteConfigToFile("AGO.cfg", configurator.AGOConfigFile, &configurator.AGOConfig)

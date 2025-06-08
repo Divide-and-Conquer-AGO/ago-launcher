@@ -15,13 +15,13 @@ import (
 )
 
 func InitGUI(updater *updater.Updater, configurator *config.Configurator, quoter *quotes.Qouter, newsReader *news.NewsReader) {
-	myApp := app.NewWithID("divide.and.conquer.ago")
+	app := app.NewWithID("divide.and.conquer.ago")
 
 	// Set the theme
-	myApp.Settings().SetTheme(&AgoTheme{})
+	app.Settings().SetTheme(&AgoTheme{})
 
 	// Create the default window
-	myWindow := myApp.NewWindow("AGO Launcher")
+	myWindow := app.NewWindow("AGO Launcher")
 
 	// Set the size and focus
 	// myWindow.CenterOnScreen()
@@ -29,7 +29,7 @@ func InitGUI(updater *updater.Updater, configurator *config.Configurator, quoter
 	myWindow.Resize(fyne.NewSize(1155, 700))
 
 	// Render the main toolbar
-	RenderToolbar(myApp, myWindow, updater, configurator, quoter, newsReader)
+	RenderToolbar(app, myWindow, updater, configurator, quoter, newsReader)
 }
 
 func RenderToolbar(app fyne.App, mainWindow fyne.Window, updater *updater.Updater, configurator *config.Configurator, quoter *quotes.Qouter, newsReader *news.NewsReader) {
@@ -37,7 +37,7 @@ func RenderToolbar(app fyne.App, mainWindow fyne.Window, updater *updater.Update
 		container.NewTabItemWithIcon("Home", theme.HomeIcon(), getHomeContent(app, updater, quoter)),
 		container.NewTabItemWithIcon("Settings", theme.SettingsIcon(), getSettingsContent(configurator)),
 		container.NewTabItemWithIcon("News", theme.DocumentIcon(), getNewsContent(newsReader)),
-		container.NewTabItemWithIcon("Updates", theme.DownloadIcon(), getUpdateContent(app, updater)),
+		container.NewTabItemWithIcon("Updates", theme.DownloadIcon(), getUpdateContent(app, mainWindow, updater)),
 		container.NewTabItemWithIcon("About", theme.ComputerIcon(), getAboutContent()),
 	)
 
