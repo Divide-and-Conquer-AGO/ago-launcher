@@ -8,8 +8,10 @@ import (
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
+	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/theme"
+	fynetooltip "github.com/dweymouth/fyne-tooltip"
 )
 
 func InitGUI(updater *updater.Updater, configurator *config.Configurator, quoter *quotes.Qouter, newsReader *news.NewsReader) {
@@ -39,8 +41,16 @@ func RenderToolbar(app fyne.App, mainWindow fyne.Window, updater *updater.Update
 		container.NewTabItemWithIcon("About", theme.ComputerIcon(), getAboutContent()),
 	)
 
+	bg := canvas.NewImageFromFile("background.png")
+    bg.FillMode = canvas.ImageFillStretch // or ImageFillContain
+
+    content := container.NewStack(
+        bg,
+        tabs,
+    )
+
 	tabs.SetTabLocation(container.TabLocationTop)
-	mainWindow.SetContent(tabs)
+	mainWindow.SetContent(fynetooltip.AddWindowToolTipLayer(content, mainWindow.Canvas()))
 	mainWindow.RequestFocus()
 	mainWindow.ShowAndRun()
 }

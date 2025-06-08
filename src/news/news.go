@@ -68,6 +68,7 @@ func (newsReader *NewsReader) GetNewsItems() {
 		newsText, err := api.GetRemoteText(url)
 		if err != nil {
 			fmt.Printf("Failed to get read markdown text from remote url %s\n", url)
+			newsReader.NewsItems[i].MarkdownText = "**Error reading Markdown text from URL**"
 		} else {
 			newsReader.NewsItems[i].MarkdownText = newsText
 		}

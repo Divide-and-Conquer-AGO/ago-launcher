@@ -17,7 +17,7 @@ func getNewsContent(newsReader *news.NewsReader) fyne.CanvasObject {
 			content := widget.NewRichTextFromMarkdown(item.MarkdownText)
 			content.Wrapping = fyne.TextWrapWord
 			scroll := container.NewVScroll(content)
-			scroll.SetMinSize(fyne.NewSize(1155, 500)) 
+			// scroll.SetMinSize(fyne.NewSize(0, 200))
 			accordion.Append(widget.NewAccordionItem(title, scroll))
 		}
 	}

@@ -8,6 +8,7 @@ import (
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/data/binding"
 	"fyne.io/fyne/v2/widget"
+	ttwidget "github.com/dweymouth/fyne-tooltip/widget"
 )
 
 func getSettingsContent(configurator *config.Configurator) fyne.CanvasObject {
@@ -44,7 +45,9 @@ func getSettingsContent(configurator *config.Configurator) fyne.CanvasObject {
 }
 
 func getDebugInputs(configurator *config.Configurator) fyne.CanvasObject {
-	option1 := widget.NewCheckWithData("Enable Logging", binding.BindBool(&configurator.AGOConfig.Debug.EnableLogging))
+	option1 := ttwidget.NewCheckWithData("Enable Logging", binding.BindBool(&configurator.AGOConfig.Debug.EnableLogging))
+	option1.SetToolTip("TestToolTip")
+	
 	option2 := widget.NewCheckWithData("Developer Debug", binding.BindBool(&configurator.AGOConfig.Debug.DevDebug))
 	option3 := widget.NewCheckWithData("Log to Console", binding.BindBool(&configurator.AGOConfig.Debug.LogToConsole))
 
