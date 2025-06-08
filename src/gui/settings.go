@@ -16,11 +16,11 @@ func getSettingsContent(configurator *config.Configurator) fyne.CanvasObject {
 		container.NewTabItem("Debug", getDebugInputs(configurator)),
 		container.NewTabItem("Sorting", getSortingInputs(configurator)),
 		container.NewTabItem("Limits", getLimitsInputs(configurator)),
-		container.NewTabItem("Saving", widget.NewLabel("Saving")),
-		container.NewTabItem("Info", widget.NewLabel("Info")),
-		container.NewTabItem("Scripts", widget.NewLabel("Scripts")),
-		container.NewTabItem("Battle", widget.NewLabel("Battle")),
-		container.NewTabItem("Difficulty", widget.NewLabel("Difficulty")),
+		container.NewTabItem("Saving", getSavingInputs(configurator)),
+		container.NewTabItem("Info", getInfoInputs(configurator)),
+		container.NewTabItem("Scripts", getScriptsInputs(configurator)),
+		container.NewTabItem("Battle", getBattleInputs(configurator)),
+		container.NewTabItem("Difficulty", getDifficultyInputs(configurator)),
 	)
 	// Game Settings (TATW.cfg)
 	gameSettingsTabs := container.NewAppTabs(
@@ -131,6 +131,66 @@ func getLimitsInputs(configurator *config.Configurator) fyne.CanvasObject {
 		maxAncillariesSpin,
 	)
 
+	return content
+}
+
+func getSavingInputs(configurator *config.Configurator) fyne.CanvasObject {
+	option1 := widget.NewCheckWithData("Post Battle Saving", binding.BindBool(&configurator.AGOConfig.Saving.PostBattleSaving))
+
+	// Container
+	content := container.NewVBox(
+		option1,
+	)
+
+	return content
+}
+
+func getInfoInputs(configurator *config.Configurator) fyne.CanvasObject {
+	option1 := widget.NewCheckWithData("Hide Army Info", binding.BindBool(&configurator.AGOConfig.Info.HideArmyInfo))
+	option2 := widget.NewCheckWithData("AI Raid Notification", binding.BindBool(&configurator.AGOConfig.Info.AIRaidNotification))
+	watchtowerRadius := MakeSpinBox(
+		"Watchtower Radius",
+		func() int { return configurator.AGOConfig.Info.WatchtowerRadius },
+		func(v int) { configurator.AGOConfig.Info.WatchtowerRadius = v },
+	)
+	content := container.NewVBox(
+		option1, option2, watchtowerRadius,
+	)
+	return content
+}
+
+func getScriptsInputs(configurator *config.Configurator) fyne.CanvasObject {
+	naturalDisasters := widget.NewCheckWithData("Natural Disasters", binding.BindBool(&configurator.AGOConfig.Scripts.NaturalDisasters))
+	randomAAAIStart := widget.NewCheckWithData("Random AA AI Start", binding.BindBool(&configurator.AGOConfig.Scripts.RandomAaAiStart))
+	mergeDolAmroth := widget.NewCheckWithData("Merge Dol Amroth", binding.BindBool(&configurator.AGOConfig.Scripts.MergeDolAmroth))
+	randomizedStart := widget.NewCheckWithData("Randomized Start", binding.BindBool(&configurator.AGOConfig.Scripts.RandomizedStart))
+	shatteredAlliances := widget.NewCheckWithData("Shattered Alliances", binding.BindBool(&configurator.AGOConfig.Scripts.ShatteredAlliances))
+	lastStandArmies := widget.NewCheckWithData("Last Stand Armies", binding.BindBool(&configurator.AGOConfig.Scripts.LastStandArmies))
+	content := container.NewVBox(
+		naturalDisasters, randomAAAIStart, mergeDolAmroth, randomizedStart, shatteredAlliances, lastStandArmies,
+	)
+	return content
+}
+
+func getBattleInputs(configurator *config.Configurator) fyne.CanvasObject {
+	noDefaultSkirmish := widget.NewCheckWithData("No Default Skirmish", binding.BindBool(&configurator.AGOConfig.Battle.NoDefaultSkirmish))
+	defaultBattleSpeed := MakeSpinBox(
+		"Default Battle Speed",
+		func() int { return configurator.AGOConfig.Battle.DefaultBattleSpeed },
+		func(v int) { configurator.AGOConfig.Battle.DefaultBattleSpeed = v },
+	)
+	content := container.NewVBox(
+		noDefaultSkirmish, defaultBattleSpeed,
+	)
+	return content
+}
+
+func getDifficultyInputs(configurator *config.Configurator) fyne.CanvasObject {
+	aggressiveRebels := widget.NewCheckWithData("Aggressive Rebels", binding.BindBool(&configurator.AGOConfig.Difficulty.AggressiveRebels))
+	aiFreeGenerals := widget.NewCheckWithData("AI Free Generals", binding.BindBool(&configurator.AGOConfig.Difficulty.AIFreeGenerals))
+	content := container.NewVBox(
+		aggressiveRebels, aiFreeGenerals,
+	)
 	return content
 }
 
