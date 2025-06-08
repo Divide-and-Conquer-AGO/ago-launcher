@@ -6,6 +6,7 @@ import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/data/binding"
+	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/widget"
 	ttwidget "github.com/dweymouth/fyne-tooltip/widget"
 )
@@ -37,7 +38,7 @@ func getSettingsContent(configurator *config.Configurator) fyne.CanvasObject {
 
 	// Container
 	content := container.NewVBox(
-		settingsTabs, saveButton,
+		settingsTabs, layout.NewSpacer(), saveButton,
 	)
 	return content
 }
