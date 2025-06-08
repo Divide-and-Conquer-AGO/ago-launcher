@@ -43,88 +43,81 @@ func getSettingsContent(configurator *config.Configurator) fyne.CanvasObject {
 	)
 	return content
 }
-
 func getDebugInputs(configurator *config.Configurator) fyne.CanvasObject {
 	option1 := ttwidget.NewCheckWithData("Enable Logging", binding.BindBool(&configurator.AGOConfig.Debug.EnableLogging))
-	option1.SetToolTip("TestToolTip")
-	
-	option2 := widget.NewCheckWithData("Developer Debug", binding.BindBool(&configurator.AGOConfig.Debug.DevDebug))
-	option3 := widget.NewCheckWithData("Log to Console", binding.BindBool(&configurator.AGOConfig.Debug.LogToConsole))
+	option1.SetToolTip("Enable logging")
 
-	// Container
+	option2 := ttwidget.NewCheckWithData("Developer Debug", binding.BindBool(&configurator.AGOConfig.Debug.DevDebug))
+	option2.SetToolTip("Disables Fog of War, enables Perfect Spy and shows all army information")
+
+	option3 := ttwidget.NewCheckWithData("Log to Console", binding.BindBool(&configurator.AGOConfig.Debug.LogToConsole))
+	option3.SetToolTip("Direct log statements to the EOP console")
+
 	content := container.NewVBox(
 		option1, option2, option3,
 	)
-
 	return content
 }
 
 func getSortingInputs(configurator *config.Configurator) fyne.CanvasObject {
-	option1 := widget.NewCheckWithData("Automatic stack sorting", binding.BindBool(&configurator.AGOConfig.Sorting.EnableSorting))
-	option2 := widget.NewCheckWithData("Sort player stacks automatically", binding.BindBool(&configurator.AGOConfig.Sorting.SortPlayer))
+	option1 := ttwidget.NewCheckWithData("Automatic stack sorting", binding.BindBool(&configurator.AGOConfig.Sorting.EnableSorting))
+	option1.SetToolTip("Enables automatic sorting of AI stacks")
 
-	// Sort Mode Selection
+	option2 := ttwidget.NewCheckWithData("Sort player stacks automatically", binding.BindBool(&configurator.AGOConfig.Sorting.SortPlayer))
+	option2.SetToolTip("Automatically sort the players stacks")
+
 	label := widget.NewLabel("Sort Algorithm Priority")
 	label.TextStyle = fyne.TextStyle{Bold: true}
 
 	sortOptions := []string{"eduType", "category", "class", "soldierCount", "experience", "categoryClass", "aiUnitValue"}
 
 	sortMode1 := widget.NewSelect(sortOptions, func(selected string) {
-		fmt.Println("Selected sort mode 1:", selected)
 		for i, v := range sortOptions {
 			if v == selected {
-				fmt.Println("Selected index:", i+1)
 				configurator.AGOConfig.Sorting.SortMode1 = i + 1
 				break
 			}
 		}
 	})
-	// We use -1 because Lua indexes start from 1
 	sortMode1.SetSelectedIndex(configurator.AGOConfig.Sorting.SortMode1 - 1)
 
 	sortMode2 := widget.NewSelect(sortOptions, func(selected string) {
-		fmt.Println("Selected sort mode 2:", selected)
 		for i, v := range sortOptions {
 			if v == selected {
-				fmt.Println("Selected index:", i+1)
 				configurator.AGOConfig.Sorting.SortMode2 = i + 1
 				break
 			}
 		}
 	})
-	// We use -1 because Lua indexes start from 1
 	sortMode2.SetSelectedIndex(configurator.AGOConfig.Sorting.SortMode2 - 1)
 
 	sortMode3 := widget.NewSelect(sortOptions, func(selected string) {
-		fmt.Println("Selected sort mode 3:", selected)
 		for i, v := range sortOptions {
 			if v == selected {
-				fmt.Println("Selected index:", i+1)
 				configurator.AGOConfig.Sorting.SortMode3 = i + 1
 				break
 			}
 		}
 	})
-	// We use -1 because Lua indexes start from 1
 	sortMode3.SetSelectedIndex(configurator.AGOConfig.Sorting.SortMode3 - 1)
 
-	// Container
 	content := container.NewVBox(
 		option1, option2, label, sortMode1, sortMode2, sortMode3,
 	)
-
 	return content
 }
 
 func getLimitsInputs(configurator *config.Configurator) fyne.CanvasObject {
 	guildCooldownSpin := MakeSpinBox(
 		"Guild Cooldown",
+		"Number of turns between guild offers",
 		func() int { return configurator.AGOConfig.Limits.GuildCooldown },
 		func(v int) { configurator.AGOConfig.Limits.GuildCooldown = v },
 	)
 
 	maxAncillariesSpin := MakeSpinBox(
 		"Maximum Ancillaries",
+		"Maximum number of ancillaries any character can hold",
 		func() int { return configurator.AGOConfig.Limits.MaximumAncillaries },
 		func(v int) { configurator.AGOConfig.Limits.MaximumAncillaries = v },
 	)
@@ -133,29 +126,33 @@ func getLimitsInputs(configurator *config.Configurator) fyne.CanvasObject {
 		guildCooldownSpin,
 		maxAncillariesSpin,
 	)
-
 	return content
 }
 
 func getSavingInputs(configurator *config.Configurator) fyne.CanvasObject {
-	option1 := widget.NewCheckWithData("Post Battle Saving", binding.BindBool(&configurator.AGOConfig.Saving.PostBattleSaving))
+	option1 := ttwidget.NewCheckWithData("Post Battle Saving", binding.BindBool(&configurator.AGOConfig.Saving.PostBattleSaving))
+	option1.SetToolTip("Automatically creates a save after a battle")
 
-	// Container
 	content := container.NewVBox(
 		option1,
 	)
-
 	return content
 }
 
 func getInfoInputs(configurator *config.Configurator) fyne.CanvasObject {
-	option1 := widget.NewCheckWithData("Hide Army Info", binding.BindBool(&configurator.AGOConfig.Info.HideArmyInfo))
-	option2 := widget.NewCheckWithData("AI Raid Notification", binding.BindBool(&configurator.AGOConfig.Info.AIRaidNotification))
+	option1 := ttwidget.NewCheckWithData("Hide Army Info", binding.BindBool(&configurator.AGOConfig.Info.HideArmyInfo))
+	option1.SetToolTip("Hides army information like banner size (Triggers a reset of the display if changed in-game, your screen may flash white after toggling this setting. Please wait.)")
+
+	option2 := ttwidget.NewCheckWithData("AI Raid Notification", binding.BindBool(&configurator.AGOConfig.Info.AIRaidNotification))
+	option2.SetToolTip("Should the player be notified whenever the AI performs an active raid on their lands")
+
 	watchtowerRadius := MakeSpinBox(
 		"Watchtower Radius",
+		"Radius of watchtowers in tiles",
 		func() int { return configurator.AGOConfig.Info.WatchtowerRadius },
 		func(v int) { configurator.AGOConfig.Info.WatchtowerRadius = v },
 	)
+
 	content := container.NewVBox(
 		option1, option2, watchtowerRadius,
 	)
@@ -163,12 +160,24 @@ func getInfoInputs(configurator *config.Configurator) fyne.CanvasObject {
 }
 
 func getScriptsInputs(configurator *config.Configurator) fyne.CanvasObject {
-	naturalDisasters := widget.NewCheckWithData("Natural Disasters", binding.BindBool(&configurator.AGOConfig.Scripts.NaturalDisasters))
-	randomAAAIStart := widget.NewCheckWithData("Random AA AI Start", binding.BindBool(&configurator.AGOConfig.Scripts.RandomAaAiStart))
-	mergeDolAmroth := widget.NewCheckWithData("Merge Dol Amroth", binding.BindBool(&configurator.AGOConfig.Scripts.MergeDolAmroth))
-	randomizedStart := widget.NewCheckWithData("Randomized Start", binding.BindBool(&configurator.AGOConfig.Scripts.RandomizedStart))
-	shatteredAlliances := widget.NewCheckWithData("Shattered Alliances", binding.BindBool(&configurator.AGOConfig.Scripts.ShatteredAlliances))
-	lastStandArmies := widget.NewCheckWithData("Last Stand Armies", binding.BindBool(&configurator.AGOConfig.Scripts.LastStandArmies))
+	naturalDisasters := ttwidget.NewCheckWithData("Natural Disasters", binding.BindBool(&configurator.AGOConfig.Scripts.NaturalDisasters))
+	naturalDisasters.SetToolTip("Should natural disasters such as earthquakes, forest fires, tidal waves and more randomly occur during the campaign.")
+
+	randomAAAIStart := ttwidget.NewCheckWithData("Random AA AI Start", binding.BindBool(&configurator.AGOConfig.Scripts.RandomAaAiStart))
+	randomAAAIStart.SetToolTip("AI Ar-Adunaim start at a random coastal location. Has no effect if the campaign has already been started and thus needs to be set manually in the launcher or at the main menu.")
+
+	mergeDolAmroth := ttwidget.NewCheckWithData("Merge Dol Amroth", binding.BindBool(&configurator.AGOConfig.Scripts.MergeDolAmroth))
+	mergeDolAmroth.SetToolTip("Automatically merge Dol Amroth into Gondor at game start. Has no effect if the campaign has already been started and thus needs to be set manually in the launcher or at the main menu.")
+
+	randomizedStart := ttwidget.NewCheckWithData("Randomized Start", binding.BindBool(&configurator.AGOConfig.Scripts.RandomizedStart))
+	randomizedStart.SetToolTip("Randomize the starting positions of the factions. Has no effect if the campaign has already been started and thus needs to be set manually in the launcher or at the main menu.")
+
+	shatteredAlliances := ttwidget.NewCheckWithData("Shattered Alliances", binding.BindBool(&configurator.AGOConfig.Scripts.ShatteredAlliances))
+	shatteredAlliances.SetToolTip("All factions start neutral towards each other and automatic expansion at turn 1 is disabled. Has no effect if the campaign has already been started and thus needs to be set manually in the launcher or at the main menu.")
+
+	lastStandArmies := ttwidget.NewCheckWithData("Last Stand Armies", binding.BindBool(&configurator.AGOConfig.Scripts.LastStandArmies))
+	lastStandArmies.SetToolTip("Should factions recieve a last stand army when they are close to being defeated.")
+
 	content := container.NewVBox(
 		naturalDisasters, randomAAAIStart, mergeDolAmroth, randomizedStart, shatteredAlliances, lastStandArmies,
 	)
@@ -176,12 +185,16 @@ func getScriptsInputs(configurator *config.Configurator) fyne.CanvasObject {
 }
 
 func getBattleInputs(configurator *config.Configurator) fyne.CanvasObject {
-	noDefaultSkirmish := widget.NewCheckWithData("No Default Skirmish", binding.BindBool(&configurator.AGOConfig.Battle.NoDefaultSkirmish))
+	noDefaultSkirmish := ttwidget.NewCheckWithData("No Default Skirmish", binding.BindBool(&configurator.AGOConfig.Battle.NoDefaultSkirmish))
+	noDefaultSkirmish.SetToolTip("Disable skirmish mode for player units by default")
+
 	defaultBattleSpeed := MakeSpinBox(
 		"Default Battle Speed",
+		"Default speed set at the start of a battle",
 		func() int { return configurator.AGOConfig.Battle.DefaultBattleSpeed },
 		func(v int) { configurator.AGOConfig.Battle.DefaultBattleSpeed = v },
 	)
+
 	content := container.NewVBox(
 		noDefaultSkirmish, defaultBattleSpeed,
 	)
@@ -189,8 +202,12 @@ func getBattleInputs(configurator *config.Configurator) fyne.CanvasObject {
 }
 
 func getDifficultyInputs(configurator *config.Configurator) fyne.CanvasObject {
-	aggressiveRebels := widget.NewCheckWithData("Aggressive Rebels", binding.BindBool(&configurator.AGOConfig.Difficulty.AggressiveRebels))
-	aiFreeGenerals := widget.NewCheckWithData("AI Free Generals", binding.BindBool(&configurator.AGOConfig.Difficulty.AIFreeGenerals))
+	aggressiveRebels := ttwidget.NewCheckWithData("Aggressive Rebels", binding.BindBool(&configurator.AGOConfig.Difficulty.AggressiveRebels))
+	aggressiveRebels.SetToolTip("Rebels will be more aggressive as well as attack settlements")
+
+	aiFreeGenerals := ttwidget.NewCheckWithData("AI Free Generals", binding.BindBool(&configurator.AGOConfig.Difficulty.AIFreeGenerals))
+	aiFreeGenerals.SetToolTip("AI gets free generals on large captain armies (balanced with a settlement/general ratio)")
+
 	content := container.NewVBox(
 		aggressiveRebels, aiFreeGenerals,
 	)
@@ -198,19 +215,21 @@ func getDifficultyInputs(configurator *config.Configurator) fyne.CanvasObject {
 }
 
 func getGameInputs(configurator *config.Configurator) fyne.CanvasObject {
-	option1 := widget.NewCheckWithData("Borderless Window", binding.BindBool(&configurator.ModConfig.Video.BorderlessWindow))
-	option2 := widget.NewCheckWithData("Windowed", binding.BindBool(&configurator.ModConfig.Video.Windowed))
-	option3 := widget.NewCheckWithData("Bloom", binding.BindBool(&configurator.ModConfig.Video.Bloom))
+	option1 := ttwidget.NewCheckWithData("Borderless Window", binding.BindBool(&configurator.ModConfig.Video.BorderlessWindow))
+	option1.SetToolTip("Enable borderless window mode")
 
-	// option4 := widget.NewEntryWithData(binding.BindString(&configurator.ModConfig.Video.BattleResolution))
-	// option5 := widget.NewEntryWithData(binding.BindString(&configurator.ModConfig.Video.CampaignResolution))
-	option4 := MakeStringBindingField("Battle Resolution", configurator.ModConfig.Video.BattleResolution)
-	option5 := MakeStringBindingField("Campaign Resolution", configurator.ModConfig.Video.CampaignResolution)
+	option2 := ttwidget.NewCheckWithData("Windowed", binding.BindBool(&configurator.ModConfig.Video.Windowed))
+	option2.SetToolTip("Enable windowed mode")
 
-	// Container
+	option3 := ttwidget.NewCheckWithData("Bloom", binding.BindBool(&configurator.ModConfig.Video.Bloom))
+	option3.SetToolTip("Enable bloom effect")
+
+	option4 := MakeStringBindingField("Battle Resolution", configurator.ModConfig.Video.BattleResolution, "Battle resolution (e.g. 1920 1080)")
+
+	option5 := MakeStringBindingField("Campaign Resolution", configurator.ModConfig.Video.CampaignResolution, "Campaign resolution (e.g. 1920x1080)")
+
 	content := container.NewVBox(
 		option1, option2, option3, option4, option5,
 	)
-
 	return content
 }

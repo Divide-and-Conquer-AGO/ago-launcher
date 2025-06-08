@@ -8,9 +8,10 @@ import (
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/data/binding"
 	"fyne.io/fyne/v2/widget"
+	ttwidget "github.com/dweymouth/fyne-tooltip/widget"
 )
 
-func MakeSpinBox(labelText string, get func() int, set func(int)) fyne.CanvasObject {
+func MakeSpinBox(labelText string, tooltip string, get func() int, set func(int)) fyne.CanvasObject {
 	val := get()
 
 	entry := widget.NewEntry()
@@ -22,32 +23,38 @@ func MakeSpinBox(labelText string, get func() int, set func(int)) fyne.CanvasObj
 		}
 	}
 
-	inc := widget.NewButton("+", func() {
+	inc := ttwidget.NewButton("+", func() {
 		val++
 		entry.SetText(fmt.Sprintf("%d", val))
 		set(val)
 	})
-	dec := widget.NewButton("-", func() {
+	label := ttwidget.NewLabel(labelText)
+	dec := ttwidget.NewButton("-", func() {
 		val--
 		entry.SetText(fmt.Sprintf("%d", val))
 		set(val)
 	})
+	inc.SetToolTip(tooltip)
+	dec.SetToolTip(tooltip)
+	label.SetToolTip(tooltip)
 
 	spinRow := container.NewHBox(dec, entry, inc)
 
 	content := container.NewVBox(
-		widget.NewLabel(labelText),
+		label,
 		spinRow,
 	)
 
 	return content
 }
 
-func MakeStringBindingField(labelText string, value string) fyne.CanvasObject {
+func MakeStringBindingField(labelText string, value string, tooltip string) fyne.CanvasObject {
 	entry := widget.NewEntryWithData(binding.BindString(&value))
+	label := ttwidget.NewLabel(labelText)
+	label.SetToolTip(tooltip)
 
 	content := container.NewVBox(
-		widget.NewLabel(labelText),
+		label,
 		entry,
 	)
 
