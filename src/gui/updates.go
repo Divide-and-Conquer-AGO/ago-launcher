@@ -2,6 +2,7 @@ package gui
 
 import (
 	"ago-launcher/updater"
+	"fmt"
 	"image/color"
 
 	"fyne.io/fyne/v2"
@@ -44,8 +45,8 @@ func getUpdateContent(app fyne.App, window fyne.Window, updater *updater.Updater
 	})
 	objects = append(objects, checkUpdateButton)
 	if updater.UpdateAvailable {
-		startUpdateButton := widget.NewButton("Start Update", func() {
-			// update logic here
+		startUpdateButton := widget.NewButton("Download Update", func() {
+			getUpdaterModal(updater)
 		})
 		objects = append(objects, startUpdateButton)
 	}
@@ -56,4 +57,50 @@ func getUpdateContent(app fyne.App, window fyne.Window, updater *updater.Updater
 	)
 
 	return content
+}
+
+func getUpdaterModal(updtr *updater.Updater) {
+	updateWindow := fyne.CurrentApp().NewWindow("Updater")
+	updateWindow.Resize(fyne.NewSize(1155, 300))
+	updateWindow.RequestFocus()
+	updateWindow.CenterOnScreen()
+	updateLabel := widget.NewLabel("Starting update process...")
+	progressBar := widget.NewProgressBar()
+	statusLabel := widget.NewLabel("")
+	updateWindow.SetContent(container.NewVBox(
+		container.NewCenter(updateLabel),
+		container.NewCenter(statusLabel),
+		progressBar,
+	))
+	updateWindow.Show()
+	go func() {
+	err := updtr.ApplyUpdatesSequentially(".", func(idx, total int, v updater.ModVersion) {
+		fyne.Do(func() {
+			updateLabel.TextStyle = fyne.TextStyle{Bold: true}
+			updateLabel.SetText(fmt.Sprintf("Applying update %d of %d: %s", idx, total, v.Version))
+
+			progressBar.SetValue(float64(idx-1) / float64(total))
+
+			statusLabel.TextStyle = fyne.TextStyle{Bold: true}
+			statusLabel.SetText(fmt.Sprintf("Downloading %s...", v.Version))
+
+			updateLabel.Refresh()
+			statusLabel.Refresh()
+		})
+	})
+	if err != nil {
+		fyne.Do(func() {
+			statusLabel.TextStyle = fyne.TextStyle{Bold: true}
+			statusLabel.SetText("Update failed: " + err.Error())
+			statusLabel.Refresh()
+		})
+	} else {
+		fyne.Do(func() {
+			progressBar.SetValue(1.0)
+			statusLabel.TextStyle = fyne.TextStyle{Bold: true}
+			statusLabel.SetText("All updates complete!")
+			statusLabel.Refresh()
+		})
+	}
+}()
 }

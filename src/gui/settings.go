@@ -2,7 +2,6 @@ package gui
 
 import (
 	"ago-launcher/config"
-	"fmt"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
@@ -34,7 +33,6 @@ func getSettingsContent(configurator *config.Configurator) fyne.CanvasObject {
 	saveButton := widget.NewButton("Save Settings", func() {
 		configurator.WriteConfigToFile("AGO.cfg", configurator.AGOConfigFile, &configurator.AGOConfig)
 		configurator.WriteConfigToFile("TATW.cfg", configurator.ModConfigFile, &configurator.ModConfig)
-		fmt.Println("Saved settings")
 	})
 
 	// Container

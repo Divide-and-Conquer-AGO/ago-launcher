@@ -1,25 +1,31 @@
 {
     "modVersions": [
         {
-            "version": "AGO-3.2.13-BETA",
+            "version": "3.2.14",
             "latest": true,
-            "url": "",
+            "url": "https://download1325.mediafire.com/3vji2p1e8mmgspPdqwsBJhZ7hpAVWCDgZLGsTah9p6jMJVDCnRZ99tMkHqLdSHs8tkNBST69svceav1-vOwvN6IqGyrdlefxFh4WLtw32fGvWkyZJq0dlnN-Xtj-8AcAwau3sNefutN3rXOvQR_NvpCMx0OfdleyymGnIgicvMA/m19ril4teukp8ps/3.2.14.zip",
             "sgc": false
         },
         {
-            "version": "AGO-3.2.12-BETA",
+            "version": "3.2.13",
+            "latest": false,
+            "url": "https://download1325.mediafire.com/83lhdabldlpgEwQXWVmz2Ble-9gn33YsGOl0HEOM7sZ5kUFnN2_-ALG9YUp4aVMCuJIsVdX0o9rljyvCKzUM2UZnzFsECZFOUaIcZIrqzYgBqYbf42zLEAxRCfCodVUtiiXxMna0sZjUK3xYa6AGTYK9f9X5-T4to5ZjuYEBbsM/4gfwz46rb9ztr03/3.2.13.zip",
+            "sgc": false
+        },
+        {
+            "version": "3.2.12",
             "latest": false,
             "url": "",
             "sgc": false
         },
         {
-            "version": "AGO-3.2.11-BETA",
+            "version": "3.2.11",
             "latest": false,
             "url": "",
             "sgc": false
         },
         {
-            "version": "AGO-3.2.10-BETA",
+            "version": "3.2.10",
             "latest": false,
             "url": "",
             "sgc": false
