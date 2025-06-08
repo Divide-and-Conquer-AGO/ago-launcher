@@ -78,7 +78,7 @@ func getHomeContent(app fyne.App, updater *updater.Updater, quoter *quotes.Qoute
 
 	// Container
 	content := container.NewVBox(
-		logoContainer, titleContainer, quoteContainer, authorContainer, versionContainer, websiteContainer, layout.NewSpacer(), buttonContainer,   
+		logoContainer, titleContainer, quoteContainer, authorContainer, versionContainer, websiteContainer, layout.NewSpacer(), buttonContainer,
 	)
 	return content
 }

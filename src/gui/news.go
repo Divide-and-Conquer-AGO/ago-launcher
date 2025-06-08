@@ -26,7 +26,6 @@ func getNewsContent(newsReader *news.NewsReader) fyne.CanvasObject {
 	content := container.NewVBox(
 		accordion,
 	)
-	
 
 	return content
 }

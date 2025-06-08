@@ -42,16 +42,15 @@ func RenderToolbar(app fyne.App, mainWindow fyne.Window, updater *updater.Update
 	)
 
 	bg := canvas.NewImageFromFile("background.png")
-    bg.FillMode = canvas.ImageFillStretch // or ImageFillContain
+	bg.FillMode = canvas.ImageFillStretch // or ImageFillContain
 
-    content := container.NewStack(
-        bg,
-        tabs,
-    )
+	content := container.NewStack(
+		bg,
+		tabs,
+	)
 
 	tabs.SetTabLocation(container.TabLocationTop)
 	mainWindow.SetContent(fynetooltip.AddWindowToolTipLayer(content, mainWindow.Canvas()))
 	mainWindow.RequestFocus()
 	mainWindow.ShowAndRun()
 }
-

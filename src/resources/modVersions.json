@@ -3,22 +3,26 @@
         {
             "version": "AGO-3.2.13-BETA",
             "latest": true,
-            "url": ""
+            "url": "",
+            "sgc": false
         },
         {
             "version": "AGO-3.2.12-BETA",
             "latest": false,
-            "url": ""
+            "url": "",
+            "sgc": false
         },
         {
             "version": "AGO-3.2.11-BETA",
             "latest": false,
-            "url": ""
+            "url": "",
+            "sgc": false
         },
         {
             "version": "AGO-3.2.10-BETA",
             "latest": false,
-            "url": ""
+            "url": "",
+            "sgc": false
         }
     ]
 }
