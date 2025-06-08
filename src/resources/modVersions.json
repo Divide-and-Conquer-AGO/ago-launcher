@@ -29,6 +29,30 @@
             "latest": false,
             "url": "",
             "sgc": false
+        },
+        {
+            "version": "3.2.9",
+            "latest": false,
+            "url": "",
+            "sgc": false
+        },
+        {
+            "version": "3.2.8",
+            "latest": false,
+            "url": "",
+            "sgc": false
+        },
+        {
+            "version": "3.2.7",
+            "latest": false,
+            "url": "",
+            "sgc": false
+        },
+        {
+            "version": "3.2.6",
+            "latest": false,
+            "url": "",
+            "sgc": false
         }
     ]
 }

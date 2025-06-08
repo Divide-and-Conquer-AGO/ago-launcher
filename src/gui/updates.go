@@ -3,57 +3,84 @@ package gui
 import (
 	"ago-launcher/updater"
 	"fmt"
-	"image/color"
 
 	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/widget"
 )
 
-func getUpdateContent(app fyne.App, window fyne.Window, updater *updater.Updater) fyne.CanvasObject {
-	var objects []fyne.CanvasObject
+func getUpdateContent(app fyne.App, window fyne.Window, updtr *updater.Updater) fyne.CanvasObject {
+	// Table header
+	headerVersion := widget.NewLabelWithStyle("Version", fyne.TextAlignLeading, fyne.TextStyle{Bold: true})
+	headerSavegame := widget.NewLabelWithStyle("Savegame Compatible", fyne.TextAlignCenter, fyne.TextStyle{Bold: true})
+	headerStatus := widget.NewLabelWithStyle("Status", fyne.TextAlignCenter, fyne.TextStyle{Bold: true})
 
-	// Mod Version
-	versionBanner := canvas.NewText("Mod Version", color.White)
-	versionBanner.TextSize = 34
-	versionBanner.TextStyle = fyne.TextStyle{Bold: true}
-	bannerContainer := container.NewCenter(versionBanner)
-	objects = append(objects, bannerContainer)
+	header := container.NewGridWithColumns(3, headerVersion, headerSavegame, headerStatus)
 
-	currentVersionText := canvas.NewText("Current Version: "+updater.CurrentVersion.Version, color.White)
-	currentVersionText.TextSize = 24
-	currentVersionText.TextStyle = fyne.TextStyle{Bold: true}
-	currVersionContainer := container.NewCenter(currentVersionText)
-	objects = append(objects, currVersionContainer)
+	// Table rows
+	var tableRows []fyne.CanvasObject
+	for _,v := range updtr.AvailableVersions.ModVersions {
+		// Version label - left aligned for better readability
+		versionLabel := widget.NewLabel(v.Version)
+		versionLabel.Alignment = fyne.TextAlignLeading
 
-	latestVersionText := canvas.NewText("Latest Version: "+updater.LatestVersion.Version, color.White)
-	latestVersionText.TextSize = 24
-	latestVersionText.TextStyle = fyne.TextStyle{Bold: true}
+		// Savegame compatibility label - center aligned (short Yes/No values)
+		savegameLabel := widget.NewLabel("No")
+		if v.SaveGameCompatible {
+			savegameLabel.SetText("Yes")
+		}
+		savegameLabel.Alignment = fyne.TextAlignCenter
 
-	if updater.UpdateAvailable {
-		latestVersionText.Color = color.RGBA{R: 0, G: 255, B: 0, A: 255}
+		// Status label - center aligned for status indicators
+		statusLabel := widget.NewLabel("")
+		statusLabel.Alignment = fyne.TextAlignCenter
+
+		if v.Version == updtr.CurrentVersion.Version {
+			versionLabel.TextStyle = fyne.TextStyle{Bold: true}
+			statusLabel.SetText("Current")
+			statusLabel.TextStyle = fyne.TextStyle{Bold: true}
+		} else if v.Version == updtr.LatestVersion.Version {
+			versionLabel.TextStyle = fyne.TextStyle{Bold: true}
+			statusLabel.SetText("Latest")
+			statusLabel.TextStyle = fyne.TextStyle{Bold: true}
+		}
+
+		row := container.NewGridWithColumns(3, versionLabel, savegameLabel, statusLabel)
+		tableRows = append(tableRows, row)
 	}
 
-	latestVersionContainer := container.NewCenter(latestVersionText)
-	objects = append(objects, latestVersionContainer)
+	// Combine header and rows into a table
+	table := container.NewVBox(header)
+	for _, row := range tableRows {
+		table.Add(row)
+	}
 
+	// Wrap the table in a scroll container
+	scrollableTable := container.NewScroll(table)
+	scrollableTable.SetMinSize(fyne.NewSize(400, 300)) // Set minimum size for the scroll area
+
+	// Buttons - stacked vertically
 	checkUpdateButton := widget.NewButton("Check for updates", func() {
-		updater.CheckForUpdate()
-		latestVersionText.Text = "Latest Version: " + updater.LatestVersion.Version
-		latestVersionContainer.Refresh()
+		updtr.CheckForUpdate()
 	})
-	objects = append(objects, checkUpdateButton)
-	if updater.UpdateAvailable {
-		startUpdateButton := widget.NewButton("Download Update", func() {
-			getUpdaterModal(updater)
+
+	var buttonBox *fyne.Container
+	if updtr.UpdateAvailable {
+		startUpdateButton := widget.NewButton("Install Update", func() {
+			getUpdaterModal(updtr)
 		})
-		objects = append(objects, startUpdateButton)
+		buttonBox = container.NewVBox(checkUpdateButton, startUpdateButton)
+	} else {
+		buttonBox = container.NewVBox(checkUpdateButton)
 	}
 
-	// Container
-	content := container.NewVBox(
-		objects...,
+	// Create the final layout with scrollable content
+	content := container.NewBorder(
+		nil,             // top
+		buttonBox,       // bottom - buttons directly at bottom
+		nil,             // left
+		nil,             // right
+		scrollableTable, // center - scrollable table
 	)
 
 	return content
@@ -74,33 +101,33 @@ func getUpdaterModal(updtr *updater.Updater) {
 	))
 	updateWindow.Show()
 	go func() {
-	err := updtr.ApplyUpdatesSequentially(".", func(idx, total int, v updater.ModVersion) {
-		fyne.Do(func() {
-			updateLabel.TextStyle = fyne.TextStyle{Bold: true}
-			updateLabel.SetText(fmt.Sprintf("Applying update %d of %d: %s", idx, total, v.Version))
+		err := updtr.ApplyUpdatesSequentially(".", func(idx, total int, v updater.ModVersion) {
+			fyne.Do(func() {
+				updateLabel.TextStyle = fyne.TextStyle{Bold: true}
+				updateLabel.SetText(fmt.Sprintf("Applying update %d of %d: %s", idx, total, v.Version))
 
-			progressBar.SetValue(float64(idx-1) / float64(total))
+				progressBar.SetValue(float64(idx-1) / float64(total))
 
-			statusLabel.TextStyle = fyne.TextStyle{Bold: true}
-			statusLabel.SetText(fmt.Sprintf("Downloading %s...", v.Version))
+				statusLabel.TextStyle = fyne.TextStyle{Bold: true}
+				statusLabel.SetText(fmt.Sprintf("Downloading %s...", v.Version))
 
-			updateLabel.Refresh()
-			statusLabel.Refresh()
+				updateLabel.Refresh()
+				statusLabel.Refresh()
+			})
 		})
-	})
-	if err != nil {
-		fyne.Do(func() {
-			statusLabel.TextStyle = fyne.TextStyle{Bold: true}
-			statusLabel.SetText("Update failed: " + err.Error())
-			statusLabel.Refresh()
-		})
-	} else {
-		fyne.Do(func() {
-			progressBar.SetValue(1.0)
-			statusLabel.TextStyle = fyne.TextStyle{Bold: true}
-			statusLabel.SetText("All updates complete!")
-			statusLabel.Refresh()
-		})
-	}
-}()
+		if err != nil {
+			fyne.Do(func() {
+				statusLabel.TextStyle = fyne.TextStyle{Bold: true}
+				statusLabel.SetText("Update failed: " + err.Error())
+				statusLabel.Refresh()
+			})
+		} else {
+			fyne.Do(func() {
+				progressBar.SetValue(1.0)
+				statusLabel.TextStyle = fyne.TextStyle{Bold: true}
+				statusLabel.SetText("All updates complete!")
+				statusLabel.Refresh()
+			})
+		}
+	}()
 }

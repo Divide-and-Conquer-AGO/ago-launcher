@@ -27,10 +27,10 @@ type ModVersions struct {
 }
 
 type ModVersion struct {
-	Version             string `json:"version"`
-	Latest              bool   `json:"latest"`
-	Url                 string `json:"url"`
-	SaveGameCompatitble bool   `json:"sgc"`
+	Version            string `json:"version"`
+	Latest             bool   `json:"latest"`
+	Url                string `json:"url"`
+	SaveGameCompatible bool   `json:"sgc"`
 }
 
 func (updater *Updater) GetCurrentModVersion() {
