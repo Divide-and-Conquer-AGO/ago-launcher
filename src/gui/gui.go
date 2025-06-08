@@ -26,7 +26,7 @@ func InitGUI(updater *updater.Updater, configurator *config.Configurator, quoter
 	// Set the size and focus
 	// myWindow.CenterOnScreen()
 	myWindow.SetFixedSize(true)
-	myWindow.Resize(fyne.NewSize(1155, 700))
+	myWindow.Resize(fyne.NewSize(1155, 500))
 
 	// Render the main toolbar
 	RenderToolbar(app, myWindow, updater, configurator, quoter, newsReader)

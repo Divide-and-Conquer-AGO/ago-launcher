@@ -13,7 +13,7 @@ func getNewsContent(newsReader *news.NewsReader) fyne.CanvasObject {
 	accordion := widget.NewAccordion()
 	for _, item := range newsReader.NewsItems {
 		if item.Published {
-			title := item.Title + " - " + item.Date
+			title := item.Date + " - " + item.Title
 			content := widget.NewRichTextFromMarkdown(item.MarkdownText)
 			content.Wrapping = fyne.TextWrapWord
 			scroll := container.NewVScroll(content)
