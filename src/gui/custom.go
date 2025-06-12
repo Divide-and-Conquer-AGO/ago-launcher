@@ -48,8 +48,8 @@ func MakeSpinBox(labelText string, tooltip string, get func() int, set func(int)
 	return content
 }
 
-func MakeStringBindingField(labelText string, value string, tooltip string) fyne.CanvasObject {
-	entry := widget.NewEntryWithData(binding.BindString(&value))
+func MakeStringBindingField(labelText string, value *string, tooltip string) fyne.CanvasObject {
+	entry := widget.NewEntryWithData(binding.BindString(value))
 	label := ttwidget.NewLabel(labelText)
 	label.SetToolTip(tooltip)
 

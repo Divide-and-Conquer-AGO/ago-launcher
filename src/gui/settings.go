@@ -26,7 +26,7 @@ func getSettingsContent(configurator *config.Configurator) fyne.CanvasObject {
 		container.NewTabItem("Hotseat", getHotseatInputs(configurator)),
 		container.NewTabItem("Debug", getDebugInputs(configurator)),
 	)
-	
+
 	// Save settings
 	saveButton := widget.NewButton("Save Settings", func() {
 		configurator.WriteConfigToFile("AGO.cfg", &configurator.AGOConfig, configurator.AGOConfigFile)
@@ -205,7 +205,7 @@ func getBattleInputs(configurator *config.Configurator) fyne.CanvasObject {
 	})
 
 	content := container.NewVBox(
-		noDefaultSkirmish, defaultBattleSpeed, freeCamEnabled, openButton, 
+		noDefaultSkirmish, defaultBattleSpeed, freeCamEnabled, openButton,
 	)
 	return content
 }
@@ -249,9 +249,9 @@ func getVideoInputs(configurator *config.Configurator) fyne.CanvasObject {
 	option6 := ttwidget.NewCheckWithData("Vulkan Rendering Mode (DXVK)", binding.BindBool(&configurator.EOPConfig.GameCfg.IsDXVKEnabled))
 	option6.SetToolTip("Experimental: Forces Medieval 2 to use DXVK instead of DirectX for rendering. Can massively improve performance on some hardware. \nNote: The first time you use DXVK Rendering, you may experience worse performance due to compilation of shaders.\nThe second time you launch the game, assuming the shaders have compiled, performance should be much better (even better than Vanilla DirectX Rendering)")
 
-	option4 := MakeStringBindingField("Battle Resolution", configurator.ModConfig.Video.BattleResolution, "Battle resolution (e.g. 1920 1080)")
+	option4 := MakeStringBindingField("Battle Resolution", &configurator.ModConfig.Video.BattleResolution, "Battle resolution (e.g. 1920 1080)")
 
-	option5 := MakeStringBindingField("Campaign Resolution", configurator.ModConfig.Video.CampaignResolution, "Campaign resolution (e.g. 1920x1080)")
+	option5 := MakeStringBindingField("Campaign Resolution", &configurator.ModConfig.Video.CampaignResolution, "Campaign resolution (e.g. 1920x1080)")
 
 	content := container.NewVBox(
 		option1, option2, option6, option3, option4, option5,
