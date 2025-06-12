@@ -18,13 +18,8 @@ func main() {
 
 	// CONFIG
 	configurator := &config.Configurator{}
-	// AGO.cfg
-	configurator.AGOConfigFile = configurator.LoadConfigFile("AGO.cfg")
-	configurator.ParseConfig(configurator.AGOConfigFile, &configurator.AGOConfig)
-	
-	// TATW.cfg
-	configurator.ModConfigFile = configurator.LoadConfigFile("TATW.cfg")
-	configurator.ParseConfig(configurator.ModConfigFile, &configurator.ModConfig)
+	configurator.ConfigLocations = []string{".", "config", "eopData/config"}
+	configurator.LoadAllConfigFiles()
 
 	// NEWSREADER
 	newsReader := &news.NewsReader{}

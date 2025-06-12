@@ -2,6 +2,7 @@ package gui
 
 import (
 	"ago-launcher/config"
+	"os"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
@@ -14,34 +15,33 @@ import (
 func getSettingsContent(configurator *config.Configurator) fyne.CanvasObject {
 	// Mod Settings (AGO.cfg)
 	modSettingsTabs := container.NewAppTabs(
-		container.NewTabItem("Debug", getDebugInputs(configurator)),
+		container.NewTabItem("Video", getVideoInputs(configurator)),
+		container.NewTabItem("Scripts", getScriptsInputs(configurator)),
 		container.NewTabItem("Sorting", getSortingInputs(configurator)),
 		container.NewTabItem("Limits", getLimitsInputs(configurator)),
 		container.NewTabItem("Saving", getSavingInputs(configurator)),
 		container.NewTabItem("Info", getInfoInputs(configurator)),
-		container.NewTabItem("Scripts", getScriptsInputs(configurator)),
 		container.NewTabItem("Battle", getBattleInputs(configurator)),
 		container.NewTabItem("Difficulty", getDifficultyInputs(configurator)),
+		container.NewTabItem("Hotseat", getHotseatInputs(configurator)),
+		container.NewTabItem("Debug", getDebugInputs(configurator)),
 	)
-	// Game Settings (TATW.cfg)
-	gameSettingsTabs := container.NewAppTabs(
-		container.NewTabItem("Video", getGameInputs(configurator)),
-	)
-	settingsTabs := container.NewAppTabs(
-		container.NewTabItem("Game Settings", gameSettingsTabs),
-		container.NewTabItem("AGO Settings", modSettingsTabs),
-	)
+	
+	// Save settings
 	saveButton := widget.NewButton("Save Settings", func() {
-		configurator.WriteConfigToFile("AGO.cfg", configurator.AGOConfigFile, &configurator.AGOConfig)
-		configurator.WriteConfigToFile("TATW.cfg", configurator.ModConfigFile, &configurator.ModConfig)
+		configurator.WriteConfigToFile("AGO.cfg", &configurator.AGOConfig, configurator.AGOConfigFile)
+		configurator.WriteConfigToFile("TATW.cfg", &configurator.ModConfig, configurator.ModConfigFile)
+		configurator.WriteConfigToFile("gameCfg.json", &configurator.EOPConfig.GameCfg, nil)
+		configurator.WriteConfigToFile("battlesCfg.json", &configurator.EOPConfig.BattlesCfg, nil)
 	})
 
 	// Container
 	content := container.NewVBox(
-		settingsTabs, layout.NewSpacer(), saveButton,
+		modSettingsTabs, layout.NewSpacer(), saveButton,
 	)
 	return content
 }
+
 func getDebugInputs(configurator *config.Configurator) fyne.CanvasObject {
 	option1 := ttwidget.NewCheckWithData("Enable Logging", binding.BindBool(&configurator.AGOConfig.Debug.EnableLogging))
 	option1.SetToolTip("Enable logging")
@@ -132,8 +132,11 @@ func getSavingInputs(configurator *config.Configurator) fyne.CanvasObject {
 	option1 := ttwidget.NewCheckWithData("Post Battle Saving", binding.BindBool(&configurator.AGOConfig.Saving.PostBattleSaving))
 	option1.SetToolTip("Automatically creates a save after a battle")
 
+	option2 := ttwidget.NewCheckWithData("Automatic Save Backup", binding.BindBool(&configurator.EOPConfig.GameCfg.IsSaveBackupEnabled))
+	option2.SetToolTip("Automatically creates multiple copies of saves in case of corruption")
+
 	content := container.NewVBox(
-		option1,
+		option1, option2,
 	)
 	return content
 }
@@ -194,8 +197,15 @@ func getBattleInputs(configurator *config.Configurator) fyne.CanvasObject {
 		func(v int) { configurator.AGOConfig.Battle.DefaultBattleSpeed = v },
 	)
 
+	freeCamEnabled := ttwidget.NewCheckWithData("Freecam Integration", binding.BindBool(&configurator.AGOConfig.Battle.NoDefaultSkirmish))
+	freeCamEnabled.SetToolTip("Automatically start and close the Freecam application when the game is launched")
+
+	openButton := widget.NewButton("Open Freecam config", func() {
+		os.Open("eopData/resources/tools/freecam/config.txt")
+	})
+
 	content := container.NewVBox(
-		noDefaultSkirmish, defaultBattleSpeed,
+		noDefaultSkirmish, defaultBattleSpeed, freeCamEnabled, openButton, 
 	)
 	return content
 }
@@ -213,7 +223,20 @@ func getDifficultyInputs(configurator *config.Configurator) fyne.CanvasObject {
 	return content
 }
 
-func getGameInputs(configurator *config.Configurator) fyne.CanvasObject {
+func getHotseatInputs(configurator *config.Configurator) fyne.CanvasObject {
+	aggressiveRebels := ttwidget.NewCheckWithData("Automatically generate hotseat/historical battles", binding.BindBool(&configurator.EOPConfig.BattlesCfg.EnableAutoGeneration))
+	aggressiveRebels.SetToolTip("Enable if you want to generate a historical battle each time you start a battle")
+
+	aiFreeGenerals := ttwidget.NewCheckWithData("Automatically generate battle result files", binding.BindBool(&configurator.EOPConfig.BattlesCfg.EnableResultsTransfer))
+	aiFreeGenerals.SetToolTip("Enable if you want to generate a results file from an online battle")
+
+	content := container.NewVBox(
+		aggressiveRebels, aiFreeGenerals,
+	)
+	return content
+}
+
+func getVideoInputs(configurator *config.Configurator) fyne.CanvasObject {
 	option1 := ttwidget.NewCheckWithData("Borderless Window", binding.BindBool(&configurator.ModConfig.Video.BorderlessWindow))
 	option1.SetToolTip("Enable borderless window mode")
 
@@ -223,12 +246,15 @@ func getGameInputs(configurator *config.Configurator) fyne.CanvasObject {
 	option3 := ttwidget.NewCheckWithData("Bloom", binding.BindBool(&configurator.ModConfig.Video.Bloom))
 	option3.SetToolTip("Enable bloom effect")
 
+	option6 := ttwidget.NewCheckWithData("Vulkan Rendering Mode (DXVK)", binding.BindBool(&configurator.EOPConfig.GameCfg.IsDXVKEnabled))
+	option6.SetToolTip("Experimental: Forces Medieval 2 to use DXVK instead of DirectX for rendering. Can massively improve performance on some hardware. \nNote: The first time you use DXVK Rendering, you may experience worse performance due to compilation of shaders.\nThe second time you launch the game, assuming the shaders have compiled, performance should be much better (even better than Vanilla DirectX Rendering)")
+
 	option4 := MakeStringBindingField("Battle Resolution", configurator.ModConfig.Video.BattleResolution, "Battle resolution (e.g. 1920 1080)")
 
 	option5 := MakeStringBindingField("Campaign Resolution", configurator.ModConfig.Video.CampaignResolution, "Campaign resolution (e.g. 1920x1080)")
 
 	content := container.NewVBox(
-		option1, option2, option3, option4, option5,
+		option1, option2, option6, option3, option4, option5,
 	)
 	return content
 }
