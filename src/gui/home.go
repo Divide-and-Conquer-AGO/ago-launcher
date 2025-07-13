@@ -3,6 +3,7 @@ package gui
 import (
 	"ago-launcher/quotes"
 	"ago-launcher/updater"
+	"ago-launcher/utils"
 	"fmt"
 	"image/color"
 	"net/url"
@@ -72,7 +73,7 @@ func getHomeContent(app fyne.App, updater *updater.Updater, quoter *quotes.Qoute
 
 	// Launch Mod
 	launchButton := widget.NewButton("Launch Mod", func() {
-		app.SendNotification(fyne.NewNotification("Launching mod...", ""))
+		utils.RunExecutable("M2TWEOP_GUI.exe")
 	})
 	buttonContainer := container.NewVBox(launchButton)
 
