@@ -18,3 +18,9 @@ jobs:
 
       - name: "Build AGO Launcher"
         run: cd src && go build
+
+      - name: "Upload Artifact"
+        uses: actions/upload-artifact@v4
+        with:
+          name: "AGO-Launcher-latest-build-${{ github.workflow_sha }}"
+          path: src/ago-launcher
