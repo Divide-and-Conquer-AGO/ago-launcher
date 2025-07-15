@@ -3,9 +3,7 @@ package quotes
 import (
 	"ago-launcher/utils"
 	"encoding/json"
-	"fmt"
 	"io"
-	"log"
 	"os"
 
 	"github.com/adam-macioszek/lotr-sdk/quote"
@@ -27,67 +25,67 @@ type Quote struct {
 func (qouter *Qouter) LoadQuotes() (Quotes, error) {
 	var quotes Quotes
 
-	fmt.Println("[Quoter] Loading quotes.json")
+	utils.Logger().Println("[Quoter] Loading quotes.json")
 	jsonFile, err := os.Open("resources/quotes.json")
 	if err != nil {
-		fmt.Println("[Quoter] could not load quote file:", err)
+		utils.Logger().Println("[Quoter] could not load quote file:", err)
 		return Quotes{}, err
 	}
 	defer jsonFile.Close()
 
 	byteValue, err := io.ReadAll(jsonFile)
 	if err != nil {
-		fmt.Println("[Quoter] could not read quote file:", err)
+		utils.Logger().Println("[Quoter] could not read quote file:", err)
 		return Quotes{}, err
 	}
 
 	err = json.Unmarshal(byteValue, &quotes)
 	if err != nil {
-		fmt.Println("[Quoter] could not unmarshal quote file:", err)
+		utils.Logger().Println("[Quoter] could not unmarshal quote file:", err)
 		return Quotes{}, err
 	}
 
 	numQuotes := len(quotes.Quotes)
 	if numQuotes <= 0 {
-		fmt.Println("[Quoter] no quotes found")
+		utils.Logger().Println("[Quoter] no quotes found")
 		return quotes, nil
 	}
 
-	fmt.Println("[Quoter] Found", numQuotes, "quotes")
+	utils.Logger().Printf("[Quoter] Found %d quotes\n", numQuotes)
 
 	return quotes, nil
 }
 
 func (qouter *Qouter) GetRandomQuote() (Quote, error) {
-	fmt.Println("[Quoter] Getting random quote")
+	utils.Logger().Println("[Quoter] Getting random quote")
 	if len(qouter.Quotes.Quotes) == 0 {
 		quotes, err := qouter.LoadQuotes()
 		if err != nil {
-			fmt.Println("[Quoter] error loading quotes:", err)
+			utils.Logger().Println("[Quoter] error loading quotes:", err)
 		}
 		qouter.Quotes = quotes
 	}
 	quote, err := utils.RandomElement(qouter.Quotes.Quotes)
 	if err != nil {
-		fmt.Println("[Quoter] error getting random quote:", err)
+		utils.Logger().Println("[Quoter] error getting random quote:", err)
 	} else {
-		fmt.Println("[Quoter] Found random quote:", quote.Quote)
+		utils.Logger().Printf("[Quoter] Found random quote: %s\n", quote.Quote)
 	}
 	return quote, err
 }
 
 func (qouter *Qouter) PrintAllQuotes() {
-	fmt.Println("[Quoter] Getting all LOTR quotes")
+	utils.Logger().Println("[Quoter] Getting all LOTR quotes")
 
 	quotes, err := quote.GetAllQuotes()
 	if err != nil {
-		log.Println("[Quoter] Failed to retrieve quotes")
-		log.Println("[Quoter]", err)
+		utils.Logger().Println("[Quoter] Failed to retrieve quotes")
+		utils.Logger().Println("[Quoter]", err)
 	}
 
 	for _, v := range quotes {
-		fmt.Println("[Quoter]", v.Dialog, "-", v.CharacterID)
+		utils.Logger().Printf("[Quoter] %s - %s\n", v.Dialog, v.CharacterID)
 	}
 
-	fmt.Printf("[Quoter] Found %v quotes\n", len(quotes))
+	utils.Logger().Printf("[Quoter] Found %d quotes\n", len(quotes))
 }

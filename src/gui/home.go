@@ -4,7 +4,6 @@ import (
 	"ago-launcher/quotes"
 	"ago-launcher/updater"
 	"ago-launcher/utils"
-	"fmt"
 	"image/color"
 	"net/url"
 
@@ -29,10 +28,10 @@ func getHomeContent(app fyne.App, updater *updater.Updater, quoter *quotes.Qoute
 	titleContainer := container.NewCenter(titleText)
 
 	// Quote (Quote)
-	quote, err := quoter.GetRandomQuote()
-	if err != nil {
-		fmt.Println("error random getting quote")
-	}
+	   quote, err := quoter.GetRandomQuote()
+	   if err != nil {
+			   utils.Logger().Println("error random getting quote")
+	   }
 	quoteText := canvas.NewText(quote.Quote, color.White)
 	quoteText.TextSize = 18
 	quoteText.TextStyle = fyne.TextStyle{Italic: true}
@@ -51,10 +50,10 @@ func getHomeContent(app fyne.App, updater *updater.Updater, quoter *quotes.Qoute
 	versionContainer := container.NewCenter(versionText)
 
 	// Website Link
-	websiteURL, err := url.Parse("https://www.divide-and-conquer-ago.com/")
-	if err != nil {
-		fmt.Println("invalid website url")
-	}
+	   websiteURL, err := url.Parse("https://www.divide-and-conquer-ago.com/")
+	   if err != nil {
+			   utils.Logger().Println("invalid website url")
+	   }
 	websiteText := widget.NewHyperlink("www.divide-and-conquer-ago.com", websiteURL)
 	websiteText.TextStyle = fyne.TextStyle{Bold: true}
 	websiteContainer := container.NewCenter(websiteText)
@@ -65,7 +64,7 @@ func getHomeContent(app fyne.App, updater *updater.Updater, quoter *quotes.Qoute
 	// quoteButton := widget.NewButton("Refresh quote", func() {
 	// 	quote, err := quoter.GetRandomQuote()
 	// 	if err != nil {
-	// 		fmt.Println("error getting random quote")
+	// 		utils.Logger().Println("error getting random quote")
 	// 	}
 	// 	quoteText.Text = quote.Quote
 	// 	authorText.Text = quote.Author

@@ -1,7 +1,7 @@
 package gui
 
 import (
-	"fmt"
+	"ago-launcher/utils"
 	"image/color"
 	"net/url"
 
@@ -27,7 +27,7 @@ func getAboutContent() fyne.CanvasObject {
 	// Website Link
 	websiteURL, err := url.Parse("https://github.com/EddieEldridge/ago-launcher/tree/main")
 	if err != nil {
-		fmt.Println("invalid website url")
+		utils.Logger().Println("invalid website url")
 	}
 	websiteText := widget.NewHyperlink("Source Code", websiteURL)
 	websiteText.TextStyle = fyne.TextStyle{Bold: true}
@@ -35,7 +35,7 @@ func getAboutContent() fyne.CanvasObject {
 
 	// Container
 	content := container.NewVBox(
-		logoContainer, titleContainer,  websiteContainer,
+		logoContainer, titleContainer, websiteContainer,
 	)
 	return content
 }

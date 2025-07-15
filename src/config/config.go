@@ -1,8 +1,8 @@
 package config
 
 import (
+	"ago-launcher/utils"
 	"encoding/json"
-	"fmt"
 	"io"
 	"log"
 	"os"
@@ -22,7 +22,7 @@ type Configurator struct {
 }
 
 func (configurator *Configurator) GetConfigFilePath(file string) string {
-	fmt.Printf("[Config] Attempting to get config file path for %s and paths %s\n", file, configurator.ConfigLocations)
+	utils.Logger().Printf("[Config] Attempting to get config file path for %s and paths %s\n", file, configurator.ConfigLocations)
 
 	for _, path := range configurator.ConfigLocations {
 		// prod
@@ -31,7 +31,7 @@ func (configurator *Configurator) GetConfigFilePath(file string) string {
 			exeDir := filepath.Dir(exePath)
 			configPath := filepath.Join(exeDir, path, file)
 			if _, err := os.Stat(configPath); err == nil {
-				fmt.Printf("[Config] Found config file in executable directory: %s\n", configPath)
+				utils.Logger().Printf("[Config] Found config file in executable directory: %s\n", configPath)
 				return configPath
 			}
 		}
@@ -41,22 +41,22 @@ func (configurator *Configurator) GetConfigFilePath(file string) string {
 		if err == nil {
 			configPath := filepath.Join(cwd, path, file)
 			if _, err := os.Stat(configPath); err == nil {
-				fmt.Printf("[Config] Found config file in working directory: %s\n", configPath)
+				utils.Logger().Printf("[Config] Found config file in working directory: %s\n", configPath)
 				return configPath
 			}
 		}
 	}
 
-	fmt.Printf("[Config] Config file not found in either executable or working directory\n")
+	utils.Logger().Printf("[Config] Config file not found in either executable or working directory\n")
 	return ""
 }
 
 // Loads a file using json/ini format and loads it into a given struct
 func (configurator *Configurator) LoadConfigFile(file string, cfgStruct interface{}) *ini.File {
-	fmt.Printf("[Config] Loading config file: %s\n", file)
+	utils.Logger().Printf("[Config] Loading config file: %s\n", file)
 
 	configPath := configurator.GetConfigFilePath(file)
-	fmt.Printf("[Config] Opening config file: %v\n", configPath)
+	utils.Logger().Printf("[Config] Opening config file: %v\n", configPath)
 
 	switch filepath.Ext(configPath) {
 		case ".json":
@@ -70,7 +70,7 @@ func (configurator *Configurator) LoadConfigFile(file string, cfgStruct interfac
 			if err != nil {
 				log.Fatalf("[Config] Fail to json read file: %v\n", err)
 			}
-			fmt.Printf("[Config] Parsing json config file to struct\n")
+			utils.Logger().Printf("[Config] Parsing json config file to struct\n")
 			err = json.Unmarshal(byteValue, cfgStruct)
 			if err != nil {
 				log.Fatalf("[Config] Failed to map json config file to struct: %v\n", err)
@@ -82,7 +82,7 @@ func (configurator *Configurator) LoadConfigFile(file string, cfgStruct interfac
 			if err != nil {
 				log.Fatalf("[Config] Fail to read ini file: %v\n", err)
 			}
-			fmt.Printf("[Config] Parsing ini config file to struct\n")
+			utils.Logger().Printf("[Config] Parsing ini config file to struct\n")
 			err = cfg.MapTo(cfgStruct)
 			if err != nil {
 				log.Fatalf("[Config] Failed to map ini config file to struct: %v\n", err)
@@ -94,7 +94,7 @@ func (configurator *Configurator) LoadConfigFile(file string, cfgStruct interfac
 
 // Writes the config data back to the json/ini file
 func (configurator *Configurator) WriteConfigToFile(file string, cfgData interface{}, filePtr *ini.File) {
-	fmt.Printf("[Config] Writing config to file: %s\n", file)
+	utils.Logger().Printf("[Config] Writing config to file: %s\n", file)
 	
 	// Get the right file path
 	configPath := configurator.GetConfigFilePath(file)
@@ -126,7 +126,7 @@ func (configurator *Configurator) WriteConfigToFile(file string, cfgData interfa
 			}
 	}
 
-	fmt.Printf("[Config] Successfully wrote config to file: %s\n", configPath)
+	utils.Logger().Printf("[Config] Successfully wrote config to file: %s\n", configPath)
 }
 
 func (configurator *Configurator) LoadAllConfigFiles() {
