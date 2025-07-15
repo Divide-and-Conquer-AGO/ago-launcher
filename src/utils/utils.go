@@ -2,6 +2,7 @@ package utils
 
 import (
 	"errors"
+	"io"
 	"log"
 	"math/rand"
 	"os"
@@ -20,9 +21,10 @@ func init() {
 	logFilePtr, err = os.OpenFile("ago-launcher.log", os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0666)
 	if err != nil {
 		log.Printf("Failed to open log file: %v\n", err)
-		LoggerVar = log.New(os.Stdout, "", log.Ldate|log.Ltime|log.Lshortfile)
+		LoggerVar = log.New(io.MultiWriter(os.Stdout, os.Stderr), "", log.Ldate|log.Ltime|log.Lshortfile)
 	} else {
-		LoggerVar = log.New(logFilePtr, "", log.Ldate|log.Ltime|log.Lshortfile)
+		multiWriter := io.MultiWriter(os.Stdout, os.Stderr, logFilePtr)
+		LoggerVar = log.New(multiWriter, "", log.Ldate|log.Ltime|log.Lshortfile)
 	}
 }
 
