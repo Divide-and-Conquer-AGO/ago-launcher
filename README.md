@@ -2,7 +2,8 @@
   <a href="https://www.divide-and-conquer-ago.com">Divide and Conquer: AGO Launcher</a>
 </h1>
 
-![](https://i.imgur.com/DvclN4t.png)
+<img width="1162" height="529" alt="image" src="https://github.com/user-attachments/assets/aec9379b-4015-4f84-acea-f14fda83f3e8" />
+
 
 -----------------
 ## Development
