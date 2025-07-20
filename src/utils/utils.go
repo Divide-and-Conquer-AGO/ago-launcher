@@ -17,7 +17,7 @@ var (
 
 func init() {
     // For fyne package builds, use Fyne's logging which works properly
-    if isFynePackaged() {
+    if IsFynePackaged() {
         // Use Fyne's logging system
         LoggerVar = log.New(os.Stdout, "", log.Ldate|log.Ltime|log.Lshortfile)
     } else {
@@ -26,7 +26,7 @@ func init() {
     }
 }
 
-func isFynePackaged() bool {
+func IsFynePackaged() bool {
     // Simple check: if we're running from a temp directory or system directory,
     // we're likely packaged
     execPath, err := os.Executable()
@@ -70,7 +70,7 @@ func RunExecutable(exeName string) {
 
     var exePath string
     
-    if isFynePackaged() {
+    if IsFynePackaged() {
         // For fyne package, use executable directory
         execDir, err := os.Executable()
         if err != nil {

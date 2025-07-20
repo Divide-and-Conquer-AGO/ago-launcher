@@ -36,31 +36,56 @@ type ModVersion struct {
 }
 
 func (updater *Updater) GetCurrentModVersion() {
-	utils.Logger().Println("[Updater] Retrieving mod version")
-	jsonFile, err := os.Open("resources/uiCfg.json")
-	if err != nil {
-		utils.Logger().Println("[Updater] could not open uiCfg file:", err)
-		// Fallback to alternate path
-		jsonFile, err = os.Open("eopData/config/uiCfg.json")
-		if err != nil {
-			utils.Logger().Println("[Updater] could not open fallback uiCfg file:", err)
-			return
-		}
-	}
-	defer jsonFile.Close()
+    utils.Logger().Println("[Updater] Retrieving mod version")
+    
+    var jsonFile *os.File
+    var err error
+    
+    // Try different paths based on build type
+    paths := []string{
+        "resources/uiCfg.json",
+        "eopData/config/uiCfg.json",
+    }
+    
+    // For fyne package, also try relative to executable
+    if utils.IsFynePackaged() {
+        execPath, execErr := os.Executable()
+        if execErr == nil {
+            execDir := filepath.Dir(execPath)
+            paths = append([]string{
+                filepath.Join(execDir, "resources/uiCfg.json"),
+                filepath.Join(execDir, "eopData/config/uiCfg.json"),
+            }, paths...)
+        }
+    }
+    
+    for _, path := range paths {
+        jsonFile, err = os.Open(path)
+        if err == nil {
+            utils.Logger().Printf("[Updater] Found uiCfg file at: %s\n", path)
+            break
+        }
+        utils.Logger().Printf("[Updater] Could not open uiCfg file at %s: %v\n", path, err)
+    }
+    
+    if jsonFile == nil {
+        utils.Logger().Println("[Updater] Could not find uiCfg file in any location")
+        return
+    }
+    defer jsonFile.Close()
 
-	jsonContent, err := io.ReadAll(jsonFile)
-	if err != nil {
-		utils.Logger().Println("[Updater] could not read uiCfg file:", err)
-		return
-	}
+    jsonContent, err := io.ReadAll(jsonFile)
+    if err != nil {
+        utils.Logger().Println("[Updater] could not read uiCfg file:", err)
+        return
+    }
 
-	modVersion := gjson.Get(string(jsonContent), "modVersion")
-	utils.Logger().Println("[Updater] Mod version", modVersion, "found")
+    modVersion := gjson.Get(string(jsonContent), "modVersion")
+    utils.Logger().Println("[Updater] Mod version", modVersion, "found")
 
-	updater.CurrentVersion = ModVersion{
-		Version: modVersion.String(),
-	}
+    updater.CurrentVersion = ModVersion{
+        Version: modVersion.String(),
+    }
 }
 
 func (updater *Updater) GetLatestModVersion() {
@@ -209,65 +234,116 @@ func (updater *Updater) ApplyUpdatesSequentially(destDir string, onProgress func
 
 // DownloadAndExtractUpdate downloads and extracts a zip update, replacing files
 func (updater *Updater) DownloadAndExtractUpdate(version ModVersion, destDir string) error {
-	utils.Logger().Printf("[Updater] Downloading and extracting update %s...\n", version.Version)
-	tmpFile, err := os.CreateTemp("", "update-*.zip")
-	if err != nil {
-		utils.Logger().Println("[Updater] Could not create temp file:", err)
-		return err
-	}
-	tmpFile.Close()
-	defer os.Remove(tmpFile.Name())
-	// Download
-	err = updater.DownloadFile(version.Url, tmpFile.Name())
-	if err != nil {
-		utils.Logger().Println("[Updater] Download failed:", err)
-		return err
-	}
-	// Extract
-	utils.Logger().Printf("[Updater] Extracting %s to %s\n", tmpFile.Name(), destDir)
-	return ExtractZip(tmpFile.Name(), destDir)
+    utils.Logger().Printf("[Updater] Downloading and extracting update %s...\n", version.Version)
+    
+    // Handle destination directory based on build type
+    var actualDestDir string
+    if utils.IsFynePackaged() {
+        // For fyne package, use executable directory
+        execPath, err := os.Executable()
+        if err != nil {
+            utils.Logger().Printf("[Updater] Could not get executable path: %v\n", err)
+            actualDestDir = destDir
+        } else {
+            actualDestDir = filepath.Dir(execPath)
+            if destDir != "." {
+                actualDestDir = filepath.Join(actualDestDir, destDir)
+            }
+        }
+    } else {
+        // For go build, use provided destDir
+        actualDestDir = destDir
+    }
+    
+    utils.Logger().Printf("[Updater] Target directory: %s\n", actualDestDir)
+    
+    tmpFile, err := os.CreateTemp("", "update-*.zip")
+    if err != nil {
+        utils.Logger().Println("[Updater] Could not create temp file:", err)
+        return err
+    }
+    tmpFile.Close()
+    defer os.Remove(tmpFile.Name())
+    
+    // Download
+    err = updater.DownloadFile(version.Url, tmpFile.Name())
+    if err != nil {
+        utils.Logger().Println("[Updater] Download failed:", err)
+        return err
+    }
+    
+    // Extract
+    utils.Logger().Printf("[Updater] Extracting %s to %s\n", tmpFile.Name(), actualDestDir)
+    return ExtractZip(tmpFile.Name(), actualDestDir)
 }
-
 // ExtractZip extracts a zip archive to the destination directory, replacing files
 func ExtractZip(src, dest string) error {
-	utils.Logger().Printf("[Updater] Extracting zip file %s to %s\n", src, dest)
-	r, err := zip.OpenReader(src)
-	if err != nil {
-		utils.Logger().Println("[Updater] Could not open zip file:", err)
-		return err
-	}
-	defer r.Close()
-	for _, f := range r.File {
-		fpath := filepath.Join(dest, f.Name)
-		if f.FileInfo().IsDir() {
-			utils.Logger().Printf("[Updater] Creating directory: %s\n", fpath)
-			os.MkdirAll(fpath, os.ModePerm)
-			continue
-		}
-		if err := os.MkdirAll(filepath.Dir(fpath), os.ModePerm); err != nil {
-			utils.Logger().Printf("[Updater] Could not create directory for file %s: %v\n", fpath, err)
-			return err
-		}
-		outFile, err := os.OpenFile(fpath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, f.Mode())
-		if err != nil {
-			utils.Logger().Printf("[Updater] Could not open file for writing: %s: %v\n", fpath, err)
-			return err
-		}
-		rc, err := f.Open()
-		if err != nil {
-			outFile.Close()
-			utils.Logger().Printf("[Updater] Could not open file in zip: %s: %v\n", f.Name, err)
-			return err
-		}
-		_, err = io.Copy(outFile, rc)
-		outFile.Close()
-		rc.Close()
-		if err != nil {
-			utils.Logger().Printf("[Updater] Error copying file: %s: %v\n", fpath, err)
-			return err
-		}
-		utils.Logger().Printf("[Updater] Extracted file: %s\n", fpath)
-	}
-	utils.Logger().Println("[Updater] Extraction complete.")
-	return nil
+    utils.Logger().Printf("[Updater] Extracting zip file %s to %s\n", src, dest)
+    r, err := zip.OpenReader(src)
+    if err != nil {
+        utils.Logger().Println("[Updater] Could not open zip file:", err)
+        return err
+    }
+    defer r.Close()
+    
+    // Ensure destination directory exists
+    if err := os.MkdirAll(dest, os.ModePerm); err != nil {
+        utils.Logger().Printf("[Updater] Could not create destination directory %s: %v\n", dest, err)
+        return err
+    }
+    
+    // Clean the destination path once
+    cleanDest := filepath.Clean(dest)
+    
+    for _, f := range r.File {
+        // Clean the file name to handle different path separators
+        cleanName := filepath.Clean(f.Name)
+        fpath := filepath.Join(cleanDest, cleanName)
+        
+        // Security check: prevent zip slip attacks
+        // Use Rel to check if the path is within the destination
+        rel, err := filepath.Rel(cleanDest, fpath)
+        if err != nil || len(rel) > 0 && rel[0] == '.' && rel[1] == '.' {
+            utils.Logger().Printf("[Updater] Skipping invalid file path in zip: %s (would extract to: %s)\n", f.Name, fpath)
+            continue
+        }
+        
+        utils.Logger().Printf("[Updater] Processing: %s -> %s\n", f.Name, fpath)
+        
+        if f.FileInfo().IsDir() {
+            utils.Logger().Printf("[Updater] Creating directory: %s\n", fpath)
+            os.MkdirAll(fpath, os.ModePerm)
+            continue
+        }
+        
+        if err := os.MkdirAll(filepath.Dir(fpath), os.ModePerm); err != nil {
+            utils.Logger().Printf("[Updater] Could not create directory for file %s: %v\n", fpath, err)
+            return err
+        }
+        
+        outFile, err := os.OpenFile(fpath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, f.Mode())
+        if err != nil {
+            utils.Logger().Printf("[Updater] Could not open file for writing: %s: %v\n", fpath, err)
+            return err
+        }
+        
+        rc, err := f.Open()
+        if err != nil {
+            outFile.Close()
+            utils.Logger().Printf("[Updater] Could not open file in zip: %s: %v\n", f.Name, err)
+            return err
+        }
+        
+        _, err = io.Copy(outFile, rc)
+        outFile.Close()
+        rc.Close()
+        
+        if err != nil {
+            utils.Logger().Printf("[Updater] Error copying file: %s: %v\n", fpath, err)
+            return err
+        }
+        utils.Logger().Printf("[Updater] Extracted file: %s\n", fpath)
+    }
+    utils.Logger().Println("[Updater] Extraction complete.")
+    return nil
 }

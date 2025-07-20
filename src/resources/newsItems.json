@@ -1,33 +1,9 @@
 {
     "newsItems": [
         {
-            "title": "Version 3.0.1 now available!",
+            "title": "Version 3.0.0 now available!",
             "url": "https://raw.githubusercontent.com/EddieEldridge/tw-script/refs/heads/main/LICENSE.md",
             "date": "2025-01-02",
-            "published": true
-        },
-        {
-            "title": "Competition Announcment",
-            "url": "https://raw.githubusercontent.com/EddieEldridge/tw-script/refs/heads/main/LICENSE.md",
-            "date": "2025-03-03",
-            "published": true
-        },
-        {
-            "title": "New Team Member",
-            "url": "https://raw.githubusercontent.com/EddieEldridge/tw-script/refs/heads/main/LICENSE.md",
-            "date": "2025-04-10",
-            "published": true
-        },
-        {
-            "title": "Upcoming Expansion: Battle for Helm's Deep",
-            "url": "https://raw.githubusercontent.com/EddieEldridge/tw-script/refs/heads/main/LICENSE.md",
-            "date": "2025-05-15",
-            "published": true
-        },
-        {
-            "title": "Developer Q&A: Balancing Factions in LOTR Strategy",
-            "url": "https://raw.githubusercontent.com/EddieEldridge/tw-script/refs/heads/main/LICENSE.md",
-            "date": "2025-06-01",
             "published": true
         }
     ]
