@@ -25,7 +25,7 @@ func InitGUI(updater *updater.Updater, configurator *config.Configurator, quoter
 	myWindow := app.NewWindow("AGO Launcher")
 
 	// Set the size and focus
-	// myWindow.CenterOnScreen()
+	myWindow.CenterOnScreen()
 	myWindow.SetFixedSize(true)
 	myWindow.Resize(fyne.NewSize(1155, 500))
 

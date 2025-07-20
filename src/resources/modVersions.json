@@ -1,6 +1,12 @@
 {
     "modVersions": [
         {
+            "version": "3.2.12",
+            "latest": false,
+            "url": "https://divide-and-conquer-ago.s3.eu-west-1.amazonaws.com/AGO-3.2.12-BETA.zip",
+            "sgc": false
+        },
+        {
             "version": "3.2.13",
             "latest": true,
             "url": "https://divide-and-conquer-ago.s3.eu-west-1.amazonaws.com/AGO-3.2.13-BETA.zip",
