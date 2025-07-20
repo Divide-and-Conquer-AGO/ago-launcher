@@ -13,7 +13,7 @@ import (
 
 func getAboutContent() fyne.CanvasObject {
 	// Logo
-	logo := canvas.NewImageFromFile("medik.png")
+	logo := canvas.NewImageFromResource(resourceMedikPng)
 	logo.FillMode = canvas.ImageFillOriginal
 	logoContainer := container.NewCenter(logo)
 

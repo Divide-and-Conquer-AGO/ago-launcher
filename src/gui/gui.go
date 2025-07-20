@@ -16,6 +16,7 @@ import (
 
 func InitGUI(updater *updater.Updater, configurator *config.Configurator, quoter *quotes.Qouter, newsReader *news.NewsReader) {
 	app := app.NewWithID("divide.and.conquer.ago")
+	app.SetIcon(resourceFaviconIco)
 
 	// Set the theme
 	app.Settings().SetTheme(&AgoTheme{})
@@ -41,7 +42,7 @@ func RenderToolbar(app fyne.App, mainWindow fyne.Window, updater *updater.Update
 		container.NewTabItemWithIcon("About", theme.ComputerIcon(), getAboutContent()),
 	)
 
-	bg := canvas.NewImageFromFile("background.png")
+	bg := canvas.NewImageFromResource(resourceBackgroundPng)
 	bg.FillMode = canvas.ImageFillStretch // or ImageFillContain
 
 	content := container.NewStack(

@@ -4,7 +4,7 @@ import (
 	"ago-launcher/utils"
 	"encoding/json"
 	"io"
-	"os"
+	"net/http"
 
 	"github.com/adam-macioszek/lotr-sdk/quote"
 )
@@ -26,12 +26,13 @@ func (qouter *Qouter) LoadQuotes() (Quotes, error) {
 	var quotes Quotes
 
 	utils.Logger().Println("[Quoter] Loading quotes.json")
-	jsonFile, err := os.Open("resources/quotes.json")
+	resp, err := http.Get("https://raw.githubusercontent.com/Divide-and-Conquer-AGO/ago-launcher/refs/heads/main/src/resources/quotes.json")
 	if err != nil {
-		utils.Logger().Println("[Quoter] could not load quote file:", err)
+		utils.Logger().Println("could not fetch modVersions file from GitHub")
 		return Quotes{}, err
 	}
-	defer jsonFile.Close()
+	jsonFile := resp.Body
+	defer resp.Body.Close()
 
 	byteValue, err := io.ReadAll(jsonFile)
 	if err != nil {

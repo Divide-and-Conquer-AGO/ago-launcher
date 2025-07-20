@@ -1,8 +1,8 @@
 Website = "https://www.divide-and-conquer-ago.com/"
 
 [Details]
-Icon = "icon.png"
-Name = "AGO Launcher"
-ID = "divide.and.conquer.ago.launcher"
-Version = "0.0.1"
-Build = 1
+  Icon = "favicon.ico"
+  Name = "AGO_Launcher"
+  ID = "divide.and.conquer.ago.launcher"
+  Version = "0.0.1"
+  Build = 19

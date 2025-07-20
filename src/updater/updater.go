@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"net/http"
 	"os"
 	"path/filepath"
 	"sort"
@@ -39,7 +40,12 @@ func (updater *Updater) GetCurrentModVersion() {
 	jsonFile, err := os.Open("resources/uiCfg.json")
 	if err != nil {
 		utils.Logger().Println("[Updater] could not open uiCfg file:", err)
-		return
+		// Fallback to alternate path
+		jsonFile, err = os.Open("eopData/config/uiCfg.json")
+		if err != nil {
+			utils.Logger().Println("[Updater] could not open fallback uiCfg file:", err)
+			return
+		}
 	}
 	defer jsonFile.Close()
 
@@ -59,22 +65,22 @@ func (updater *Updater) GetCurrentModVersion() {
 
 func (updater *Updater) GetLatestModVersion() {
 	utils.Logger().Println("[Updater] Retrieving latest mod version")
-	// Local
-	jsonFile, err := os.Open("resources/modVersions.json")
-	if err != nil {
-		utils.Logger().Println("[Updater] could not open modVersions file:", err)
-		return
-	}
-	defer jsonFile.Close()
-
-	// Remote
-	// resp, err := http.Get("https://raw.githubusercontent.com/EddieEldridge/ago-launcher/refs/heads/main/src/resources/modVersions.json?token=<>")
+	// // Local
+	// jsonFile, err := os.Open("resources/modVersions.json")
 	// if err != nil {
-	// 	utils.Logger().Println("could not fetch modVersions file from GitHub")
+	// 	utils.Logger().Println("[Updater] could not open modVersions file:", err)
 	// 	return
 	// }
-	// defer resp.Body.Close()
-	// jsonFile := resp.Body
+	// defer jsonFile.Close()
+
+	// Remote
+	resp, err := http.Get("https://raw.githubusercontent.com/Divide-and-Conquer-AGO/ago-launcher/refs/heads/main/src/resources/modVersions.json")
+	if err != nil {
+		utils.Logger().Println("could not fetch modVersions file from GitHub")
+		return
+	}
+	defer resp.Body.Close()
+	jsonFile := resp.Body
 
 	byteValue, err := io.ReadAll(jsonFile)
 	if err != nil {

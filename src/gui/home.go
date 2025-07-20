@@ -16,7 +16,7 @@ import (
 
 func getHomeContent(app fyne.App, updater *updater.Updater, quoter *quotes.Qouter) fyne.CanvasObject {
 	// Logo
-	logo := canvas.NewImageFromFile("icon.png")
+	logo := canvas.NewImageFromResource(resourceIconPng)
 	logo.FillMode = canvas.ImageFillOriginal
 	logoContainer := container.NewCenter(logo)
 
