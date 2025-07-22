@@ -52,7 +52,10 @@ func (configurator *Configurator) LoadConfigFile(path string, cfgStruct interfac
 		}
 		return nil
 	case ".cfg":
-		cfg, err := ini.Load(absPath)
+		cfg, err := ini.LoadSources(ini.LoadOptions{
+			AllowShadows:   true,
+			SpaceBeforeInlineComment: false,
+		}, absPath)
 		if err != nil {
 			log.Fatalf("[Config] Fail to read ini file at %s: %v\n", absPath, err)
 		}
