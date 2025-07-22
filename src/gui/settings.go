@@ -243,9 +243,6 @@ func getVideoInputs(configurator *config.Configurator) fyne.CanvasObject {
 	option2 := ttwidget.NewCheckWithData("Windowed", binding.BindBool(&configurator.ModConfig.Video.Windowed))
 	option2.SetToolTip("Enable windowed mode")
 
-	option3 := ttwidget.NewCheckWithData("Bloom", binding.BindBool(&configurator.ModConfig.Video.Bloom))
-	option3.SetToolTip("Enable bloom effect")
-
 	option6 := ttwidget.NewCheckWithData("Vulkan Rendering Mode (DXVK)", binding.BindBool(&configurator.EOPConfig.GameCfg.IsDXVKEnabled))
 	option6.SetToolTip("Experimental: Forces Medieval 2 to use DXVK instead of DirectX for rendering. Can massively improve performance on some hardware. \nNote: The first time you use DXVK Rendering, you may experience worse performance due to compilation of shaders.\nThe second time you launch the game, assuming the shaders have compiled, performance should be much better (even better than Vanilla DirectX Rendering)")
 
@@ -254,7 +251,7 @@ func getVideoInputs(configurator *config.Configurator) fyne.CanvasObject {
 	option5 := MakeStringBindingField("Campaign Resolution", &configurator.ModConfig.Video.CampaignResolution, "Campaign resolution (e.g. 1920x1080)")
 
 	content := container.NewVBox(
-		option1, option2, option6, option3, option4, option5,
+		option1, option2, option6, option4, option5,
 	)
 	return content
 }

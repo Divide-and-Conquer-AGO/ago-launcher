@@ -73,6 +73,17 @@ func getUpdateContent(app fyne.App, window fyne.Window, updtr *updater.Updater) 
 	// Buttons - stacked vertically
 	checkUpdateButton := widget.NewButton("Check for updates", func() {
 		updtr.CheckForUpdate()
+		if updtr.UpdateAvailable {
+			app.SendNotification(&fyne.Notification{
+				Title:   "Update Available",
+				Content: "A new mod version is available: " + updtr.LatestVersion.Version,
+			})
+		} else {
+			app.SendNotification(&fyne.Notification{
+				Title:   "No Updates",
+				Content: "You are already on the latest version: " + updtr.CurrentVersion.Version,
+			})
+		}
 	})
 
 	var buttonBox *fyne.Container
@@ -81,8 +92,7 @@ func getUpdateContent(app fyne.App, window fyne.Window, updtr *updater.Updater) 
 			getUpdaterModal(updtr)
 		})
 		buttonBox = container.NewVBox(checkUpdateButton, startUpdateButton)
-		fyneApp := fyne.CurrentApp()
-		fyneApp.SendNotification(&fyne.Notification{
+		app.SendNotification(&fyne.Notification{
 			Title:   "Update Available",
 			Content: "A new mod version is available: " + updtr.LatestVersion.Version,
 		})

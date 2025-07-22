@@ -6,7 +6,6 @@ type ModConfig struct {
 		Windowed           bool   `ini:"windowed"`
 		BattleResolution   string `ini:"battle_resolution"`
 		CampaignResolution string `ini:"campaign_resolution"`
-		Bloom              bool   `ini:"bloom"`
 	} `ini:"video"`
 }
 

@@ -47,29 +47,29 @@ func RandomElement[T any](slice []T) (T, error) {
 	}
 	return slice[rand.Intn(len(slice))], nil
 }
-
-// Run executable relative to current working directory
+// Run executable relative to the location of the running executable
 func RunExecutable(exeName string) {
     LoggerVar.Println("=== Running Local Executable ===")
 
-    // Use current working directory to find the executable
-    cwd, err := os.Getwd()
+    exePath, err := os.Executable()
     if err != nil {
-        LoggerVar.Printf("Error getting current directory: %v\n", err)
+        LoggerVar.Printf("Error getting executable path: %v\n", err)
         return
     }
-    
-    exePath := filepath.Join(cwd, exeName)
-    LoggerVar.Printf("Attempting to run: %s\n", exePath)
+
+    exeDir := filepath.Dir(exePath)
+    targetExePath := filepath.Join(exeDir, exeName)
+    LoggerVar.Printf("Attempting to run: %s\n", targetExePath)
 
     // Check if file exists
-    if _, err := os.Stat(exePath); os.IsNotExist(err) {
-        LoggerVar.Printf("Executable not found: %s\n", exePath)
+    if _, err := os.Stat(targetExePath); os.IsNotExist(err) {
+        LoggerVar.Printf("Executable not found: %s\n", targetExePath)
         return
     }
 
-    // Run the executable
-    cmd := exec.Command(exePath)
+    // Run the executable with working directory set to exeDir
+    cmd := exec.Command(targetExePath)
+    cmd.Dir = exeDir
     err = cmd.Start()
     if err != nil {
         LoggerVar.Printf("Error running executable: %v\n", err)

@@ -10,4 +10,4 @@ run:
 
 package:
 	fyne package
-	copy /Y $(EXE_NAME) "$(modFolder)\"
+	copy /Y $(EXE_NAME) "$(modFolder)"
