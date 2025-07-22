@@ -1,6 +1,7 @@
 Website = "https://www.divide-and-conquer-ago.com/"
 
 [Details]
+  OS = "windows"
   Icon = "favicon.ico"
   Name = "AGO_Launcher"
   ID = "divide.and.conquer.ago.launcher"
