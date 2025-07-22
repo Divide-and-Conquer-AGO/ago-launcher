@@ -18,7 +18,6 @@ func main() {
 
 	// CONFIG
 	configurator := &config.Configurator{}
-	configurator.ConfigLocations = []string{".", "config", "eopData/config"}
 	configurator.LoadAllConfigFiles()
 
 	// NEWSREADER

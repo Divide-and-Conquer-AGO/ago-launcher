@@ -31,8 +31,8 @@ func getSettingsContent(configurator *config.Configurator) fyne.CanvasObject {
 	saveButton := widget.NewButton("Save Settings", func() {
 		configurator.WriteConfigToFile("AGO.cfg", &configurator.AGOConfig, configurator.AGOConfigFile)
 		configurator.WriteConfigToFile("TATW.cfg", &configurator.ModConfig, configurator.ModConfigFile)
-		configurator.WriteConfigToFile("gameCfg.json", &configurator.EOPConfig.GameCfg, nil)
-		configurator.WriteConfigToFile("battlesCfg.json", &configurator.EOPConfig.BattlesCfg, nil)
+		configurator.WriteConfigToFile("eopData/config/gameCfg.json", &configurator.EOPConfig.GameCfg, nil)
+		configurator.WriteConfigToFile("eopData/config/battlesCfg.json", &configurator.EOPConfig.BattlesCfg, nil)
 	})
 
 	// Container

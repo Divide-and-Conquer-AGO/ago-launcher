@@ -7,8 +7,6 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
-
-	"fyne.io/fyne/v2"
 )
 
 var (
@@ -16,44 +14,30 @@ var (
 )
 
 func init() {
-    // For fyne package builds, use Fyne's logging which works properly
-    if IsFynePackaged() {
-        // Use Fyne's logging system
-        LoggerVar = log.New(os.Stdout, "", log.Ldate|log.Ltime|log.Lshortfile)
-    } else {
-        // For go build, use your file logging
-        setupFileLogging()
-    }
+    setupLogger()
 }
 
-func IsFynePackaged() bool {
-    // Simple check: if we're running from a temp directory or system directory,
-    // we're likely packaged
-    execPath, err := os.Executable()
-    if err != nil {
-        return false
-    }
-    return filepath.Dir(execPath) != filepath.Dir(os.Args[0])
+func Logger() *log.Logger {
+	return LoggerVar
 }
 
-func setupFileLogging() {
-    execPath, err := os.Executable()
+func setupLogger() {
+    exePath, err := os.Executable()
+    var logFilePtr *os.File
     if err == nil {
-        execDir := filepath.Dir(execPath)
-        os.Chdir(execDir)
+        logFilePath := filepath.Join(filepath.Dir(exePath), "AGO_Launcher.log")
+        logFilePtr, err = os.OpenFile(logFilePath, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0666)
     }
-    
-    logFilePtr, err := os.OpenFile("AGO_Launcher.log", os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0666)
     if err != nil {
         log.Printf("Failed to open log file: %v\n", err)
         LoggerVar = log.New(os.Stdout, "", log.Ldate|log.Ltime|log.Lshortfile)
     } else {
         LoggerVar = log.New(logFilePtr, "", log.Ldate|log.Ltime|log.Lshortfile)
     }
-}
-
-func Logger() *log.Logger {
-	return LoggerVar
+    if exePath != "" {
+        dir := filepath.Dir(exePath)
+        Logger().Println("Running from directory:", dir)
+    }
 }
 
 func RandomElement[T any](slice []T) (T, error) {
@@ -64,31 +48,18 @@ func RandomElement[T any](slice []T) (T, error) {
 	return slice[rand.Intn(len(slice))], nil
 }
 
-// Run executable in the same directory as the Go program
+// Run executable relative to current working directory
 func RunExecutable(exeName string) {
     LoggerVar.Println("=== Running Local Executable ===")
 
-    var exePath string
-    
-    if IsFynePackaged() {
-        // For fyne package, use executable directory
-        execDir, err := os.Executable()
-        if err != nil {
-            LoggerVar.Printf("Error getting executable path: %v\n", err)
-            return
-        }
-        dir := filepath.Dir(execDir)
-        exePath = filepath.Join(dir, exeName)
-    } else {
-        // For go build, use current working directory
-        cwd, err := os.Getwd()
-        if err != nil {
-            LoggerVar.Printf("Error getting current directory: %v\n", err)
-            return
-        }
-        exePath = filepath.Join(cwd, exeName)
+    // Use current working directory to find the executable
+    cwd, err := os.Getwd()
+    if err != nil {
+        LoggerVar.Printf("Error getting current directory: %v\n", err)
+        return
     }
-
+    
+    exePath := filepath.Join(cwd, exeName)
     LoggerVar.Printf("Attempting to run: %s\n", exePath)
 
     // Check if file exists
@@ -99,19 +70,10 @@ func RunExecutable(exeName string) {
 
     // Run the executable
     cmd := exec.Command(exePath)
-    err := cmd.Start()
+    err = cmd.Start()
     if err != nil {
         LoggerVar.Printf("Error running executable: %v\n", err)
-        
-        // Check if it's a permission-related error
-		LoggerVar.Println("*** PERMISSION ERROR - Try running as Administrator or check antivirus settings ***")
-		
-		// Show Fyne toast notification
-		fyneApp := fyne.CurrentApp()
-		fyneApp.SendNotification(&fyne.Notification{
-			Title:   "Permission Error",
-			Content: "Failed to launch " + exeName + ". Try running this application as Administrator or check antivirus settings.",
-		})
+        LoggerVar.Println("*** PERMISSION ERROR - Try running as Administrator or check antivirus settings ***")
     } else {
         LoggerVar.Println("Executable started successfully")
     }

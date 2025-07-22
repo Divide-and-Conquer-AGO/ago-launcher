@@ -20,3 +20,5 @@ go install github.com/air-verse/air@latest
 cd src 
 air
 ```
+
+This will build the binary (AGO_Launcher.exe) and run it from `resources/mods/ago_beta` where there are various config files and example folders to use
