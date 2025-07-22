@@ -2,7 +2,6 @@ package gui
 
 import (
 	"ago-launcher/config"
-	"os"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
@@ -197,15 +196,33 @@ func getBattleInputs(configurator *config.Configurator) fyne.CanvasObject {
 		func(v int) { configurator.AGOConfig.Battle.DefaultBattleSpeed = v },
 	)
 
-	freeCamEnabled := ttwidget.NewCheckWithData("Freecam Integration", binding.BindBool(&configurator.AGOConfig.Battle.NoDefaultSkirmish))
+	freeCamEnabled := ttwidget.NewCheckWithData("Freecam Integration", binding.BindBool(&configurator.EOPConfig.GameCfg.IsFreecamIntegrationEnabled))
 	freeCamEnabled.SetToolTip("Automatically start and close the Freecam application when the game is launched")
 
-	openButton := widget.NewButton("Open Freecam config", func() {
-		os.Open("eopData/resources/tools/freecam/config.txt")
-	})
+	// openButton := widget.NewButton("Open Freecam config", func() {
+	// 	exePath, err := os.Executable()
+	// 	if err != nil {
+	// 		log.Fatalf("[Config] Could not get executable path: %v", err)
+	// 	}
+	// 	baseDir := filepath.Dir(exePath)
+	// 	configPath := "eopData/resources/tools/freecam/config.txt"
+	// 	if !filepath.IsAbs(configPath) {
+	// 		configPath = filepath.Join(baseDir, configPath)
+	// 	}
+	// 	if err != nil {
+	// 		utils.Logger().Printf("Failed to get executable path", err)
+	// 		return
+	// 	}
+	// 	f, err := os.Open(configPath)
+	// 	if err != nil {
+	// 		utils.Logger().Printf("Failed to open Freecam config", err)
+	// 		return
+	// 	}
+	// 	defer f.Close()
+	// })
 
 	content := container.NewVBox(
-		noDefaultSkirmish, defaultBattleSpeed, freeCamEnabled, openButton,
+		noDefaultSkirmish, defaultBattleSpeed, freeCamEnabled,
 	)
 	return content
 }
