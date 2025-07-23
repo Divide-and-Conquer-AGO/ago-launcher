@@ -50,10 +50,10 @@ func getHomeContent(app fyne.App, updater *updater.Updater, quoter *quotes.Qoute
 	versionContainer := container.NewCenter(versionText)
 
 	// Website Link
-	   websiteURL, err := url.Parse("https://www.divide-and-conquer-ago.com/")
-	   if err != nil {
-			   utils.Logger().Println("invalid website url")
-	   }
+	websiteURL, err := url.Parse("https://www.divide-and-conquer-ago.com/")
+	if err != nil {
+			utils.Logger().Println("invalid website url")
+	}
 	websiteText := widget.NewHyperlink("www.divide-and-conquer-ago.com", websiteURL)
 	websiteText.TextStyle = fyne.TextStyle{Bold: true}
 	websiteContainer := container.NewCenter(websiteText)

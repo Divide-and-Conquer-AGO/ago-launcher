@@ -129,7 +129,7 @@ func (updater *Updater) CheckForUpdate() (ModVersion, bool, error) {
 	return updater.CurrentVersion, false, nil
 }
 
-func (updater *Updater) DownloadFile(url, dest string) error {
+func (updater *Updater) DownloadFile(url, dest string, onProgress func(completed, total int64, percent float64)) error {
 	utils.Logger().Printf("[Updater] Downloading file from %s to %s\n", url, dest)
 	req, _ := grab.NewRequest(dest, url)
 	client := grab.NewClient()
@@ -141,11 +141,17 @@ func (updater *Updater) DownloadFile(url, dest string) error {
 	for {
 		select {
 		case <-t.C:
+			if onProgress != nil {
+				onProgress(resp.BytesComplete(), resp.Size(), resp.Progress())
+			}
 			utils.Logger().Printf("[Updater]   transferred %v / %v bytes (%.2f%%)\n",
 				resp.BytesComplete(),
-				resp.Size,
+				resp.Size(),
 				100*resp.Progress())
 		case <-resp.Done:
+			if onProgress != nil {
+				onProgress(resp.BytesComplete(), resp.Size(), resp.Progress())
+			}
 			if err := resp.Err(); err != nil {
 				utils.Logger().Println("[Updater] Download failed:", err)
 				return err
@@ -186,7 +192,7 @@ func (updater *Updater) GetUpdatesToApply() ([]ModVersion, error) {
 }
 
 // Applies all updates in order, updating the current version after each
-func (updater *Updater) ApplyUpdatesSequentially(destDir string, onProgress func(idx, total int, v ModVersion)) error {
+func (updater *Updater) ApplyUpdatesSequentially(destDir string, onProgress func(idx, total int, v ModVersion), onDownloadProgress func(completed, total int64, percent float64)) error {
 	utils.Logger().Println("[Updater] Applying updates sequentially...")
 	updates, err := updater.GetUpdatesToApply()
 	if err != nil {
@@ -199,7 +205,7 @@ func (updater *Updater) ApplyUpdatesSequentially(destDir string, onProgress func
 			onProgress(i+1, total, update)
 		}
 		utils.Logger().Printf("[Updater] Applying update %s (%d/%d)...\n", update.Version, i+1, total)
-		err := updater.DownloadAndExtractUpdate(update, destDir)
+		err := updater.DownloadAndExtractUpdate(update, destDir, onDownloadProgress)
 		if err != nil {
 			utils.Logger().Printf("[Updater] Failed to apply update %s: %v\n", update.Version, err)
 			return fmt.Errorf("failed to apply update %s: %w", update.Version, err)
@@ -212,33 +218,54 @@ func (updater *Updater) ApplyUpdatesSequentially(destDir string, onProgress func
 }
 
 // DownloadAndExtractUpdate downloads and extracts a zip update, replacing files
-func (updater *Updater) DownloadAndExtractUpdate(version ModVersion, destDir string) error {
+func (updater *Updater) DownloadAndExtractUpdate(version ModVersion, destDir string, onDownloadProgress func(completed, total int64, percent float64)) error {
 	utils.Logger().Printf("[Updater] Downloading and extracting update %s...\n", version.Version)
 
-	utils.Logger().Printf("[Updater] Target directory: %s\n", destDir)
-
-	tmpFile, err := os.CreateTemp("", "update-*.zip")
+	// Get the actual mod directory path
+	exePath, err := os.Executable()
 	if err != nil {
-		utils.Logger().Println("[Updater] Could not create temp file:", err)
+		utils.Logger().Printf("[Updater] Could not get executable path: %v\n", err)
 		return err
 	}
-	tmpFile.Close()
-	defer os.Remove(tmpFile.Name())
+	exeDir := filepath.Dir(exePath)
+	actualDestDir := exeDir // Use the executable's directory as the destination
+	
+	utils.Logger().Printf("[Updater] Target directory: %s\n", actualDestDir)
 
+	// Create temporary file in the destination directory instead of system temp
+	tmpFileName := filepath.Join(actualDestDir, fmt.Sprintf("update-%s.zip", version.Version))
+	
 	// Download
-	err = updater.DownloadFile(version.Url, tmpFile.Name())
+	utils.Logger().Printf("[Updater] Downloading to temp file: %s\n", tmpFileName)
+	err = updater.DownloadFile(version.Url, tmpFileName, onDownloadProgress)
 	if err != nil {
 		utils.Logger().Println("[Updater] Download failed:", err)
+		os.Remove(tmpFileName) // Clean up on download failure
 		return err
+	}
+
+	// Signal extraction starting
+	if onDownloadProgress != nil {
+		onDownloadProgress(-1, 0, 0) // Special signal for extraction start
 	}
 
 	// Extract
-	utils.Logger().Printf("[Updater] Extracting %s to %s\n", tmpFile.Name(), destDir)
-	return ExtractZip(tmpFile.Name(), destDir)
+	utils.Logger().Printf("[Updater] Extracting %s to %s\n", tmpFileName, actualDestDir)
+	err = ExtractZipWithProgress(tmpFileName, actualDestDir, onDownloadProgress)
+	
+	// Clean up the temporary file
+	removeErr := os.Remove(tmpFileName)
+	if removeErr != nil {
+		utils.Logger().Printf("[Updater] Warning: Could not remove temp file %s: %v\n", tmpFileName, removeErr)
+	} else {
+		utils.Logger().Printf("[Updater] Cleaned up temp file: %s\n", tmpFileName)
+	}
+	
+	return err
 }
 
 // ExtractZip extracts a zip archive to the destination directory, replacing files
-func ExtractZip(src, dest string) error {
+func ExtractZip(src, dest string, onProgress func(completed, total int64, percent float64)) error {
 	utils.Logger().Printf("[Updater] Extracting zip file %s to %s\n", src, dest)
 	r, err := zip.OpenReader(src)
 	if err != nil {
@@ -256,6 +283,15 @@ func ExtractZip(src, dest string) error {
 	// Clean the destination path once
 	cleanDest := filepath.Clean(dest)
 
+	// Count total files for progress reporting
+	totalFiles := int64(len(r.File))
+	var processedFiles int64 = 0
+
+	// Signal extraction starting
+	if onProgress != nil {
+		onProgress(0, totalFiles, 0)
+	}
+
 	for _, f := range r.File {
 		// Clean the file name to handle different path separators
 		cleanName := filepath.Clean(f.Name)
@@ -266,6 +302,10 @@ func ExtractZip(src, dest string) error {
 		rel, err := filepath.Rel(cleanDest, fpath)
 		if err != nil || len(rel) > 0 && rel[0] == '.' && rel[1] == '.' {
 			utils.Logger().Printf("[Updater] Skipping invalid file path in zip: %s (would extract to: %s)\n", f.Name, fpath)
+			processedFiles++
+			if onProgress != nil {
+				onProgress(processedFiles, totalFiles, float64(processedFiles)/float64(totalFiles))
+			}
 			continue
 		}
 
@@ -274,6 +314,10 @@ func ExtractZip(src, dest string) error {
 		if f.FileInfo().IsDir() {
 			utils.Logger().Printf("[Updater] Creating directory: %s\n", fpath)
 			os.MkdirAll(fpath, os.ModePerm)
+			processedFiles++
+			if onProgress != nil {
+				onProgress(processedFiles, totalFiles, float64(processedFiles)/float64(totalFiles))
+			}
 			continue
 		}
 
@@ -304,7 +348,17 @@ func ExtractZip(src, dest string) error {
 			return err
 		}
 		utils.Logger().Printf("[Updater] Extracted file: %s\n", fpath)
+		
+		processedFiles++
+		if onProgress != nil {
+			onProgress(processedFiles, totalFiles, float64(processedFiles)/float64(totalFiles))
+		}
 	}
 	utils.Logger().Println("[Updater] Extraction complete.")
 	return nil
+}
+
+// ExtractZipWithProgress extracts a zip archive with progress reporting
+func ExtractZipWithProgress(src, dest string, onProgress func(completed, total int64, percent float64)) error {
+	return ExtractZip(src, dest, onProgress)
 }

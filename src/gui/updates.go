@@ -120,10 +120,14 @@ func getUpdaterModal(updtr *updater.Updater) {
 	updateLabel := widget.NewLabel("Starting update process...")
 	progressBar := widget.NewProgressBar()
 	statusLabel := widget.NewLabel("")
+	downloadProgressLabel := widget.NewLabel("")
+	downloadProgressBar := widget.NewProgressBar()
 	updateWindow.SetContent(container.NewVBox(
 		container.NewCenter(updateLabel),
 		container.NewCenter(statusLabel),
 		progressBar,
+		container.NewCenter(downloadProgressLabel),
+		downloadProgressBar,
 	))
 	updateWindow.Show()
 	go func() {
@@ -137,7 +141,50 @@ func getUpdaterModal(updtr *updater.Updater) {
 				statusLabel.TextStyle = fyne.TextStyle{Bold: true}
 				statusLabel.SetText(fmt.Sprintf("Downloading %s...", v.Version))
 
+				// Reset download progress for new file
+				downloadProgressLabel.SetText("Preparing download...")
+				downloadProgressBar.SetValue(0)
+
 				updateLabel.Refresh()
+				statusLabel.Refresh()
+				downloadProgressLabel.Refresh()
+			})
+		}, func(completed, total int64, percent float64) {
+			// Download and extraction progress callback
+			fyne.Do(func() {
+				if completed == -1 && total == 0 && percent == 0 {
+					// Special signal for extraction start
+					statusLabel.SetText("Download complete, starting extraction...")
+					downloadProgressLabel.SetText("Preparing to extract files...")
+					downloadProgressBar.SetValue(1.0) // Show download as complete
+				} else if completed >= 0 && total > 0 && completed <= total {
+					// Download phase - using byte progress
+					if total > 1024*1024 { // If size is larger than 1MB, it's likely download
+						downloadProgressLabel.SetText(fmt.Sprintf("Downloaded: %.1f MB / %.1f MB (%.1f%%)", 
+							float64(completed)/(1024*1024), 
+							float64(total)/(1024*1024), 
+							percent*100))
+						downloadProgressBar.SetValue(percent)
+						statusLabel.SetText("Downloading...")
+					} else {
+						// Extraction phase - using file count progress
+						downloadProgressLabel.SetText(fmt.Sprintf("Extracted: %d / %d files (%.1f%%)", 
+							completed, total, percent*100))
+						downloadProgressBar.SetValue(percent)
+						statusLabel.SetText("Extracting files...")
+					}
+				} else if completed > 0 && total == 0 {
+					// Download with unknown size
+					downloadProgressLabel.SetText(fmt.Sprintf("Downloaded: %.1f MB", float64(completed)/(1024*1024)))
+					downloadProgressBar.SetValue(0)
+					statusLabel.SetText("Downloading...")
+				} else {
+					// Fallback
+					downloadProgressLabel.SetText(fmt.Sprintf("Processing: %d / %d", completed, total))
+					downloadProgressBar.SetValue(percent)
+				}
+				downloadProgressLabel.Refresh()
+				downloadProgressBar.Refresh()
 				statusLabel.Refresh()
 			})
 		})
@@ -145,14 +192,18 @@ func getUpdaterModal(updtr *updater.Updater) {
 			fyne.Do(func() {
 				statusLabel.TextStyle = fyne.TextStyle{Bold: true}
 				statusLabel.SetText("Update failed: " + err.Error())
+				downloadProgressLabel.SetText("Download failed")
 				statusLabel.Refresh()
+				downloadProgressLabel.Refresh()
 			})
 		} else {
 			fyne.Do(func() {
 				progressBar.SetValue(1.0)
 				statusLabel.TextStyle = fyne.TextStyle{Bold: true}
 				statusLabel.SetText("All updates complete!")
+				downloadProgressLabel.SetText("Download complete")
 				statusLabel.Refresh()
+				downloadProgressLabel.Refresh()
 			})
 		}
 	}()
