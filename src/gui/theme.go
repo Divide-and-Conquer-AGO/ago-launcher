@@ -46,22 +46,25 @@ func (m AgoTheme) Icon(name fyne.ThemeIconName) fyne.Resource {
 
 func (m AgoTheme) Font(style fyne.TextStyle) fyne.Resource {
 	if style.Monospace {
-		return theme.DefaultTheme().Font(style)
+			return resourceLTMuseumBlackTtf
 	}
 	if style.Bold {
 		if style.Italic {
-			return theme.DefaultTheme().Font(style)
+			return resourceLTMuseumItalicTtf
 		}
 		// https://github.com/lusingander/fyne-font-example?tab=readme-ov-file
-		// return resourceGeorgiaTtf
+		return resourceLTMuseumBoldTtf
 	}
 	if style.Italic {
-		return theme.DefaultTheme().Font(style)
+		return resourceLTMuseumItalicTtf
 	}
-	return theme.DefaultTheme().Font(style)
-	// return resourceGeorgiaTtf
+	theme.DefaultTheme().Size(theme.SizeNameCaptionText)
+	return resourceLTMuseumBlackTtf
 }
 
 func (m AgoTheme) Size(name fyne.ThemeSizeName) float32 {
+	if name == theme.SizeNameCaptionText {
+		return 16	
+	}
 	return theme.DefaultTheme().Size(name)
 }

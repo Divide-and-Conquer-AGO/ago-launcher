@@ -41,11 +41,6 @@ func getAboutContent() fyne.CanvasObject {
 	soundsOfMiddleEarthText.TextStyle = fyne.TextStyle{Bold: true}
 	soundsOfMiddleEarthContainer := container.NewCenter(soundsOfMiddleEarthText)
 
-	titleText := canvas.NewText("Launcher created by Medik", color.White)
-	titleText.TextSize = 12
-	titleText.TextStyle = fyne.TextStyle{Bold: true}
-	titleContainer := container.NewCenter(titleText)
-
 	websiteURL, err := url.Parse("https://github.com/EddieEldridge/ago-launcher/tree/main")
 	if err != nil {
 		utils.Logger().Println("invalid website url")
@@ -56,7 +51,7 @@ func getAboutContent() fyne.CanvasObject {
 
 	// Container
 	content := container.NewVBox(
-		logoContainer, tolkienContainer, discordContainer, soundsOfMiddleEarthContainer, websiteContainer, titleContainer, 
+		logoContainer, tolkienContainer, discordContainer, soundsOfMiddleEarthContainer, websiteContainer,
 	)
 	return content
 }

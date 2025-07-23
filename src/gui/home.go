@@ -33,6 +33,7 @@ func getHomeContent(app fyne.App, updater *updater.Updater, quoter *quotes.Qoute
 			   utils.Logger().Println("error random getting quote")
 	   }
 	quoteText := canvas.NewText(quote.Quote, color.White)
+	quoteText.Text = "'" + quoteText.Text + "'"
 	quoteText.TextSize = 18
 	quoteText.TextStyle = fyne.TextStyle{Italic: true}
 	quoteContainer := container.NewCenter(quoteText)
