@@ -8,6 +8,7 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"sort"
 	"time"
@@ -214,6 +215,26 @@ func (updater *Updater) ApplyUpdatesSequentially(destDir string, onProgress func
 		utils.Logger().Printf("[Updater] Update %s applied successfully.\n", update.Version)
 	}
 	utils.Logger().Println("[Updater] All updates applied.")
+
+	// Run FullCleaner.bat after all updates have been applied
+	exePath, err := os.Executable()
+	if err != nil {
+		utils.Logger().Printf("[Updater] Could not get executable path: %v\n", err)
+		return err
+	}
+	exeDir := filepath.Dir(exePath)
+	batchPath := filepath.Join(exeDir, "Full_Cleaner.bat")
+
+	utils.Logger().Printf("[Updater] Running cleanup batch file: %s\n", batchPath)
+	cmd := exec.Command("cmd", "/C", batchPath)
+	cmd.Dir = exeDir
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	if err := cmd.Run(); err != nil {
+		utils.Logger().Printf("[Updater] Failed to run Full_Cleaner.bat: %v\n", err)
+		return err
+	}
+	utils.Logger().Println("[Updater] Full_Cleaner.bat executed successfully.")
 	return nil
 }
 
