@@ -37,6 +37,11 @@ func (m AgoTheme) Color(name fyne.ThemeColorName, variant fyne.ThemeVariant) col
 		return color.RGBA{R: 255, G: 177, B: 68, A: 255}
 	}
 
+	// Text Color
+	if name == theme.ColorNameForeground {
+		return color.RGBA{R: 255, G: 255, B: 255, A: 255}
+	}
+
 	return theme.DefaultTheme().Color(name, variant)
 }
 
