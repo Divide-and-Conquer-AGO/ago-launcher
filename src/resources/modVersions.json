@@ -1,8 +1,14 @@
 {
     "modVersions": [
         {
-            "version": "3.2.14",
+            "version": "3.2.141",
             "latest": true,
+            "url": "https://divide-and-conquer-ago.s3.eu-west-1.amazonaws.com/3.2.14.zip",
+            "sgc": true
+        },
+        {
+            "version": "3.2.14",
+            "latest": false,
             "url": "https://divide-and-conquer-ago.s3.eu-west-1.amazonaws.com/3.2.13.zip",
             "sgc": false
         }
