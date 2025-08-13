@@ -1,11 +1,18 @@
-<h1 align="center">
+<h1 align="center" style="color:#bf6f00;">
   <a href="https://www.divide-and-conquer-ago.com">Divide and Conquer: AGO Launcher</a>
 </h1>
 
-![alt text](docs/img/image-5.png)
-![alt text](docs/img/image-4.png)
-![alt text](docs/img/image-6.png)
-![alt text](docs/img/image-3.png)
+<div align="center">
+  <a href="https://discord.gg/yVHm7kBTAY">
+    <img src="https://img.shields.io/discord/759414542240972840?style=for-the-badge&label=Discord&color=bf6f00" >
+  </a>
+  <div>
+    <img src="docs/img/image-5.png" >
+    <img src="docs/img/image-4.png" >
+    <img src="docs/img/image-6.png" >
+    <img src="docs/img/image-3.png" >
+  </div>
+</div>
 
 -----------------
 ## Development

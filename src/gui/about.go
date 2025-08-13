@@ -17,10 +17,17 @@ func getAboutContent() fyne.CanvasObject {
 	logo.FillMode = canvas.ImageFillOriginal
 	logoContainer := container.NewCenter(logo)
 
-	tolkienText := canvas.NewText("January 3, 1892 - September 2, 1973", color.White)
-	tolkienText.TextSize = 14
-	tolkienText.TextStyle = fyne.TextStyle{Italic: true}
-	tolkienContainer := container.NewCenter(tolkienText)
+	tolkienText1 := canvas.NewText("In memory of J.R.R. Tolkien", color.White)
+	tolkienText1.TextSize = 18
+	tolkienText1.TextStyle = fyne.TextStyle{Italic: true}
+	tolkienContainer1 := container.NewCenter(tolkienText1)
+
+	tolkienText2 := canvas.NewText("January 3, 1892 - September 2, 1973", color.White)
+	tolkienText2.TextSize = 16
+	tolkienText2.TextStyle = fyne.TextStyle{Italic: true}
+	tolkienContainer2 := container.NewCenter(tolkienText2)
+
+	dummyContainer := container.NewCenter(canvas.NewText("", color.Transparent))
 
 	// Text
 	// Title
@@ -51,7 +58,7 @@ func getAboutContent() fyne.CanvasObject {
 
 	// Container
 	content := container.NewVBox(
-		logoContainer, tolkienContainer, discordContainer, soundsOfMiddleEarthContainer, websiteContainer,
+		logoContainer, tolkienContainer1, tolkienContainer2, dummyContainer, discordContainer, soundsOfMiddleEarthContainer, websiteContainer,
 	)
 	return content
 }
