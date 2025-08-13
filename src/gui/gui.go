@@ -31,14 +31,14 @@ func InitGUI(updater *updater.Updater, configurator *config.Configurator, quoter
 	myWindow.CenterOnScreen()
 
 	// Render the main toolbar
-	RenderToolbar(app, myWindow, updater, configurator, quoter, newsReader)
+	RenderToolbar(myWindow, updater, configurator, quoter, newsReader)
 }
 
-func RenderToolbar(app fyne.App, mainWindow fyne.Window, updater *updater.Updater, configurator *config.Configurator, quoter *quotes.Qouter, newsReader *news.NewsReader) {
+func RenderToolbar(mainWindow fyne.Window, updater *updater.Updater, configurator *config.Configurator, quoter *quotes.Qouter, newsReader *news.NewsReader) {
 	tabs := container.NewAppTabs(
-		container.NewTabItemWithIcon("Home", theme.HomeIcon(), getHomeContent(app, updater, quoter)),
+		container.NewTabItemWithIcon("Home", theme.HomeIcon(), getHomeContent(updater, quoter)),
 		container.NewTabItemWithIcon("Settings", theme.SettingsIcon(), getSettingsContent(configurator)),
-		container.NewTabItemWithIcon("Updates", theme.DownloadIcon(), getUpdateContent(app, mainWindow, updater)),
+		container.NewTabItemWithIcon("Updates", theme.DownloadIcon(), getUpdateContent(mainWindow, updater)),
 		container.NewTabItemWithIcon("News", theme.DocumentIcon(), getNewsContent(newsReader)),
 		container.NewTabItemWithIcon("About", theme.ComputerIcon(), getAboutContent()),
 	)

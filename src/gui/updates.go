@@ -2,6 +2,7 @@ package gui
 
 import (
 	"ago-launcher/updater"
+	"ago-launcher/utils"
 	"fmt"
 	"net/url"
 
@@ -12,7 +13,7 @@ import (
 	"fyne.io/fyne/v2/widget"
 )
 
-func getUpdateContent(app fyne.App, window fyne.Window, updtr *updater.Updater) fyne.CanvasObject {
+func getUpdateContent(window fyne.Window, updtr *updater.Updater) fyne.CanvasObject {
 	// Table header
 	headerVersion := widget.NewLabelWithStyle("Version", fyne.TextAlignLeading, fyne.TextStyle{Bold: true})
 	headerSavegame := widget.NewLabelWithStyle("Savegame Compatible", fyne.TextAlignCenter, fyne.TextStyle{Bold: true})
@@ -71,33 +72,49 @@ func getUpdateContent(app fyne.App, window fyne.Window, updtr *updater.Updater) 
 	scrollableTable := container.NewScroll(table)
 	scrollableTable.SetMinSize(fyne.NewSize(500, 300))
 
-	checkUpdateButton := widget.NewButton("Check for updates", func() {
-		updtr.GetCurrentModVersion()
-		updtr.CheckForUpdate()
-		if updtr.UpdateAvailable {
-			app.SendNotification(&fyne.Notification{
-				Title:   "Update Available",
-				Content: "A new mod version is available: " + updtr.LatestVersion.Version,
-			})
-		} else {
-			app.SendNotification(&fyne.Notification{
-				Title:   "No Updates",
-				Content: "You are already on the latest version: " + updtr.CurrentVersion.Version,
-			})
-		}
-	})
-
 	var buttonBox *fyne.Container
 	if updtr.UpdateAvailable {
 		startUpdateButton := widget.NewButton("Update to latest version", func() {
-			getUpdaterModal(updtr, window, tableRows)
+			getUpdaterModal(updtr, window)
 		})
-		buttonBox = container.NewVBox(checkUpdateButton, startUpdateButton)
-		app.SendNotification(&fyne.Notification{
+		checkUpdateButton := widget.NewButton("Check for updates", func() {
+			updtr.GetCurrentModVersion()
+			updtr.CheckForUpdate()
+			if updtr.UpdateAvailable {
+				fyne.CurrentApp().SendNotification(&fyne.Notification{
+					Title:   "Update Available",
+					Content: "A new mod version is available: " + updtr.LatestVersion.Version,
+				})
+			} else {
+				fyne.CurrentApp().SendNotification(&fyne.Notification{
+					Title:   "No Updates",
+					Content: "You are already on the latest version: " + updtr.CurrentVersion.Version,
+				})
+			}
+		})
+		buttonBox = container.NewVBox(startUpdateButton, checkUpdateButton)
+
+		// Notify once if update is available
+		fyne.CurrentApp().SendNotification(&fyne.Notification{
 			Title:   "Update Available",
 			Content: "A new mod version is available: " + updtr.LatestVersion.Version,
 		})
 	} else {
+		checkUpdateButton := widget.NewButton("Check for updates", func() {
+			updtr.GetCurrentModVersion()
+			updtr.CheckForUpdate()
+			if updtr.UpdateAvailable {
+				fyne.CurrentApp().SendNotification(&fyne.Notification{
+					Title:   "Update Available",
+					Content: "A new mod version is available: " + updtr.LatestVersion.Version,
+				})
+			} else {
+				fyne.CurrentApp().SendNotification(&fyne.Notification{
+					Title:   "No Updates",
+					Content: "You are already on the latest version: " + updtr.CurrentVersion.Version,
+				})
+			}
+		})
 		buttonBox = container.NewVBox(checkUpdateButton)
 	}
 
@@ -105,7 +122,7 @@ func getUpdateContent(app fyne.App, window fyne.Window, updtr *updater.Updater) 
 	return content
 }
 
-func getUpdaterModal(updtr *updater.Updater, parentWindow fyne.Window, tableRows []fyne.CanvasObject) {
+func getUpdaterModal(updtr *updater.Updater, parentWindow fyne.Window) {
 	warnAboutUpdates(updtr, parentWindow, func(proceed bool) {
 		if !proceed {
 			return
@@ -201,14 +218,11 @@ func getUpdaterModal(updtr *updater.Updater, parentWindow fyne.Window, tableRows
 					downloadProgressLabel.Refresh()
 
 					// Add close button
-					closeButton := widget.NewButton("Close", func() {
+					closeButton := widget.NewButton("Launch mod", func() {
 						updateWindow.Close()
 						updtr.GetCurrentModVersion()
 						updtr.CheckForUpdate()
-
-						for _, row := range tableRows {
-							row.Refresh()
-						}
+						utils.RunExecutable("M2TWEOP_GUI.exe")
 					})
 					contentBox.Add(container.NewVBox(layout.NewSpacer(), closeButton))
 					contentBox.Refresh()
