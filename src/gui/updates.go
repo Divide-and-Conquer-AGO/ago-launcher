@@ -95,7 +95,7 @@ func getUpdateContent(app fyne.App, window fyne.Window, updtr *updater.Updater) 
 	var buttonBox *fyne.Container
 	if updtr.UpdateAvailable {
 		startUpdateButton := widget.NewButton("Update to latest version", func() {
-			getUpdaterModal(updtr)
+			getUpdaterModal(updtr, window)
 		})
 		buttonBox = container.NewVBox(checkUpdateButton, startUpdateButton)
 		app.SendNotification(&fyne.Notification{
@@ -118,9 +118,9 @@ func getUpdateContent(app fyne.App, window fyne.Window, updtr *updater.Updater) 
 	return content
 }
 
-func getUpdaterModal(updtr *updater.Updater) {
+func getUpdaterModal(updtr *updater.Updater, parentWindow fyne.Window) {
 	// Check for compatibility issues first, before showing the update window
-	warnAboutUpdates(updtr, fyne.CurrentApp().Driver().AllWindows()[0], func(proceed bool) {
+	warnAboutUpdates(updtr, parentWindow, func(proceed bool) {
 		if !proceed {
 			return // User cancelled, don't show update window at all
 		}
@@ -206,19 +206,21 @@ func getUpdaterModal(updtr *updater.Updater) {
 			if err != nil {
 				fyne.Do(func() {
 					statusLabel.TextStyle = fyne.TextStyle{Bold: true}
-					statusLabel.SetText("Update failed: " + err.Error())
-					downloadProgressLabel.SetText("Download failed")
+					statusLabel.SetText("Update failed: " + err.Error() + " Please report this issue in the Discord, providing your AGO_Launcher.log file..")
+					downloadProgressLabel.SetText("Update failed!")
 					statusLabel.Refresh()
 					downloadProgressLabel.Refresh()
+					parentWindow.Canvas().Content().Refresh()
 				})
 			} else {
 				fyne.Do(func() {
 					progressBar.SetValue(1.0)
 					statusLabel.TextStyle = fyne.TextStyle{Bold: true}
 					statusLabel.SetText("All updates complete!")
-					downloadProgressLabel.SetText("Download complete")
+					downloadProgressLabel.SetText("Download complete!")
 					statusLabel.Refresh()
 					downloadProgressLabel.Refresh()
+					parentWindow.Canvas().Content().Refresh()
 				})
 			}
 		}()
