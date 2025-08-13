@@ -28,7 +28,7 @@ func getUpdateContent(app fyne.App, window fyne.Window, updtr *updater.Updater) 
 		versionLabel.Alignment = fyne.TextAlignLeading
 
 		// Savegame compatibility label - center aligned (short Yes/No values)
-		savegameLabel := widget.NewLabel("⚠️")
+		savegameLabel := widget.NewLabel("❌")
 		if v.SaveGameCompatible {
 			savegameLabel.SetText("✅")
 		}
@@ -77,6 +77,7 @@ func getUpdateContent(app fyne.App, window fyne.Window, updtr *updater.Updater) 
 
 	// Buttons - stacked vertically
 	checkUpdateButton := widget.NewButton("Check for updates", func() {
+		updtr.GetCurrentModVersion()
 		updtr.CheckForUpdate()
 		if updtr.UpdateAvailable {
 			app.SendNotification(&fyne.Notification{
