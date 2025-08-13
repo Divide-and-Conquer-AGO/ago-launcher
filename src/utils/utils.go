@@ -38,7 +38,7 @@ func setupLogger() {
 	}
 	if exePath != "" {
 		dir := filepath.Dir(exePath)
-		Logger().Println("Running from directory:", dir)
+		Logger().Println("[Utils] Running from directory:", dir)
 	}
 }
 
@@ -53,11 +53,11 @@ func RandomElement[T any](slice []T) (T, error) {
 // Run executable relative to the location of the running executable
 func RunExecutable(exeName string) {
     var app = fyne.CurrentApp()
-    LoggerVar.Println("=== Running Local Executable ===")
+    Logger().Println("=== Running Local Executable ===")
 
     exePath, err := os.Executable()
     if err != nil {
-        LoggerVar.Printf("Error getting executable path: %v\n", err)
+        Logger().Printf("Error getting executable path: %v\n", err)
         return
     }
 
@@ -66,14 +66,14 @@ func RunExecutable(exeName string) {
     
     // Clean the path to remove any malformed separators
     targetExePath = filepath.Clean(targetExePath)
-    
-    LoggerVar.Printf("Attempting to run: %s\n", targetExePath)
-    LoggerVar.Printf("Executable directory: %s\n", exeDir)
-    LoggerVar.Printf("Target executable name: %s\n", exeName)
+
+    Logger().Printf("[Utils] Attempting to run: %s\n", targetExePath)
+    Logger().Printf("[Utils] Executable directory: %s\n", exeDir)
+    Logger().Printf("[Utils] Target executable name: %s\n", exeName)
 
     // Check if file exists
     if _, err := os.Stat(targetExePath); os.IsNotExist(err) {
-        LoggerVar.Printf("Executable not found: %s\n", targetExePath)
+        Logger().Printf("[Utils] Executable not found: %s\n", targetExePath)
         return
     }
 
@@ -82,14 +82,14 @@ func RunExecutable(exeName string) {
     err = cmd.Start()
     if err != nil {
         var msg = "Error running executable: " + err.Error()
-        LoggerVar.Println(msg)
+        Logger().Println(msg)
         app.SendNotification(&fyne.Notification{
             Title:   "Permission Error", 
             Content: "Try running launcher as Administrator or check antivirus settings",
         })
-        LoggerVar.Println("*** PERMISSION ERROR - Try running as Administrator or check antivirus settings ***")
+        Logger().Println("[Utils] *** PERMISSION ERROR - Try running as Administrator or check antivirus settings ***")
     } else {
-        LoggerVar.Println("Executable started successfully")
+        Logger().Println("[Utils] Executable started successfully")
         app.Quit()
     }
 }

@@ -30,7 +30,7 @@ func getHomeContent(app fyne.App, updater *updater.Updater, quoter *quotes.Qoute
 	// Quote (Quote)
 	   quote, err := quoter.GetRandomQuote()
 	   if err != nil {
-			   utils.Logger().Println("error random getting quote")
+			   utils.Logger().Println("[Home] error random getting quote")
 	   }
 	quoteText := canvas.NewText(quote.Quote, color.White)
 	quoteText.Text = "'" + quoteText.Text + "'"
@@ -53,23 +53,20 @@ func getHomeContent(app fyne.App, updater *updater.Updater, quoter *quotes.Qoute
 	// Website Link
 	websiteURL, err := url.Parse("https://www.divide-and-conquer-ago.com/")
 	if err != nil {
-			utils.Logger().Println("invalid website url")
+			utils.Logger().Println("[Home] invalid website url")
 	}
 	websiteText := widget.NewHyperlink("www.divide-and-conquer-ago.com", websiteURL)
 	websiteText.TextStyle = fyne.TextStyle{Bold: true}
 	websiteContainer := container.NewCenter(websiteText)
 
-	// Buttons
-
-	// Quote Refresh
-	// quoteButton := widget.NewButton("Refresh quote", func() {
-	// 	quote, err := quoter.GetRandomQuote()
-	// 	if err != nil {
-	// 		utils.Logger().Println("error getting random quote")
-	// 	}
-	// 	quoteText.Text = quote.Quote
-	// 	authorText.Text = quote.Author
-	// })
+	// // Discord Link
+	// discordUrl, err := url.Parse("https://discord.gg/yVHm7kBTAY")
+	// if err != nil {
+	// 		utils.Logger().Println("[Home] invalid discord url")
+	// }
+	// discordText := widget.NewHyperlink("Join our Discord", discordUrl)
+	// discordText.TextStyle = fyne.TextStyle{Bold: true}
+	// discordContainer := container.NewCenter(discordText)
 
 	// Launch Mod
 	launchButton := widget.NewButton("Launch Mod", func() {

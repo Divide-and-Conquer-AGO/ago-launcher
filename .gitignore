@@ -28,3 +28,4 @@ tmp
 ago-launcher
 *.log
 .DS_Store
+*.app

@@ -17,16 +17,23 @@ func getAboutContent() fyne.CanvasObject {
 	logo.FillMode = canvas.ImageFillOriginal
 	logoContainer := container.NewCenter(logo)
 
-	tolkienText := canvas.NewText("January 3, 1892 - September 2, 1973", color.White)
-	tolkienText.TextSize = 14
-	tolkienText.TextStyle = fyne.TextStyle{Italic: true}
-	tolkienContainer := container.NewCenter(tolkienText)
+	tolkienText1 := canvas.NewText("In memory of J.R.R. Tolkien", color.White)
+	tolkienText1.TextSize = 18
+	tolkienText1.TextStyle = fyne.TextStyle{Italic: true}
+	tolkienContainer1 := container.NewCenter(tolkienText1)
+
+	tolkienText2 := canvas.NewText("January 3, 1892 - September 2, 1973", color.White)
+	tolkienText2.TextSize = 16
+	tolkienText2.TextStyle = fyne.TextStyle{Italic: true}
+	tolkienContainer2 := container.NewCenter(tolkienText2)
+
+	dummyContainer := container.NewCenter(canvas.NewText("", color.Transparent))
 
 	// Text
 	// Title
 	discordURL, err := url.Parse("https://discord.gg/yVHm7kBTAY")
 	if err != nil {
-		utils.Logger().Println("invalid discord url")
+		utils.Logger().Println("[About]invalid discord url")
 	}
 	discordText := widget.NewHyperlink("Join our Discord", discordURL)
 	discordText.TextStyle = fyne.TextStyle{Bold: true}
@@ -35,7 +42,7 @@ func getAboutContent() fyne.CanvasObject {
 	// Website Link
 	soundsOfMiddleEarth, err := url.Parse("https://sounds-of-middle-earth.com/")
 	if err != nil {
-		utils.Logger().Println("invalid website url")
+		utils.Logger().Println("[About]invalid website url")
 	}
 	soundsOfMiddleEarthText := widget.NewHyperlink("Sounds of Middle-earth", soundsOfMiddleEarth)
 	soundsOfMiddleEarthText.TextStyle = fyne.TextStyle{Bold: true}
@@ -43,7 +50,7 @@ func getAboutContent() fyne.CanvasObject {
 
 	websiteURL, err := url.Parse("https://github.com/EddieEldridge/ago-launcher/tree/main")
 	if err != nil {
-		utils.Logger().Println("invalid website url")
+		utils.Logger().Println("[About]invalid website url")
 	}
 	websiteText := widget.NewHyperlink("Source Code", websiteURL)
 	websiteText.TextStyle = fyne.TextStyle{Bold: true}
@@ -51,7 +58,7 @@ func getAboutContent() fyne.CanvasObject {
 
 	// Container
 	content := container.NewVBox(
-		logoContainer, tolkienContainer, discordContainer, soundsOfMiddleEarthContainer, websiteContainer,
+		logoContainer, tolkienContainer1, tolkienContainer2, dummyContainer, discordContainer, soundsOfMiddleEarthContainer, websiteContainer,
 	)
 	return content
 }
