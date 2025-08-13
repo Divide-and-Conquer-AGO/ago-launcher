@@ -35,5 +35,5 @@ This will build the binary (AGO_Launcher.exe) and run it from `resources/mods/ag
 If you want to test it on an actual mod folder in it's packaged state, you can run
 
 ```make
-make package modFolder=E:\Steam\steamapps\common\Medieval II Total War\mods\ago_beta
+fyne package -release -os windows && xcopy /Y "AGO_Launcher.exe" "E:\Steam\steamapps\common\Medieval II Total War\mods\ago_beta\AGO_Launcher.exe" &&"E:\Steam\steamapps\common\Medieval II Total War\mods\ago_beta\AGO_Launcher.exe"
 ```

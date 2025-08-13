@@ -2,7 +2,7 @@
     "newsItems": [
         {
             "title": "We love our testers!",
-            "url": "https://raw.githubusercontent.com/EddieEldridge/ago-launcher/refs/heads/main/src/newsItems/newsItem1.md",
+            "url": "https://raw.githubusercontent.com/EddieEldridge/ago-launcher/refs/heads/main/src/resources/newsItems/newsItem1.md",
             "date": "2025-01-02",
             "published": true
         }

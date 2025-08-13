@@ -110,10 +110,7 @@ func (updater *Updater) GetLatestModVersion() {
 
 func (updater *Updater) CheckForUpdate() (ModVersion, bool, error) {
 	utils.Logger().Println("[Updater] Checking for updates...")
-	if updater.CurrentVersion.Version == "" {
-		updater.GetCurrentModVersion()
-	}
-
+	updater.GetCurrentModVersion()
 	updater.GetLatestModVersion()
 	latestVersion := updater.LatestVersion
 
@@ -126,6 +123,7 @@ func (updater *Updater) CheckForUpdate() (ModVersion, bool, error) {
 		return latestVersion, true, nil
 	}
 
+	updater.UpdateAvailable = false
 	utils.Logger().Println("[Updater] No update available.")
 	return updater.CurrentVersion, false, nil
 }
@@ -250,12 +248,12 @@ func (updater *Updater) DownloadAndExtractUpdate(version ModVersion, destDir str
 	}
 	exeDir := filepath.Dir(exePath)
 	actualDestDir := exeDir // Use the executable's directory as the destination
-	
+
 	utils.Logger().Printf("[Updater] Target directory: %s\n", actualDestDir)
 
 	// Create temporary file in the destination directory instead of system temp
 	tmpFileName := filepath.Join(actualDestDir, fmt.Sprintf("update-%s.zip", version.Version))
-	
+
 	// Download
 	utils.Logger().Printf("[Updater] Downloading to temp file: %s\n", tmpFileName)
 	err = updater.DownloadFile(version.Url, tmpFileName, onDownloadProgress)
@@ -273,7 +271,7 @@ func (updater *Updater) DownloadAndExtractUpdate(version ModVersion, destDir str
 	// Extract
 	utils.Logger().Printf("[Updater] Extracting %s to %s\n", tmpFileName, actualDestDir)
 	err = ExtractZipWithProgress(tmpFileName, actualDestDir, onDownloadProgress)
-	
+
 	// Clean up the temporary file
 	removeErr := os.Remove(tmpFileName)
 	if removeErr != nil {
@@ -281,7 +279,7 @@ func (updater *Updater) DownloadAndExtractUpdate(version ModVersion, destDir str
 	} else {
 		utils.Logger().Printf("[Updater] Cleaned up temp file: %s\n", tmpFileName)
 	}
-	
+
 	return err
 }
 
@@ -369,7 +367,7 @@ func ExtractZip(src, dest string, onProgress func(completed, total int64, percen
 			return err
 		}
 		utils.Logger().Printf("[Updater] Extracted file: %s\n", fpath)
-		
+
 		processedFiles++
 		if onProgress != nil {
 			onProgress(processedFiles, totalFiles, float64(processedFiles)/float64(totalFiles))
