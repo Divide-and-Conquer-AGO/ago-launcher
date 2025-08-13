@@ -9,5 +9,5 @@ run:
 	air
 
 package:
-	fyne package
+	fyne package -release -os windows
 	copy /Y $(EXE_NAME) "$(modFolder)"
