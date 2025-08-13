@@ -37,8 +37,8 @@ func RenderToolbar(app fyne.App, mainWindow fyne.Window, updater *updater.Update
 	tabs := container.NewAppTabs(
 		container.NewTabItemWithIcon("Home", theme.HomeIcon(), getHomeContent(app, updater, quoter)),
 		container.NewTabItemWithIcon("Settings", theme.SettingsIcon(), getSettingsContent(configurator)),
-		container.NewTabItemWithIcon("News", theme.DocumentIcon(), getNewsContent(newsReader)),
 		container.NewTabItemWithIcon("Updates", theme.DownloadIcon(), getUpdateContent(app, mainWindow, updater)),
+		container.NewTabItemWithIcon("News", theme.DocumentIcon(), getNewsContent(newsReader)),
 		container.NewTabItemWithIcon("About", theme.ComputerIcon(), getAboutContent()),
 	)
 
