@@ -7,17 +7,15 @@ import (
 	"ago-launcher/updater"
 
 	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/theme"
 	fynetooltip "github.com/dweymouth/fyne-tooltip"
 )
 
-func InitGUI(updater *updater.Updater, configurator *config.Configurator, quoter *quotes.Qouter, newsReader *news.NewsReader) {
-	app := app.NewWithID("divide.and.conquer.ago")
-	app.SetIcon(resourceFaviconIco)
-
+func InitGUI(app fyne.App, splashWindow fyne.Window, updater *updater.Updater, configurator *config.Configurator, quoter *quotes.Qouter, newsReader *news.NewsReader) {
+	app.SetIcon(ResourceFaviconIco)
+	
 	// Set the theme
 	app.Settings().SetTheme(&AgoTheme{})
 
@@ -31,10 +29,10 @@ func InitGUI(updater *updater.Updater, configurator *config.Configurator, quoter
 	myWindow.CenterOnScreen()
 
 	// Render the main toolbar
-	RenderToolbar(myWindow, updater, configurator, quoter, newsReader)
+	RenderToolbar(myWindow, splashWindow, updater, configurator, quoter, newsReader)
 }
 
-func RenderToolbar(mainWindow fyne.Window, updater *updater.Updater, configurator *config.Configurator, quoter *quotes.Qouter, newsReader *news.NewsReader) {
+func RenderToolbar(mainWindow fyne.Window, splashWindow fyne.Window, updater *updater.Updater, configurator *config.Configurator, quoter *quotes.Qouter, newsReader *news.NewsReader) {
 	tabs := container.NewAppTabs(
 		container.NewTabItemWithIcon("Home", theme.HomeIcon(), getHomeContent(updater, quoter)),
 		container.NewTabItemWithIcon("Settings", theme.SettingsIcon(), getSettingsContent(configurator)),
@@ -54,5 +52,6 @@ func RenderToolbar(mainWindow fyne.Window, updater *updater.Updater, configurato
 	tabs.SetTabLocation(container.TabLocationTop)
 	mainWindow.SetContent(fynetooltip.AddWindowToolTipLayer(content, mainWindow.Canvas()))
 	mainWindow.RequestFocus()
+	splashWindow.Close()
 	mainWindow.ShowAndRun()
 }

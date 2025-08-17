@@ -3,6 +3,7 @@ package config
 type ModConfig struct {
 	Video struct {
 		BorderlessWindow   bool   `ini:"borderless_window"`
+		Movies             bool   `ini:"movies"`
 		Windowed           bool   `ini:"windowed"`
 		BattleResolution   string `ini:"battle_resolution"`
 		CampaignResolution string `ini:"campaign_resolution"`
