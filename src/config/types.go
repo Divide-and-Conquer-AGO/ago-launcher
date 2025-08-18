@@ -8,6 +8,10 @@ type ModConfig struct {
 		BattleResolution   string `ini:"battle_resolution"`
 		CampaignResolution string `ini:"campaign_resolution"`
 	} `ini:"video"`
+
+	Game struct {
+		EventCutscenes   bool   `ini:"event_cutscenes"`
+	} `ini:"game"`
 }
 
 type AGOConfig struct {

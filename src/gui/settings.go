@@ -263,7 +263,7 @@ func getVideoInputs(configurator *config.Configurator) fyne.CanvasObject {
 	option6 := ttwidget.NewCheckWithData("Vulkan Rendering Mode (DXVK)", binding.BindBool(&configurator.EOPConfig.GameCfg.IsDXVKEnabled))
 	option6.SetToolTip("Experimental: Forces Medieval 2 to use DXVK instead of DirectX for rendering. Can massively improve performance on some hardware. \nNote: The first time you use DXVK Rendering, you may experience worse performance due to compilation of shaders.\nThe second time you launch the game, assuming the shaders have compiled, performance should be much better (even better than Vanilla DirectX Rendering)")
 
-	option3 := ttwidget.NewCheckWithData("Battle Cutscenes", binding.BindBool(&configurator.ModConfig.Video.Movies))
+	option3 := ttwidget.NewCheckWithData("Battle Cutscenes", binding.BindBool(&configurator.ModConfig.Game.EventCutscenes))
 	option3.SetToolTip("Enable battle cutscenes which take over camera control such as those of generals getting killed and gates being broken")
 
 	option4 := MakeStringBindingField("Battle Resolution", &configurator.ModConfig.Video.BattleResolution, "Battle resolution (e.g. 1920 1080)")
