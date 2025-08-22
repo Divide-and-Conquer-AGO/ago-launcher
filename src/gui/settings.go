@@ -165,7 +165,7 @@ func getScriptsInputs(configurator *config.Configurator) fyne.CanvasObject {
 	naturalDisasters.SetToolTip("Should natural disasters such as earthquakes, forest fires, tidal waves and more randomly occur during the campaign.")
 
 	randomAAAIStart := ttwidget.NewCheckWithData("Random AA AI Start", binding.BindBool(&configurator.AGOConfig.Scripts.RandomAaAiStart))
-	randomAAAIStart.SetToolTip("AI Ar-Adunaim start at a random coastal location. Has no effect if the campaign has already been started and thus needs to be set manually in the launcher or at the main menu.")
+	randomAAAIStart.SetToolTip("AI Ar-Adunaim get an additional random coastal settlement in their auto-expansion. Has no effect if the campaign has already been started and thus needs to be set manually in the launcher or at the main menu.")
 
 	mergeDolAmroth := ttwidget.NewCheckWithData("Merge Dol Amroth", binding.BindBool(&configurator.AGOConfig.Scripts.MergeDolAmroth))
 	mergeDolAmroth.SetToolTip("Automatically merge Dol Amroth into Gondor at game start. Has no effect if the campaign has already been started and thus needs to be set manually in the launcher or at the main menu.")
