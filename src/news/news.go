@@ -40,7 +40,7 @@ func (newsReader *NewsReader) GetNewsItems() {
 	// Remote
 	resp, err := http.Get("https://raw.githubusercontent.com/Divide-and-Conquer-AGO/ago-launcher/refs/heads/main/src/resources/newsItems.json")
 	if err != nil {
-		utils.Logger().Println("[News] could not fetch modVersions file from GitHub")
+		utils.Logger().Println("[News] could not fetch modVersions file from GitHub: ", err)
 		return
 	}
 	defer resp.Body.Close()
@@ -48,12 +48,12 @@ func (newsReader *NewsReader) GetNewsItems() {
 
 	byteValue, err := io.ReadAll(jsonFile)
 	if err != nil {
-		utils.Logger().Println("[News] could not open modVersions file")
+		utils.Logger().Println("[News] could not open modVersions file", err)
 	}
 
-	jsonErr := json.Unmarshal(byteValue, newsReader)
-	if jsonErr != nil {
-		utils.Logger().Println("[News] could not unmarshal file")
+	err = json.Unmarshal(byteValue, newsReader)
+	if err != nil {
+		utils.Logger().Println("[News] could not unmarshal file", err)
 	}
 
 	utils.Logger().Printf("[News] Found %d news items\n", len(newsReader.RemoteNewsItems))

@@ -30,7 +30,7 @@ func getHomeContent(updater *updater.Updater, quoter *quotes.Qouter) fyne.Canvas
 	// Quote (Quote)
 	   quote, err := quoter.GetRandomQuote()
 	   if err != nil {
-			   utils.Logger().Println("[Home] error random getting quote")
+			   utils.Logger().Println("[Home] Error random getting quote: ", err)
 	   }
 	quoteText := canvas.NewText(quote.Quote, color.White)
 	quoteText.Text = "'" + quoteText.Text + "'"
@@ -53,7 +53,7 @@ func getHomeContent(updater *updater.Updater, quoter *quotes.Qouter) fyne.Canvas
 	// Website Link
 	websiteURL, err := url.Parse("https://www.divide-and-conquer-ago.com/")
 	if err != nil {
-			utils.Logger().Println("[Home] invalid website url")
+			utils.Logger().Println("[Home] Invalid website url", err)
 	}
 	websiteText := widget.NewHyperlink("www.divide-and-conquer-ago.com", websiteURL)
 	websiteText.TextStyle = fyne.TextStyle{Bold: true}

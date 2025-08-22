@@ -33,7 +33,7 @@ func getAboutContent() fyne.CanvasObject {
 	// Title
 	discordURL, err := url.Parse("https://discord.gg/yVHm7kBTAY")
 	if err != nil {
-		utils.Logger().Println("[About]invalid discord url")
+		utils.Logger().Println("[About] Invalid discord url", err)
 	}
 	discordText := widget.NewHyperlink("Join our Discord", discordURL)
 	discordText.TextStyle = fyne.TextStyle{Bold: true}
@@ -42,7 +42,7 @@ func getAboutContent() fyne.CanvasObject {
 	// Website Link
 	soundsOfMiddleEarth, err := url.Parse("https://sounds-of-middle-earth.com/")
 	if err != nil {
-		utils.Logger().Println("[About]invalid website url")
+		utils.Logger().Println("[About] Invalid SOME url", err)
 	}
 	soundsOfMiddleEarthText := widget.NewHyperlink("Sounds of Middle-earth", soundsOfMiddleEarth)
 	soundsOfMiddleEarthText.TextStyle = fyne.TextStyle{Bold: true}
@@ -50,7 +50,7 @@ func getAboutContent() fyne.CanvasObject {
 
 	websiteURL, err := url.Parse("https://github.com/EddieEldridge/ago-launcher/tree/main")
 	if err != nil {
-		utils.Logger().Println("[About]invalid website url")
+		utils.Logger().Println("[About] Invalid website url", err)
 	}
 	websiteText := widget.NewHyperlink("Source Code", websiteURL)
 	websiteText.TextStyle = fyne.TextStyle{Bold: true}

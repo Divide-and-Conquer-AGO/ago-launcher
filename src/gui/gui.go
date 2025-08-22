@@ -5,6 +5,7 @@ import (
 	"ago-launcher/news"
 	"ago-launcher/quotes"
 	"ago-launcher/updater"
+	"ago-launcher/utils"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/canvas"
@@ -15,7 +16,7 @@ import (
 
 func InitGUI(app fyne.App, splashWindow fyne.Window, updater *updater.Updater, configurator *config.Configurator, quoter *quotes.Qouter, newsReader *news.NewsReader) {
 	app.SetIcon(ResourceFaviconIco)
-	
+
 	// Set the theme
 	app.Settings().SetTheme(&AgoTheme{})
 
@@ -53,5 +54,17 @@ func RenderToolbar(mainWindow fyne.Window, splashWindow fyne.Window, updater *up
 	mainWindow.SetContent(fynetooltip.AddWindowToolTipLayer(content, mainWindow.Canvas()))
 	mainWindow.RequestFocus()
 	splashWindow.Close()
+
+	// LAA Check
+	laaApplied, err := utils.IsLargeAddressAware("../../medieval2.exe")
+	if err != nil {
+		utils.Logger().Println("[Utils] Error checking for LAA:", err)
+	} else {
+		utils.Logger().Println("[Utils] LAA applied:", laaApplied)
+		if !laaApplied {
+			utils.SetLargeAddressAware("../../medieval2.exe")
+		}
+	}
+
 	mainWindow.ShowAndRun()
 }
