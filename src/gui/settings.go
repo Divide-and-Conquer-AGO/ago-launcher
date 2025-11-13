@@ -202,7 +202,7 @@ func getBattleInputs(configurator *config.Configurator) fyne.CanvasObject {
 	// openButton := widget.NewButton("Open Freecam config", func() {
 	// 	exePath, err := os.Executable()
 	// 	if err != nil {
-	// 		log.Fatalf("[Config] Could not get executable path: %v", err)
+	// 		utils.Logger().Fatalf("[Config] Could not get executable path: %v", err)
 	// 	}
 	// 	baseDir := filepath.Dir(exePath)
 	// 	configPath := "eopData/resources/tools/freecam/config.txt"

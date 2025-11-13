@@ -1,11 +1,14 @@
 package main
 
 import (
+	"runtime/debug"
+
 	"ago-launcher/config"
 	"ago-launcher/gui"
 	"ago-launcher/news"
 	"ago-launcher/quotes"
 	"ago-launcher/updater"
+	"ago-launcher/utils"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
@@ -15,13 +18,21 @@ import (
 )
 
 func main() {
+	// Crash Handler
+	defer func() {
+		if r := recover(); r != nil {
+			stack := debug.Stack()
+			utils.Logger().Fatalf("error: %v\n%s\n", r, stack)
+		}
+	}()
+
 	app := app.NewWithID("divide.and.conquer.ago")
+	var splashWindow fyne.Window
 
 	logo := canvas.NewImageFromResource(gui.ResourceFaviconIco)
 	logo.FillMode = canvas.ImageFillOriginal
 	logoContainer := container.NewCenter(logo)
 
-	var splashWindow fyne.Window
 	if drv, ok := fyne.CurrentApp().Driver().(desktop.Driver); ok {
         splashWindow = drv.CreateSplashWindow()
         splashWindow.SetContent(logoContainer)
