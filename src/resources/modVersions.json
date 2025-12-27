@@ -2,7 +2,7 @@
     "modVersions": [
          {
             "version": "3.3.0",
-            "latest": true,
+            "latest": false,
             "url": "https://drive.google.com/file/d/1JDl3juqDwJFnvzNVBMwt46fT0_T8hlyA/view?usp=sharing",
             "sgc": false
         },
