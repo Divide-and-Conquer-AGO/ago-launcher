@@ -1,0 +1,1 @@
+New standalone beta version 3.3.0 is available, final version before release! Please remove any old versions and re-download from scratch.
