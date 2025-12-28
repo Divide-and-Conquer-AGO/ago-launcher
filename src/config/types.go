@@ -51,6 +51,7 @@ type AGOConfig struct {
 		RandomizedStart    bool `ini:"randomized_start"`
 		ShatteredAlliances bool `ini:"shattered_alliances"`
 		LastStandArmies    bool `ini:"last_stand_armies"`
+		CinematicIntros    bool `ini:"use_cinematic_intros"`
 	} `ini:"scripts"`
 
 	Battle struct {

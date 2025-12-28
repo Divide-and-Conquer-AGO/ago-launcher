@@ -179,8 +179,11 @@ func getScriptsInputs(configurator *config.Configurator) fyne.CanvasObject {
 	lastStandArmies := ttwidget.NewCheckWithData("Last Stand Armies", binding.BindBool(&configurator.AGOConfig.Scripts.LastStandArmies))
 	lastStandArmies.SetToolTip("Should factions recieve a last stand army when they are close to being defeated.")
 
+	cinematicIntros := ttwidget.NewCheckWithData("Cinematic Intros", binding.BindBool(&configurator.AGOConfig.Scripts.LastStandArmies))
+	cinematicIntros.SetToolTip("Should there be cinematic intros played at the start of the game for player controlled factions.")
+
 	content := container.NewVBox(
-		naturalDisasters, randomAAAIStart, mergeDolAmroth, randomizedStart, shatteredAlliances, lastStandArmies,
+		naturalDisasters, randomAAAIStart, mergeDolAmroth, randomizedStart, shatteredAlliances, lastStandArmies, cinematicIntros,
 	)
 	return content
 }
