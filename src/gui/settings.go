@@ -182,8 +182,11 @@ func getScriptsInputs(configurator *config.Configurator) fyne.CanvasObject {
 	cinematicIntros := ttwidget.NewCheckWithData("Cinematic Intros", binding.BindBool(&configurator.AGOConfig.Scripts.CinematicIntros))
 	cinematicIntros.SetToolTip("Should there be cinematic intros played at the start of the game for player controlled factions.")
 
+	autoReturnLoot := ttwidget.NewCheckWithData("Auto Return Loot", binding.BindBool(&configurator.AGOConfig.Scripts.AutoReturnLoot))
+	autoReturnLoot.SetToolTip("Should loot automatically be returned after battles.")
+
 	content := container.NewVBox(
-		naturalDisasters, randomAAAIStart, mergeDolAmroth, randomizedStart, shatteredAlliances, lastStandArmies, cinematicIntros,
+		naturalDisasters, randomAAAIStart, mergeDolAmroth, randomizedStart, shatteredAlliances, lastStandArmies, cinematicIntros, autoReturnLoot,
 	)
 	return content
 }

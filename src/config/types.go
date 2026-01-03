@@ -52,6 +52,7 @@ type AGOConfig struct {
 		ShatteredAlliances bool `ini:"shattered_alliances"`
 		LastStandArmies    bool `ini:"last_stand_armies"`
 		CinematicIntros    bool `ini:"use_cinematic_intros"`
+		AutoReturnLoot     bool `ini:"auto_return_loot"`
 	} `ini:"scripts"`
 
 	Battle struct {
