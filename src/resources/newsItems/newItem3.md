@@ -1,0 +1,1 @@
+AGO V3 has been released! If you were a beta tester you are advised to download the release and delete your ago_beta folder. You can transfer your saves from ago_beta/saves to AGO_V3/saves if you wish. Thank you for testing!

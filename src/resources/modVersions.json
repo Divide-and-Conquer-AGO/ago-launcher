@@ -1,34 +1,16 @@
 {
     "modVersions": [
-         {
-            "version": "3.3.0",
-            "latest": false,
-            "url": "https://drive.google.com/file/d/1JDl3juqDwJFnvzNVBMwt46fT0_T8hlyA/view?usp=sharing",
-            "sgc": false
-        },
         {
-            "version": "3.3.1",
+            "version": "3.0.0",
             "latest": false,
-            "url": "https://divide-and-conquer-ago.s3.eu-west-1.amazonaws.com/3.3.1.zip",
+            "url": "https://divide-and-conquer-ago.s3.eu-west-1.amazonaws.com/AGO_V3_Installer.zip",
             "sgc": true
         },
         {
-            "version": "3.3.2",
-            "latest": false,
-            "url": "https://divide-and-conquer-ago.s3.eu-west-1.amazonaws.com/3.3.2.zip",
-            "sgc": false
-        },
-        {
-            "version": "3.3.3",
-            "latest": false,
-            "url": "https://divide-and-conquer-ago.s3.eu-west-1.amazonaws.com/3.3.3.zip",
-            "sgc": true
-        },
-        {
-            "version": "3.3.4",
+            "version": "3.0.1",
             "latest": true,
-            "url": "https://divide-and-conquer-ago.s3.eu-west-1.amazonaws.com/3.3.4.zip",
-            "sgc": false
+            "url": "https://divide-and-conquer-ago.s3.eu-west-1.amazonaws.com/3.0.1.zip",
+            "sgc": true
         }
     ]
 }
