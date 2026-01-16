@@ -12,7 +12,6 @@ import (
 
 	"fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/container"
 )
 
 func main() {
@@ -29,7 +28,7 @@ func main() {
 
 	logo := canvas.NewImageFromResource(gui.ResourceFaviconIco)
 	logo.FillMode = canvas.ImageFillOriginal
-	logoContainer := container.NewCenter(logo)
+	// logoContainer := container.NewCenter(logo)
 
 	// if drv, ok := app.Driver().(desktop.Driver); ok {
 	// 	// splashWindow = drv.CreateSplashWindow()
