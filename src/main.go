@@ -10,11 +10,9 @@ import (
 	"ago-launcher/updater"
 	"ago-launcher/utils"
 
-	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
-	"fyne.io/fyne/v2/driver/desktop"
 )
 
 func main() {
@@ -27,18 +25,18 @@ func main() {
 	}()
 
 	app := app.NewWithID("divide.and.conquer.ago")
-	var splashWindow fyne.Window
+	// var splashWindow fyne.Window
 
 	logo := canvas.NewImageFromResource(gui.ResourceFaviconIco)
 	logo.FillMode = canvas.ImageFillOriginal
 	logoContainer := container.NewCenter(logo)
 
-	if drv, ok := app.Driver().(desktop.Driver); ok {
-		splashWindow = drv.CreateSplashWindow()
-		splashWindow.SetContent(logoContainer)
-		splashWindow.SetTitle("AGO Launcher")
-		splashWindow.Show()
-	}
+	// if drv, ok := app.Driver().(desktop.Driver); ok {
+	// 	// splashWindow = drv.CreateSplashWindow()
+	// 	splashWindow.SetContent(logoContainer)
+	// 	splashWindow.SetTitle("AGO Launcher")
+	// 	splashWindow.Show()
+	// }
 
 	// QUOTER
 	quoter := &quotes.Qouter{}

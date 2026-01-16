@@ -65,9 +65,9 @@ func RenderToolbar(mainWindow fyne.Window, splashWindow fyne.Window, updater *up
 		}
 	}
 
-	if splashWindow != nil {
-		splashWindow.Close()
-	}
+	// if splashWindow != nil {
+	// 	splashWindow.Close()
+	// }
 
 	mainWindow.ShowAndRun()
 }
