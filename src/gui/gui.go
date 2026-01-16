@@ -53,7 +53,6 @@ func RenderToolbar(mainWindow fyne.Window, splashWindow fyne.Window, updater *up
 	tabs.SetTabLocation(container.TabLocationTop)
 	mainWindow.SetContent(fynetooltip.AddWindowToolTipLayer(content, mainWindow.Canvas()))
 	mainWindow.RequestFocus()
-	splashWindow.Close()
 
 	// LAA Check
 	laaApplied, err := utils.IsLargeAddressAware("../../medieval2.exe")
@@ -64,6 +63,10 @@ func RenderToolbar(mainWindow fyne.Window, splashWindow fyne.Window, updater *up
 		if !laaApplied {
 			utils.SetLargeAddressAware("../../medieval2.exe")
 		}
+	}
+
+	if splashWindow != nil {
+		splashWindow.Close()
 	}
 
 	mainWindow.ShowAndRun()

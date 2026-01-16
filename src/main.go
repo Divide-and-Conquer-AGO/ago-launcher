@@ -33,12 +33,12 @@ func main() {
 	logo.FillMode = canvas.ImageFillOriginal
 	logoContainer := container.NewCenter(logo)
 
-	if drv, ok := fyne.CurrentApp().Driver().(desktop.Driver); ok {
-        splashWindow = drv.CreateSplashWindow()
-        splashWindow.SetContent(logoContainer)
+	if drv, ok := app.Driver().(desktop.Driver); ok {
+		splashWindow = drv.CreateSplashWindow()
+		splashWindow.SetContent(logoContainer)
 		splashWindow.SetTitle("AGO Launcher")
-        splashWindow.Show()
-    }
+		splashWindow.Show()
+	}
 
 	// QUOTER
 	quoter := &quotes.Qouter{}
