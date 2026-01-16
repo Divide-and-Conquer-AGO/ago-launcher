@@ -53,5 +53,5 @@ func main() {
 	newsReader := &news.NewsReader{}
 	newsReader.GetNewsItems()
 
-	gui.InitGUI(app, splashWindow, updater, configurator, quoter, newsReader)
+	gui.InitGUI(app, nil, updater, configurator, quoter, newsReader)
 }
