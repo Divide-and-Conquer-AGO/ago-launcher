@@ -32,8 +32,14 @@
         },
         {
             "version": "3.0.5",
-            "latest": true,
+            "latest": false,
             "url": "https://divide-and-conquer-ago.s3.eu-west-1.amazonaws.com/3.0.5.zip",
+            "sgc": true
+        },
+        {
+            "version": "3.0.6",
+            "latest": true,
+            "url": "https://divide-and-conquer-ago.s3.eu-west-1.amazonaws.com/3.0.6.zip",
             "sgc": true
         }
     ]
