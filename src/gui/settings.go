@@ -185,6 +185,9 @@ func getScriptsInputs(configurator *config.Configurator) fyne.CanvasObject {
 	autoReturnLoot := ttwidget.NewCheckWithData("Auto Return Loot", binding.BindBool(&configurator.AGOConfig.Scripts.AutoReturnLoot))
 	autoReturnLoot.SetToolTip("Should loot automatically be returned after battles.")
 
+	autoConvertBuildings := ttwidget.NewCheckWithData("Auto Convert Buildings", binding.BindBool(&configurator.AGOConfig.Scripts.AutoConvertBuildings))
+	autoConvertBuildings.SetToolTip("Should buildings automatically be converted to your factions culture.")
+
 	content := container.NewVBox(
 		naturalDisasters, randomAAAIStart, mergeDolAmroth, randomizedStart, shatteredAlliances, lastStandArmies, cinematicIntros, autoReturnLoot,
 	)

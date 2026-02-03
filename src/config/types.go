@@ -45,14 +45,15 @@ type AGOConfig struct {
 	} `ini:"info"`
 
 	Scripts struct {
-		NaturalDisasters   bool `ini:"natural_disasters"`
-		RandomAaAiStart    bool `ini:"random_aa_ai_start"`
-		MergeDolAmroth     bool `ini:"merge_dol_amroth"`
-		RandomizedStart    bool `ini:"randomized_start"`
-		ShatteredAlliances bool `ini:"shattered_alliances"`
-		LastStandArmies    bool `ini:"last_stand_armies"`
-		CinematicIntros    bool `ini:"use_cinematic_intros"`
-		AutoReturnLoot     bool `ini:"auto_return_loot"`
+		NaturalDisasters   		 bool `ini:"natural_disasters"`
+		RandomAaAiStart    		 bool `ini:"random_aa_ai_start"`
+		MergeDolAmroth     		 bool `ini:"merge_dol_amroth"`
+		RandomizedStart    		 bool `ini:"randomized_start"`
+		ShatteredAlliances 		 bool `ini:"shattered_alliances"`
+		LastStandArmies    		 bool `ini:"last_stand_armies"`
+		CinematicIntros    		 bool `ini:"use_cinematic_intros"`
+		AutoReturnLoot     		 bool `ini:"auto_return_loot"`
+		AutoConvertBuildings     bool `ini:"auto_convert_buildings"`
 	} `ini:"scripts"`
 
 	Battle struct {
