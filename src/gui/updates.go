@@ -70,7 +70,6 @@ func getUpdateContent(window fyne.Window, updtr *updater.Updater) fyne.CanvasObj
 	}
 
 	scrollableTable := container.NewScroll(table)
-	scrollableTable.SetMinSize(fyne.NewSize(500, 300))
 
 	var buttonBox *fyne.Container
 	if updtr.UpdateAvailable {
@@ -118,7 +117,7 @@ func getUpdateContent(window fyne.Window, updtr *updater.Updater) fyne.CanvasObj
 		buttonBox = container.NewVBox(checkUpdateButton)
 	}
 
-	content := container.NewBorder(nil, buttonBox, nil, nil, table)
+	content := container.NewBorder(nil, buttonBox, nil, nil, scrollableTable)
 	return content
 }
 
