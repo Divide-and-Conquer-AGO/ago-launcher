@@ -50,8 +50,14 @@
         },
         {
             "version": "3.0.8",
-            "latest": true,
+            "latest": false,
             "url": "https://pub-4a433a254a904270915c43aa9803d87e.r2.dev/3.0.8.zip",
+            "sgc": true
+        },
+        {
+            "version": "3.0.9",
+            "latest": true,
+            "url": "https://pub-4a433a254a904270915c43aa9803d87e.r2.dev/3.0.9.zip",
             "sgc": true
         }
     ]
