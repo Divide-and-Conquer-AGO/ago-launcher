@@ -1,12 +1,6 @@
 {
     "modVersions": [
         {
-            "version": "3.0.0",
-            "latest": false,
-            "url": "https://divide-and-conquer-ago.s3.eu-west-1.amazonaws.com/AGO_V3_Installer.zip",
-            "sgc": true
-        },
-        {
             "version": "3.0.1",
             "latest": false,
             "url": "https://pub-4a433a254a904270915c43aa9803d87e.r2.dev/3.0.1.zip",
