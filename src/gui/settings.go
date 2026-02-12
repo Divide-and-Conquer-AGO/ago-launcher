@@ -154,8 +154,14 @@ func getInfoInputs(configurator *config.Configurator) fyne.CanvasObject {
 		func(v int) { configurator.AGOConfig.Info.WatchtowerRadius = v },
 	)
 
+	option3 := ttwidget.NewCheckWithData("3160p/1440p Font Support", binding.BindBool(&configurator.AGOConfig.Info.FontScaling))
+	option3.SetToolTip("Enable automatic font scaling for high-resolution monitors (1440p and 4K). When enabled, fonts will be automatically scaled up for better readability on high-resolution displays.")
+
+	option4 := ttwidget.NewCheckWithData("Custom Movement Extent Colors", binding.BindBool(&configurator.AGOConfig.Info.CustomExtensColors))
+	option4.SetToolTip("Adjust character's movement extent colors on the campaign map based on the faction colors. If you wish to further edit the colors manually, please refer to the colors.lua file.")
+
 	content := container.NewVBox(
-		option1, option2, watchtowerRadius,
+		option1, option2, watchtowerRadius, option3, option4,
 	)
 	return content
 }
@@ -205,6 +211,9 @@ func getBattleInputs(configurator *config.Configurator) fyne.CanvasObject {
 		func(v int) { configurator.AGOConfig.Battle.DefaultBattleSpeed = v },
 	)
 
+	changeGeneralPosition := ttwidget.NewCheckWithData("Change General Position", binding.BindBool(&configurator.AGOConfig.Battle.ChangeGeneralPosition))
+	changeGeneralPosition.SetToolTip("Change the default position of generals in battle")
+
 	freeCamEnabled := ttwidget.NewCheckWithData("Freecam Integration", binding.BindBool(&configurator.EOPConfig.GameCfg.IsFreecamIntegrationEnabled))
 	freeCamEnabled.SetToolTip("Automatically start and close the Freecam application when the game is launched")
 
@@ -231,7 +240,7 @@ func getBattleInputs(configurator *config.Configurator) fyne.CanvasObject {
 	// })
 
 	content := container.NewVBox(
-		noDefaultSkirmish, defaultBattleSpeed, freeCamEnabled,
+		noDefaultSkirmish, defaultBattleSpeed, freeCamEnabled, changeGeneralPosition,
 	)
 	return content
 }

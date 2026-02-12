@@ -39,9 +39,11 @@ type AGOConfig struct {
 	} `ini:"saving"`
 
 	Info struct {
-		HideArmyInfo       bool `ini:"hide_army_info"`
-		AIRaidNotification bool `ini:"ai_raid_notification"`
-		WatchtowerRadius   int  `ini:"watchtower_radius"`
+		HideArmyInfo       	 bool  `ini:"hide_army_info"`
+		AIRaidNotification 	 bool  `ini:"ai_raid_notification"`
+		WatchtowerRadius   	 int   `ini:"watchtower_radius"`
+		FontScaling		   	 bool  `ini:"enable_font_scaling"`
+		CustomExtensColors   bool  `ini:"custom_extent_colors"`
 	} `ini:"info"`
 
 	Scripts struct {
@@ -57,8 +59,9 @@ type AGOConfig struct {
 	} `ini:"scripts"`
 
 	Battle struct {
-		NoDefaultSkirmish  bool `ini:"no_default_skirmish"`
-		DefaultBattleSpeed int  `ini:"default_battle_speed"`
+		NoDefaultSkirmish  	  bool  `ini:"no_default_skirmish"`
+		DefaultBattleSpeed 	  int   `ini:"default_battle_speed"`
+		ChangeGeneralPosition bool  `ini:"change_general_position"`
 	} `ini:"battle"`
 
 	Difficulty struct {
