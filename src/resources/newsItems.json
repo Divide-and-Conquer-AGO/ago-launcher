@@ -1,15 +1,9 @@
 {
     "newsItems": [
         {
-            "title": "We love our testers!",
-            "url": "https://raw.githubusercontent.com/EddieEldridge/ago-launcher/refs/heads/main/src/resources/newsItems/newsItem1.md",
-            "date": "2025-01-02",
-            "published": true
-        },
-        {
-            "title": "3.3.0-BETA is now available",
-            "url": "https://raw.githubusercontent.com/EddieEldridge/ago-launcher/refs/heads/main/src/resources/newsItems/newsItem2.md",
-            "date": "2025-12-27",
+            "title": "Update your launcher!",
+            "url": "https://raw.githubusercontent.com/EddieEldridge/ago-launcher/refs/heads/main/src/resources/newsItems/launcherNotification.md",
+            "date": "2026-01-10",
             "published": true
         },
         {

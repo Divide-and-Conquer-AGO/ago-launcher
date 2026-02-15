@@ -1,0 +1,3 @@
+If you have issues with the launcher not starting or being buggy, try downloading the latest nightly build version from here -> https://nightly.link/Divide-and-Conquer-AGO/ago-launcher/workflows/build/main?preview
+
+If you need to download patches manually for whatever reason, you can find them here -> https://raw.githubusercontent.com/Divide-and-Conquer-AGO/ago-launcher/refs/heads/main/src/resources/modVersions.json
