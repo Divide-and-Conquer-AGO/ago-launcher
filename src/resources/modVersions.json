@@ -1,40 +1,46 @@
 {
-    "modVersions": [
-        {
-            "version": "3.0.5",
-            "latest": false,
-            "url": "https://divide-and-conquer-ago.com/3.0.5_New.zip",
-            "sgc": true
-        },
-        {
-            "version": "3.0.6",
-            "latest": false,
-            "url": "https://divide-and-conquer-ago.com/3.0.6.zip",
-            "sgc": true
-        },
-        {
-            "version": "3.0.7",
-            "latest": false,
-            "url": "https://divide-and-conquer-ago.com/3.0.7.zip",
-            "sgc": true
-        },
-        {
-            "version": "3.0.8",
-            "latest": false,
-            "url": "https://divide-and-conquer-ago.com/3.0.8.zip",
-            "sgc": true
-        },
-        {
-            "version": "3.0.9",
-            "latest": false,
-            "url": "https://divide-and-conquer-ago.com/3.0.9.zip",
-            "sgc": true
-        },
-        {
-            "version": "3.1.0",
-            "latest": true,
-            "url": "https://divide-and-conquer-ago.com/3.1.0.zip",
-            "sgc": false
-        }
-    ]
+  "modVersions": [
+    {
+      "version": "3.0.5",
+      "latest": false,
+      "url": "https://divide-and-conquer-ago.com/3.0.5_New.zip",
+      "sgc": true
+    },
+    {
+      "version": "3.0.6",
+      "latest": false,
+      "url": "https://divide-and-conquer-ago.com/3.0.6.zip",
+      "sgc": true
+    },
+    {
+      "version": "3.0.7",
+      "latest": false,
+      "url": "https://divide-and-conquer-ago.com/3.0.7.zip",
+      "sgc": true
+    },
+    {
+      "version": "3.0.8",
+      "latest": false,
+      "url": "https://divide-and-conquer-ago.com/3.0.8.zip",
+      "sgc": true
+    },
+    {
+      "version": "3.0.9",
+      "latest": false,
+      "url": "https://divide-and-conquer-ago.com/3.0.9.zip",
+      "sgc": true
+    },
+    {
+      "version": "3.1.0",
+      "latest": false,
+      "url": "https://divide-and-conquer-ago.com/3.1.0.zip",
+      "sgc": false
+    },
+    {
+      "version": "3.1.1",
+      "latest": true,
+      "url": "https://divide-and-conquer-ago.com/3.1.1_fix.zip",
+      "sgc": false
+    }
+  ]
 }
