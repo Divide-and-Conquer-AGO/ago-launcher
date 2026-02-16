@@ -50,8 +50,14 @@
     },
     {
       "version": "3.1.3",
-      "latest": true,
+      "latest": false,
       "url": "https://divide-and-conquer-ago.com/3.1.3.zip",
+      "sgc": false
+    },
+    {
+      "version": "3.1.4",
+      "latest": true,
+      "url": "https://divide-and-conquer-ago.com/3.1.4.zip",
       "sgc": false
     }
   ]
