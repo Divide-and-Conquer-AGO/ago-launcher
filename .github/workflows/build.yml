@@ -1,7 +1,14 @@
 # Use the following for linting: https://rhysd.github.io/actionlint/
 name: Build AGO Launcher
 
-on: [push]
+on:
+  push:
+  schedule:
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   # It runs on every commit pushed to GitHub
@@ -22,8 +29,28 @@ jobs:
       - name: "Build AGO Launcher"
         run: cd src && fyne package -release -os windows
 
+      - name: "Prepare Nightly Binary"
+        shell: pwsh
+        run: |
+          Copy-Item -Path "src/AGO_Launcher.exe" -Destination "src/AGO_Launcher_nightly.exe" -Force
+
       - name: "Upload Artifact"
         uses: actions/upload-artifact@v4
         with:
           name: "AGO-Launcher-latest-build-${{ github.workflow_sha }}"
           path: src/AGO_Launcher.exe
+
+      - name: "Create or Update Nightly Release"
+        uses: ncipollo/release-action@v1
+        with:
+          tag: nightly
+          name: AGO Launcher Nightly
+          body: |
+            Automated nightly build.
+
+            - Commit: ${{ github.sha }}
+            - Run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          artifacts: src/AGO_Launcher.exe
+          allowUpdates: true
+          replacesArtifacts: true
+          prerelease: true
