@@ -24,7 +24,8 @@ func getUpdateContent(window fyne.Window, updtr *updater.Updater) fyne.CanvasObj
 
 	// Table rows
 	var tableRows []fyne.CanvasObject
-	for _, v := range updtr.AvailableVersions.ModVersions {
+	for i := len(updtr.AvailableVersions.ModVersions) - 1; i >= 0; i-- {
+		v := updtr.AvailableVersions.ModVersions[i]
 		versionLabel := widget.NewLabel(v.Version)
 		versionLabel.Alignment = fyne.TextAlignLeading
 
