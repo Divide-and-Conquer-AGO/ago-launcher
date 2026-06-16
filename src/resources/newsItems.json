@@ -11,6 +11,12 @@
             "url": "https://raw.githubusercontent.com/EddieEldridge/ago-launcher/refs/heads/main/src/resources/newsItems/newsItem3.md",
             "date": "2026-01-10",
             "published": true
+        },
+        {
+            "title": "AGO V3.2 is here!",
+            "url": "https://raw.githubusercontent.com/EddieEldridge/ago-launcher/refs/heads/main/src/resources/newsItems/newsItem4.md",
+            "date": "2026-06-15",
+            "published": true
         }
     ]
 }
