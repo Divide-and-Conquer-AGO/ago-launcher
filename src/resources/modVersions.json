@@ -2,7 +2,7 @@
   "modVersions": [
     {
       "version": "6.0.3",
-      "latest": false,
+      "latest": true,
       "url": "https://divide-and-conquer-ago.com/6.0.3.zip",
       "sgc": true
     }
