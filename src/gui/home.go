@@ -22,7 +22,7 @@ func getHomeContent(updater *updater.Updater, quoter *quotes.Qouter) fyne.Canvas
 
 	// Text
 	// Title
-	titleText := canvas.NewText("Divide and Conquer: AGO", color.White)
+	titleText := canvas.NewText("Divide and Conquer", color.White)
 	titleText.TextSize = 32
 	titleText.TextStyle = fyne.TextStyle{Bold: true}
 	titleContainer := container.NewCenter(titleText)
@@ -51,11 +51,11 @@ func getHomeContent(updater *updater.Updater, quoter *quotes.Qouter) fyne.Canvas
 	versionContainer := container.NewCenter(versionText)
 
 	// Website Link
-	websiteURL, err := url.Parse("https://www.divide-and-conquer-ago.com/")
+	websiteURL, err := url.Parse("Discord")
 	if err != nil {
 			utils.Logger().Println("[Home] Invalid website url", err)
 	}
-	websiteText := widget.NewHyperlink("www.divide-and-conquer-ago.com", websiteURL)
+	websiteText := widget.NewHyperlink("https://discord.gg/nxjjeg236y", websiteURL)
 	websiteText.TextStyle = fyne.TextStyle{Bold: true}
 	websiteContainer := container.NewCenter(websiteText)
 

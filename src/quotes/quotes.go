@@ -26,7 +26,7 @@ func (qouter *Qouter) LoadQuotes() (Quotes, error) {
 	var quotes Quotes
 
 	utils.Logger().Println("[Quoter] Loading quotes.json")
-	resp, err := http.Get("https://raw.githubusercontent.com/Divide-and-Conquer-AGO/ago-launcher/refs/heads/main/src/resources/quotes.json")
+	resp, err := http.Get("https://raw.githubusercontent.com/Divide-and-Conquer-AGO/ago-launcher/refs/heads/divide-and-conquer/src/resources/quotes.json")
 	if err != nil {
 		utils.Logger().Println("could not fetch modVersions file from GitHub")
 		return Quotes{}, err

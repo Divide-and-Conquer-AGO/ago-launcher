@@ -21,7 +21,7 @@ func InitGUI(app fyne.App, splashWindow fyne.Window, updater *updater.Updater, c
 	app.Settings().SetTheme(&AgoTheme{})
 
 	// Create the default window
-	myWindow := app.NewWindow("AGO Launcher")
+	myWindow := app.NewWindow("DaC Launcher")
 
 	// Set the size and focus
 	myWindow.SetMaster()

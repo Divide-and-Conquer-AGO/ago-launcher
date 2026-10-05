@@ -116,9 +116,9 @@ func (configurator *Configurator) WriteConfigToFile(path string, cfgData interfa
 }
 
 func (configurator *Configurator) LoadAllConfigFiles() {
-	// AGO.cfg
-	agoCfgPtr := configurator.LoadConfigFile("AGO.cfg", &configurator.AGOConfig)
-	configurator.AGOConfigFile = agoCfgPtr
+	// // DaC.cfg
+	// agoCfgPtr := configurator.LoadConfigFile("AGO.cfg", &configurator.AGOConfig)
+	// configurator.AGOConfigFile = agoCfgPtr
 
 	// TATW.cfg
 	modCfgPtr := configurator.LoadConfigFile("TATW.cfg", &configurator.ModConfig)

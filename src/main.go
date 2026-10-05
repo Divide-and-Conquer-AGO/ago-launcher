@@ -33,7 +33,7 @@ func main() {
 	// if drv, ok := app.Driver().(desktop.Driver); ok {
 	// 	// splashWindow = drv.CreateSplashWindow()
 	// 	splashWindow.SetContent(logoContainer)
-	// 	splashWindow.SetTitle("AGO Launcher")
+	// 	splashWindow.SetTitle("DaC Launcher")
 	// 	splashWindow.Show()
 	// }
 

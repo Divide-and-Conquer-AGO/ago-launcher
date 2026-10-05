@@ -38,7 +38,7 @@ func (newsReader *NewsReader) GetNewsItems() {
 	// defer jsonFile.Close()
 
 	// Remote
-	resp, err := http.Get("https://raw.githubusercontent.com/Divide-and-Conquer-AGO/ago-launcher/refs/heads/main/src/resources/newsItems.json")
+	resp, err := http.Get("https://raw.githubusercontent.com/Divide-and-Conquer-AGO/ago-launcher/refs/heads/divide-and-conquer/src/resources/newsItems.json")
 	if err != nil {
 		utils.Logger().Println("[News] could not fetch modVersions file from GitHub: ", err)
 		return

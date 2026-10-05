@@ -1,5 +1,5 @@
 # Use the following for linting: https://rhysd.github.io/actionlint/
-name: Build AGO Launcher
+name: Build DAC Launcher
 
 on:
   push:
@@ -26,31 +26,31 @@ jobs:
       - name: "Install Fyne"
         run: go install fyne.io/tools/cmd/fyne@latest
 
-      - name: "Build AGO Launcher"
+      - name: "Build DAC Launcher"
         run: cd src && fyne package -release -os windows
 
       - name: "Prepare Nightly Binary"
         shell: pwsh
         run: |
-          Copy-Item -Path "src/AGO_Launcher.exe" -Destination "src/AGO_Launcher_nightly.exe" -Force
+          Copy-Item -Path "src/DAC_Launcher.exe" -Destination "src/DAC_Launcher_nightly.exe" -Force
 
       - name: "Upload Artifact"
         uses: actions/upload-artifact@v4
         with:
-          name: "AGO-Launcher-latest-build-${{ github.workflow_sha }}"
-          path: src/AGO_Launcher.exe
+          name: "DAC-Launcher-latest-build-${{ github.workflow_sha }}"
+          path: src/DAC_Launcher.exe
 
       - name: "Create or Update Nightly Release"
         uses: ncipollo/release-action@v1
         with:
           tag: nightly
-          name: AGO Launcher Nightly
+          name: DAC Launcher Nightly
           body: |
             Automated nightly build.
 
             - Commit: ${{ github.sha }}
             - Run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-          artifacts: src/AGO_Launcher.exe
+          artifacts: src/DAC_Launcher.exe
           allowUpdates: true
           replacesArtifacts: true
           prerelease: true

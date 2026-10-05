@@ -79,7 +79,7 @@ func (updater *Updater) GetLatestModVersion() {
 	// defer jsonFile.Close()
 
 	// Remote
-	resp, err := http.Get("https://raw.githubusercontent.com/Divide-and-Conquer-AGO/ago-launcher/refs/heads/main/src/resources/modVersions.json")
+	resp, err := http.Get("https://raw.githubusercontent.com/Divide-and-Conquer-AGO/ago-launcher/refs/heads/divide-and-conquer/src/resources/modVersions.json")
 	if err != nil {
 		utils.Logger().Println("[Updater] could not fetch modVersions file from GitHub")
 		return

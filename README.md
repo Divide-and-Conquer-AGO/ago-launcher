@@ -1,5 +1,5 @@
 <h1 align="center" style="color:#bf6f00;">
-  <a href="https://www.divide-and-conquer-ago.com">Divide and Conquer: AGO Launcher</a>
+  <a href="https://www.divide-and-conquer-ago.com">Divide and Conquer: V6 Launcher</a>
 </h1>
 
 <div align="center">
@@ -36,5 +36,5 @@ If you want to test it on an actual mod folder in it's packaged state, you can r
 
 ```shell
 cd src
-fyne package -release -os windows && xcopy /Y "AGO_Launcher.exe" "E:\Steam\steamapps\common\Medieval II Total War\mods\ago_beta\AGO_Launcher.exe" &&"E:\Steam\steamapps\common\Medieval II Total War\mods\ago_beta\AGO_Launcher.exe"
+fyne package -release -os windows && xcopy /Y "DaC_Launcher.exe" "E:\Steam\steamapps\common\Medieval II Total War\mods\dac_beta\DaC_Launcher.exe" &&"E:\Steam\steamapps\common\Medieval II Total War\mods\dac_beta\DaC_Launcher.exe"
 ```
