@@ -36,5 +36,5 @@ If you want to test it on an actual mod folder in it's packaged state, you can r
 
 ```shell
 cd src
-fyne package -release -os windows && xcopy /Y "DaC_Launcher.exe" "E:\Steam\steamapps\common\Medieval II Total War\mods\dac_beta\DaC_Launcher.exe" &&"E:\Steam\steamapps\common\Medieval II Total War\mods\dac_beta\DaC_Launcher.exe"
+fyne package -release -os windows && xcopy /Y "DaC_Launcher.exe" "E:\Steam\steamapps\common\Medieval II Total War\mods\dac-beta\DaC_Launcher.exe" &&"E:\Steam\steamapps\common\Medieval II Total War\mods\dac-beta\DaC_Launcher.exe"
 ```
