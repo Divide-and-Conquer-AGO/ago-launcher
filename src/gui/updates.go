@@ -202,7 +202,7 @@ func getUpdaterModal(updtr *updater.Updater, parentWindow fyne.Window) {
 				fyne.Do(func() {
 					statusLabel.TextStyle = fyne.TextStyle{Bold: true}
 					statusLabel.SetText("Update failed: " + err.Error() +
-						" Please report this issue in the Discord, providing your AGO_Launcher.log file.")
+						" Please report this issue in the Discord, providing your DaC_Launcher.log file.")
 					downloadProgressLabel.SetText("Update failed!")
 					statusLabel.Refresh()
 					downloadProgressLabel.Refresh()

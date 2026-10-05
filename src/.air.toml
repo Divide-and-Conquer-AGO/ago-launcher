@@ -3,8 +3,8 @@ tmp_dir = "tmp"
 
 [build]
   args_bin = []
-  bin = "./resources/mods/ago_beta/AGO_Launcher.exe"
-  cmd = "go build -o ./resources/mods/ago_beta/AGO_Launcher.exe ."
+  bin = "./resources/mods/ago_beta/DaC_Launcher.exe"
+  cmd = "go build -o ./resources/mods/ago_beta/DaC_Launcher.exe ."
   delay = 1000
   exclude_dir = ["tmp", "vendor", "testdata", "resources/mods"]
   exclude_file = []

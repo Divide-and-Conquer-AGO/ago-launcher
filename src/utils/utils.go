@@ -27,7 +27,7 @@ func setupLogger() {
 	exePath, err := os.Executable()
 	var logFilePtr *os.File
 	if err == nil {
-		logFilePath := filepath.Join(filepath.Dir(exePath), "AGO_Launcher.log")
+		logFilePath := filepath.Join(filepath.Dir(exePath), "DaC_Launcher.log")
 		logFilePtr, err = os.OpenFile(logFilePath, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0666)
 	}
 	if err != nil {

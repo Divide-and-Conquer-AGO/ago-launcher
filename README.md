@@ -30,7 +30,7 @@ cd src
 air
 ```
 
-This will build the binary (AGO_Launcher.exe) and run it from `resources/mods/ago_beta` where there are various config files and example folders to use
+This will build the binary (DaC_Launcher.exe) and run it from `resources/mods/dac_beta` where there are various config files and example folders to use
 
 If you want to test it on an actual mod folder in it's packaged state, you can run
 
