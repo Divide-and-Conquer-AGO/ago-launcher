@@ -16,7 +16,7 @@ import (
 
 func getHomeContent(updater *updater.Updater, quoter *quotes.Qouter) fyne.CanvasObject {
 	// Logo
-	logo := canvas.NewImageFromResource(resourceIconPng)
+	logo := canvas.NewImageFromResource(loadResource("icon.png", resourceIconPng))
 	logo.FillMode = canvas.ImageFillOriginal
 	logoContainer := container.NewCenter(logo)
 
@@ -28,10 +28,10 @@ func getHomeContent(updater *updater.Updater, quoter *quotes.Qouter) fyne.Canvas
 	titleContainer := container.NewCenter(titleText)
 
 	// Quote (Quote)
-	   quote, err := quoter.GetRandomQuote()
-	   if err != nil {
-			   utils.Logger().Println("[Home] Error random getting quote: ", err)
-	   }
+	quote, err := quoter.GetRandomQuote()
+	if err != nil {
+		utils.Logger().Println("[Home] Error random getting quote: ", err)
+	}
 	quoteText := canvas.NewText(quote.Quote, color.White)
 	quoteText.Text = "'" + quoteText.Text + "'"
 	quoteText.TextSize = 18
@@ -45,17 +45,17 @@ func getHomeContent(updater *updater.Updater, quoter *quotes.Qouter) fyne.Canvas
 	authorContainer := container.NewCenter(authorText)
 
 	// Mod Version
-	versionText := canvas.NewText("Version: " + updater.CurrentVersion.Version, color.White)
+	versionText := canvas.NewText("Version: "+updater.CurrentVersion.Version, color.White)
 	versionText.TextSize = 14
 	versionText.TextStyle = fyne.TextStyle{Bold: true}
 	versionContainer := container.NewCenter(versionText)
 
 	// Website Link
-	websiteURL, err := url.Parse("Discord")
+	websiteURL, err := url.Parse("https://discord.gg/nxjjeg236y")
 	if err != nil {
-			utils.Logger().Println("[Home] Invalid website url", err)
+		utils.Logger().Println("[Home] Invalid website url", err)
 	}
-	websiteText := widget.NewHyperlink("https://discord.gg/nxjjeg236y", websiteURL)
+	websiteText := widget.NewHyperlink("Discord", websiteURL)
 	websiteText.TextStyle = fyne.TextStyle{Bold: true}
 	websiteContainer := container.NewCenter(websiteText)
 

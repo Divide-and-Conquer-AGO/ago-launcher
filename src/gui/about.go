@@ -13,7 +13,7 @@ import (
 
 func getAboutContent() fyne.CanvasObject {
 	// Logo
-	logo := canvas.NewImageFromResource(resourceTolkienPng)
+	logo := canvas.NewImageFromResource(loadResource("tolkien.png", resourceTolkienPng))
 	logo.FillMode = canvas.ImageFillOriginal
 	logoContainer := container.NewCenter(logo)
 
@@ -48,7 +48,7 @@ func getAboutContent() fyne.CanvasObject {
 	soundsOfMiddleEarthText.TextStyle = fyne.TextStyle{Bold: true}
 	soundsOfMiddleEarthContainer := container.NewCenter(soundsOfMiddleEarthText)
 
-	websiteURL, err := url.Parse("https://github.com/EddieEldridge/ago-launcher/tree/main")
+	websiteURL, err := url.Parse("https://github.com/Divide-and-Conquer-AGO/ago-launcher")
 	if err != nil {
 		utils.Logger().Println("[About] Invalid website url", err)
 	}

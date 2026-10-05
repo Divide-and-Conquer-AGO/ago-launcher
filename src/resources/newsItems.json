@@ -2,7 +2,7 @@
     "newsItems": [
         {
             "title": "Update your launcher!",
-            "url": "https://raw.githubusercontent.com/EddieEldridge/ago-launcher/refs/heads/main/src/resources/newsItems/launcherNotification.md",
+            "url": "https://raw.githubusercontent.com/EddieEldridge/ago-launcher/refs/heads/divide-and-conquer/src/resources/newsItems/launcherNotification.md",
             "date": "2026-01-10",
             "published": true
         }

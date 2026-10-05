@@ -14,9 +14,9 @@ var _ fyne.Theme = (*AgoTheme)(nil)
 
 // ---- Color Palette ----
 var (
-	colorBackground = color.RGBA{R: 34, G: 34, B: 34, A: 255}   // Dark gray background
-	colorPrimary    = color.RGBA{R: 191, G: 111, B: 0, A: 255}  // Amber accent
-	colorButton     = color.RGBA{R: 138, G: 80, B: 0, A: 255}   // Dark amber button
+	colorBackground = color.RGBA{R: 40, G: 43, B: 49, A: 255}    // Dark gray background
+	colorPrimary    = color.RGBA{R: 204, G: 145, B: 52, A: 255}  // Amber accent
+	colorButton     = color.RGBA{R: 18, G: 67, B: 104, A: 255}   // Dark amber button
 	colorText       = color.RGBA{R: 255, G: 255, B: 255, A: 255} // White text
 )
 

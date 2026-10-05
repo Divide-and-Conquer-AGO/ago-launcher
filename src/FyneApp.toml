@@ -1,8 +1,8 @@
-Website = "https://www.divide-and-conquer-ago.com/"
+Website = "https://discord.gg/nxjjeg236y/"
 
 [Details]
   Icon = "favicon.ico"
   Name = "DaC_Launcher"
-  ID = "divide.and.conquer.ago.launcher"
+  ID = "divide.and.conquer.launcher"
   Version = "0.0.1"
-  Build = 17
+  Build = 21

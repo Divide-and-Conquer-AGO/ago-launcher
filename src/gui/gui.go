@@ -15,7 +15,7 @@ import (
 )
 
 func InitGUI(app fyne.App, splashWindow fyne.Window, updater *updater.Updater, configurator *config.Configurator, quoter *quotes.Qouter, newsReader *news.NewsReader) {
-	app.SetIcon(ResourceFaviconIco)
+	app.SetIcon(loadResource("favicon.ico", resourceFaviconIco))
 
 	// Set the theme
 	app.Settings().SetTheme(&AgoTheme{})
@@ -42,7 +42,7 @@ func RenderToolbar(mainWindow fyne.Window, splashWindow fyne.Window, updater *up
 		container.NewTabItemWithIcon("About", theme.ComputerIcon(), getAboutContent()),
 	)
 
-	bg := canvas.NewImageFromResource(resourceBackgroundPng)
+	bg := canvas.NewImageFromResource(loadResource("background.png", resourceBackgroundPng))
 	bg.FillMode = canvas.ImageFillStretch // or ImageFillContain
 
 	content := container.NewStack(

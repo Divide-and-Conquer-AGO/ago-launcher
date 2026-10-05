@@ -3,8 +3,8 @@ tmp_dir = "tmp"
 
 [build]
   args_bin = []
-  bin = "./resources/mods/ago_beta/DaC_Launcher.exe"
-  cmd = "go build -o ./resources/mods/ago_beta/DaC_Launcher.exe ."
+  bin = "./resources/mods/dac_beta/DaC_Launcher.exe"
+  cmd = "go build -o ./resources/mods/dac_beta/DaC_Launcher.exe ."
   delay = 1000
   exclude_dir = ["tmp", "vendor", "testdata", "resources/mods"]
   exclude_file = []
@@ -16,7 +16,7 @@ tmp_dir = "tmp"
   include_ext = ["go", "tpl", "tmpl", "html"]
   include_file = []
   kill_delay = "0s"
-  log = "tmp/AGO_Launcher_Errors.log"
+  log = "tmp/DaC_Launcher_Errors.log"
   poll = false
   poll_interval = 0
   post_cmd = []
