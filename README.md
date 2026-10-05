@@ -38,3 +38,8 @@ If you want to test it on an actual mod folder in it's packaged state, you can r
 cd src
 fyne package -release -os windows && xcopy /Y "DaC_Launcher.exe" "E:\Steam\steamapps\common\Medieval II Total War\mods\dac-beta\DaC_Launcher.exe" &&"E:\Steam\steamapps\common\Medieval II Total War\mods\dac-beta\DaC_Launcher.exe"
 ```
+
+Regenerate bundled images and fonts
+```shell
+fyne bundle -package gui -o gui/bundle.go icon.png && fyne bundle -a -o gui/bundle.go background.png && fyne bundle -a -o gui/bundle.go tolkien.png && fyne bundle -a -o gui/bundle.go favicon.ico && fyne bundle -a -o gui/bundle.go LTMuseum-Black.ttf && fyne bundle -a -o gui/bundle.go LTMuseum-Bold.ttf && fyne bundle -a -o gui/bundle.go LTMuseum-Italic.ttf
+```
